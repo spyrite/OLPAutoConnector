@@ -103,7 +103,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>SolutionTemplates</PackageId>
+    <PackageId>$(AssemblyName)</PackageId>
     <Version>1.0.0</Version>
     <ProjectGuid>{E2990802-E901-4864-9459-3343203BC72E}</ProjectGuid>
   </PropertyGroup>
@@ -125,14 +125,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>$(PackageId)$(PackageAssemblyVersion)</AssemblyName>
-    <Product>$(PackageId)</Product>
+    <AssemblyName></AssemblyName>
+    <Product>$(AssemblyName)</Product>
     <Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Revit\App.cs" />
-    <None Include="Revit\ConnectCIsToHost.cs" />
+    <None Include="Revit\JoinCICapsAndHost.cs" />
   </ItemGroup>
 
   <!-- Fody -->
@@ -142,17 +141,35 @@
         <PropertyChanged />
       </Weavers>
     </WeaverConfiguration>
+    <Title>$(AssemblyName)</Title>
+    <RootNamespace>OLP.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />
     <PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*" IncludeAssets="build; compile" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
-    <Folder Include="Views\" />
+    <Folder Include="Resources\Images\" />
+    <Folder Include="Customs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Actions.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Actions.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Actions.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Actions.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
