@@ -28,8 +28,8 @@ namespace OLP.AutoConnector.Revit
                     ToolTip = "Соединяет вложенные в закладные детали \"бетонные заглушки\" с основой, согласует материалы заглушек и основы.",
                     LongDescription = "Бетонные заглушки, выполненные тем же материалом что и основа, в соединенном положении позволяют скрыть выемки, образованные закладными деталями в основе." +
                     "Таким образом, основа отображается сплошными поверхностями без излишних контруных линий от выемок.",
-                    Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/AutoConnector_16.ico")),
-                    LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/AutoConnector_32.ico"))
+                    Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/JoinCICapsAndHost_16.ico")),
+                    LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/JoinCICapsAndHost_32.ico"))
                 }
             ];
 

@@ -36,8 +36,11 @@ namespace OLP.AutoConnector.Views
 
         public ActionsVM.NextAction ShowNextActionsDialog()
         {
-            ShowDialog();
-            return (DataContext as ActionsVM).SelectedNextAction;
+            bool? result = ShowDialog();
+            ActionsVM vm = DataContext as ActionsVM;
+            if (result == null || result == false) vm.SelectedNextAction = ActionsVM.NextAction.Cancel;
+
+            return vm.SelectedNextAction;
         }
 
         private void radioButton1_Checked(object sender, RoutedEventArgs e)
@@ -63,12 +66,13 @@ namespace OLP.AutoConnector.Views
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             if (DoNotShowThisDialogCheckBox.IsChecked == true)
             {
                 Properties.Actions.Default.AllowShowCountDialog = false;
                 Properties.Actions.Default.Save();
             }
-
+            Close();
         }
     }
 }

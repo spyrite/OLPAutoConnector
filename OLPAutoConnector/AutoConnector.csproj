@@ -131,6 +131,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\JoinCICapsAndHost_16.ico" />
+    <None Remove="Resources\Images\JoinCICapsAndHost_32.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Revit\JoinCICapsAndHost.cs" />
   </ItemGroup>
 
@@ -149,12 +154,17 @@
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Prism.Core" Version="9.0.537" />
+    <PackageReference Include="Revit.Async" Version="2.0.1" />
     <PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*" IncludeAssets="build; compile" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Images\" />
-    <Folder Include="Customs\" />
+    <Resource Include="Resources\Images\JoinCICapsAndHost_16.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\JoinCICapsAndHost_32.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -163,12 +173,42 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Actions.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\InputData.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InputData.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FailureMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FailureMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SupportedFamilyNames.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SupportedFamilyNames.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\FailureMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FailureMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SupportedFamilyNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SupportedFamilyNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Properties\Actions.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Actions.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\InputData.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>InputData.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

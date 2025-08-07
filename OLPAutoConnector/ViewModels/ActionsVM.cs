@@ -61,22 +61,31 @@ namespace OLP.AutoConnector.ViewModels
             switch (targetElementKind)
             {
                 case TargetElementKind.CIs:
-                    if (userSelectedCIsCount > 0)
+                    switch (userSelectedCIsCount)
                     {
-                        _instruction = $"Будет выполнено соединение бетонных заглушек с основой для {userSelectedCIsCount} выбранных закладных деталей. Желаете продолжить?";
-                        _allowDisplayNextActions = Visibility.Collapsed;
-                        _allowDisplayCancelButton = Visibility.Visible;
-                        _allowDisplayDoNotShowThisWindowCheckBox = Visibility.Visible;
-                        _windowHeight = 180;
+                        case -1:
+                            _instruction = "Пользовательский выбор не содержит ни одной закладной детали. Команда отменена.";
+                            _allowDisplayNextActions = Visibility.Collapsed;
+                            _allowDisplayCancelButton = Visibility.Collapsed;
+                            _allowDisplayDoNotShowThisWindowCheckBox = Visibility.Collapsed;
+                            _windowHeight = 150;
+                            break;
+                        case 0:
+                            _instruction = "Не выбрано ни одной закладной детали. Для продолжения выберите дальнейшее действие:";
+                            _allowDisplayNextActions = Visibility.Visible;
+                            _allowDisplayCancelButton = Visibility.Visible;
+                            _allowDisplayDoNotShowThisWindowCheckBox = Visibility.Collapsed;
+                            _windowHeight = 280;
+                            break;
+                        default:
+                            _instruction = $"Будет выполнено соединение бетонных заглушек с основой для выбранных закладных деталей (N = {userSelectedCIsCount}). Желаете продолжить?";
+                            _allowDisplayNextActions = Visibility.Collapsed;
+                            _allowDisplayCancelButton = Visibility.Visible;
+                            _allowDisplayDoNotShowThisWindowCheckBox = Visibility.Visible;
+                            _windowHeight = 200;
+                            break;
+
                     }
-                    else
-                    {
-                        _instruction = "Не выбрано ни одной закладной детали. Для продолжения выберите дальнейшее действие:";
-                        _allowDisplayNextActions = Visibility.Visible;
-                        _allowDisplayCancelButton = Visibility.Visible;
-                        _allowDisplayDoNotShowThisWindowCheckBox = Visibility.Collapsed;
-                        _windowHeight = 250;
-                    } 
                     break;
 
                 default:

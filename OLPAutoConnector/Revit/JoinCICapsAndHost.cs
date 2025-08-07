@@ -1,59 +1,54 @@
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.UI;
+using OLP.AutoConnector.Models;
+using OLP.AutoConnector.Resources;
 using OLP.AutoConnector.ViewModels;
 using OLP.AutoConnector.Views;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using static OLP.AutoConnector.Resources.StructuralFilters;
 
 namespace OLP.AutoConnector.Revit
 {
     [Transaction(TransactionMode.Manual)]
     public class JoinCICapsAndHost : IExternalCommand
     {
-        private static readonly ElementFilter _hostFilter = new LogicalOrFilter(
-            [ new ElementCategoryFilter(BuiltInCategory.OST_Walls)
-            , new ElementCategoryFilter(BuiltInCategory.OST_Floors)
-            , new ElementCategoryFilter(BuiltInCategory.OST_StructuralColumns)
-            , new ElementCategoryFilter(BuiltInCategory.OST_StructuralFraming)
-            , new ElementCategoryFilter(BuiltInCategory.OST_StructuralFoundation)]);
-        private static readonly List<string> _concreteMaterailKeys = ["Бетон", "Железобетон"];
-
-        //private static Guid _materialParameterGuid = new Guid("8b5e61a2-b091-491c-8092-0b01a55d4f44");
-        private static readonly string _concreteInsertFamilyNameKey = "220_Закладная";
-        private static readonly string _concreteCapFamilyNameKey = "220_Бетонная заглушка";
-        private static readonly string _concreteCapMaterialParameterName = "Материал_Бетонная заглушка";
-
-
         public static UIApplication UIApp;
         public static UIDocument UIDoc;
         public static Autodesk.Revit.ApplicationServices.Application App;
         public static Document Doc;
 
-        private static ActionsVM.NextAction _selectedNextAction;
+        private ActionsVM.NextAction _selectedNextAction;
         private List<ElementId> _selectedElemIds;
         private FilteredElementCollector _ciCollector;
         private List<FamilyInstance> _targetCIs;
 
+        private Dictionary<int, FailureModel> _failureModels;
+        private ActionsView _actionsView;
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
         {
+            //Инициализация
             UIApp = commandData.Application;
             UIDoc = commandData.Application.ActiveUIDocument;
             App = commandData.Application.Application;
             Doc = commandData.Application.ActiveUIDocument.Document;
+            _failureModels = [];
 
             _selectedElemIds = [.. UIDoc.Selection.GetElementIds()];
 
             if (_selectedElemIds.Any())
                 _ciCollector = new FilteredElementCollector(Doc, _selectedElemIds).OfClass(typeof(FamilyInstance));
+
+            //Диалоговое окно с выбором дальнейшего действия
             else
             {
-                ActionsView actionsView = new(new ActionsVM(ActionsVM.TargetElementKind.CIs, 0));
-                _selectedNextAction = actionsView.ShowNextActionsDialog();
+                _actionsView = new(new ActionsVM(ActionsVM.TargetElementKind.CIs, 0));
+                _selectedNextAction = _actionsView.ShowNextActionsDialog();
 
-                switch ((actionsView.DataContext as ActionsVM).SelectedNextAction)
+                switch (_selectedNextAction)
                 {
                     case ActionsVM.NextAction.Cancel:
                         return Result.Cancelled;
@@ -64,114 +59,125 @@ namespace OLP.AutoConnector.Revit
                         _ciCollector = new FilteredElementCollector(Doc, UIDoc.ActiveView.Id).OfClass(typeof(FamilyInstance));
                         break;
                     case ActionsVM.NextAction.AllowUserSelection:
+                        try
+                        {
+                            _selectedElemIds = [.. UIDoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, new CIsSelectionFilter(),
+                            "Выберите закладные детали").Select(r => r.ElementId)];
+                            _ciCollector = new FilteredElementCollector(Doc, _selectedElemIds).OfClass(typeof(FamilyInstance));
+                        }
+                        catch { }
                         break;
                 }
 ;           }
 
             //Поиск закладных деталей в коллекторе
-            _targetCIs = [.. _ciCollector.Cast<FamilyInstance>().Where(inst => inst.Symbol.FamilyName.Contains(_concreteInsertFamilyNameKey))];
+            _targetCIs = _ciCollector != null ? [.. _ciCollector.Cast<FamilyInstance>().Where(inst => inst.Symbol.FamilyName.Contains(ConcreteInsertFamilyNameKey))] : [];
 
             if (!_targetCIs.Any())
             {
-                message = "Не выбрано ни одной закладной детали. Команда отменена.";
+                _actionsView = new(new ActionsVM(ActionsVM.TargetElementKind.CIs, -1));
+                _actionsView.ShowNextActionsDialog();
                 return Result.Cancelled;
             }
 
-            using (Transaction tx = new(Doc, "OLP: Соединение бетонных заглушек с основой"))
+            else if (Properties.Actions.Default.AllowShowCountDialog == true)
             {
-                FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
-                failureHandlingOptions.SetForcedModalHandling(false);
-                failureHandlingOptions.SetDelayedMiniWarnings(false);
-                failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
-                tx.SetFailureHandlingOptions(failureHandlingOptions);
+                _actionsView = new(new ActionsVM(ActionsVM.TargetElementKind.CIs, _targetCIs.Count));
+                _selectedNextAction = _actionsView.ShowNextActionsDialog();
+                if (_selectedNextAction == ActionsVM.NextAction.Cancel) return Result.Cancelled;
+            }
+                
 
-                tx.Start();
-
-                foreach (FamilyInstance ci in _targetCIs)
+            using (Transaction tx = new(Doc, "OLP: Соединение бетонных заглушек с основой"))
                 {
-                    List<FamilyInstance> concreteCaps = ci.GetSubComponentIds().Select(id => Doc.GetElement(id) as FamilyInstance)
-                        .ToList().FindAll(inst => inst.Symbol.FamilyName.Contains(_concreteCapFamilyNameKey));
+                    FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
+                    failureHandlingOptions.SetForcedModalHandling(false);
+                    failureHandlingOptions.SetDelayedMiniWarnings(false);
+                    failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
+                    tx.SetFailureHandlingOptions(failureHandlingOptions);
 
-                    if (_hostFilter.PassesFilter(ci.Host) && concreteCaps.Any())
+                    tx.Start();
+
+                    foreach (FamilyInstance ci in _targetCIs)
                     {
-                        //Операция "Присоединить элементы геометрии", не выполняется если элементы уже соединены.
-                        foreach (FamilyInstance concreteCap in concreteCaps) 
-                            if (!JoinGeometryUtils.AreElementsJoined(Doc, ci.Host, concreteCap)) JoinGeometryUtils.JoinGeometry(Doc, ci.Host, concreteCap);
+                        //Проверка наличия хоста у закладной детали
+                        if (!HostFilter.PassesFilter(ci.Host)) AddFailureId(0, ci.Id);
 
-                        //Назначение материала основы бетонной заглушке, выполняется только если материал определяется как "Бетон" 
+                        //Поиск бетонных заглушек в закладных деталях
+                        List<FamilyInstance> concreteCaps = ci.GetSubComponentIds().Select(id => Doc.GetElement(id) as FamilyInstance)
+                            .ToList().FindAll(inst => inst.Symbol.FamilyName.Contains(ConcreteCapFamilyNameKey));
+                        if (!concreteCaps.Any()) AddFailureId(1, ci.Id);
+
+                        //Проверка наличия параметра материала для бетонных заглушек
+                        Parameter concreteCapMaterialParameter = ci.LookupParameter(ConcreteCapMaterialParameterName);
+                        if (concreteCapMaterialParameter == null) AddFailureId(2, ci.Id);
+
+                        //Проверка "бетонности" материала хоста
                         ElementId materialId = ci.Host.GetMaterialIds(false).ToList()
-                            .Find(id => _concreteMaterailKeys.Any(key => Doc.GetElement(id).Name.Contains(key)));
+                            .Find(id => ConcreteMaterailKeys.Any(key => Doc.GetElement(id).Name.Contains(key)));
+                        if (materialId == null) AddFailureId(3, ci.Id);
 
-                        if (materialId != null) ci.LookupParameter(_concreteCapMaterialParameterName)?.Set(materialId);
+                        //Операция "Присоединить элементы геометрии" с проверкой на возможность выполнения. Не выполняется если элементы уже соединены.
+                        using (SubTransaction subTx = new(Doc))
+                        {
+                            subTx.Start();
+
+                            foreach (FamilyInstance concreteCap in concreteCaps)
+                            {
+                                if (!JoinGeometryUtils.AreElementsJoined(Doc, ci.Host, concreteCap))
+                                {
+                                    try { JoinGeometryUtils.JoinGeometry(Doc, ci.Host, concreteCap); }
+                                    catch { AddFailureId(4, ci.Id); subTx.RollBack(); break; }
+                                }
+                            }
+
+                            if (!subTx.HasEnded()) subTx.Commit();
+                        }
+
+                        //Обработка закладной детали пропускается, если хотя бы одна из проверок не была пройдена
+                        if (_failureModels.Any(fm => fm.Value.Ids.Contains(ci.Id))) continue;
+
+                        //Назначение материала основы бетонной заглушке
+                        concreteCapMaterialParameter.Set(materialId);
                     }
+
+                    tx.Commit();
                 }
 
-                tx.Commit();
+            if (_failureModels.Any())
+            {
+                new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show();
             }
 
             return Result.Succeeded;
         }
 
-
-        /*
-        private ElementId GetHostMaterialId(Element host)
+        private void AddFailureId(int failureKey, ElementId failureId)
         {
-            ElementId materialId = ElementId.InvalidElementId;
-            
+            if (!_failureModels.ContainsKey(failureKey))
+                switch (failureKey)
+                {
+                    case 0:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.HostNotFound);
+                        break;
+                    case 1:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.ConcreteCapsNotFound + $" {ConcreteInsertFamilyNameKey}");
+                        break;
+                    case 2:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.ConcreteCapMaterialParameterNotFound + $" \"{ConcreteCapMaterialParameterName}\"");
+                        break;
+                    case 3:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.hostMaterialIsNotConcrete + $" {string.Join(", ", ConcreteMaterailKeys)}");
+                        break;
+                    case 4:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.CannotJoinCICapsAndHost);
+                        break;
+                    case 5:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.UnknowFailure);
+                        break;
+                }
 
-            switch((BuiltInCategory)host.Category.Id.IntegerValue)
-            {
-                case BuiltInCategory.OST_Walls:
-                    materialId = host is Wall ? GetConcreteMaterialIdFromLayers((host as Wall).WallType)
-                        : GetConcreteMaterialIdFromParameter(host);
-                    break;
-
-                case BuiltInCategory.OST_Floors:
-                    materialId = host is Floor ? GetConcreteMaterialIdFromLayers((host as Floor).FloorType)
-                        : GetConcreteMaterialIdFromParameter(host);
-                    break;
-
-                case BuiltInCategory.OST_StructuralColumns:
-                    materialId = GetConcreteMaterialIdFromParameter(host);
-                    break;
-
-                case BuiltInCategory.OST_StructuralFraming:
-                    materialId = GetConcreteMaterialIdFromParameter(host);
-                    break;
-
-                case BuiltInCategory.OST_StructuralFoundation:
-                    materialId = host is Floor ? GetConcreteMaterialIdFromLayers((host as Floor).FloorType)
-                        : GetConcreteMaterialIdFromParameter(host);
-                    break;
-            }
-
-            return materialId;
+            _failureModels[failureKey].Ids.Add(failureId);
         }
-
-        private ElementId GetConcreteMaterialIdFromLayers(HostObjAttributes hostType)
-        {
-            ElementId materialId = ElementId.InvalidElementId;
-            List<Material> materials = hostType.GetCompoundStructure()?
-                            .GetLayers().Select(layer => Doc.GetElement(layer.MaterialId) as Material)
-                            .ToList();
-            if (materials.Any())
-                materialId = materials.Find(mat => mat != null && _concreteMaterailKeys.Any(key => mat.Name.Contains(key)))?.Id;
-            return materialId ?? ElementId.InvalidElementId;
-        }
-
-        private ElementId GetConcreteMaterialIdFromParameter(Element host)
-        {           
-            ElementType hostType = Doc.GetElement(host.GetTypeId()) as ElementType;
-            ElementId materialId = hostType.get_Parameter(_materialParameterGuid)?.AsElementId();
-            if (materialId == null || materialId == ElementId.InvalidElementId) 
-                materialId = hostType.get_Parameter(BuiltInParameter.STRUCTURAL_MATERIAL_PARAM)?.AsElementId();
-            if (materialId == null || materialId == ElementId.InvalidElementId) 
-                materialId = host.get_Parameter(_materialParameterGuid)?.AsElementId();
-            if (materialId == null || materialId == ElementId.InvalidElementId) 
-                materialId = host.get_Parameter(BuiltInParameter.STRUCTURAL_MATERIAL_PARAM)?.AsElementId();
-
-            return materialId ?? ElementId.InvalidElementId;
-        }
-        */
     }
 }
