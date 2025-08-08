@@ -147,4 +147,7 @@
   <data name="RailingCapsTurnedOn" xml:space="preserve">
     <value>Обнаружены заглушки на стыкуемых участках поручней ограждений. Необходимо отредактировать соответствующие параметры типа</value>
   </data>
+  <data name="HandrailDiametersAreDifferent" xml:space="preserve">
+    <value>Различные диаметры поручней ограждений</value>
+  </data>
 </root>

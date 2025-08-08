@@ -23,14 +23,19 @@ namespace OLP.AutoConnector.Revit
 
         private FamilyInstance _primaryRailing;
         private FamilyInstance _secondaryRailing;
+        private RailingEndData _primaryRailingData;
+        private RailingEndData _secondaryRailingData;
+
 
         private Dictionary<int, FailureModel> _failureModels;
         private List<string> _supportedFamilyNames;
 
         private double _minRailingsDistanceY;
         private double _railingsDistanceY;
-        private double _railingsConnectAlignX;
-        private double _railingsConnectAngle;
+
+        private double _railingsEndAngleIP;
+        private double _railingsEndAngleOP;
+        private double _railingsEndLength;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -81,12 +86,23 @@ namespace OLP.AutoConnector.Revit
                 AddFailureId(2, _secondaryRailing.Id);
             }
 
+            //Диаметры поручней
+            if (_primaryRailing.Symbol.LookupParameter(FamilyParameterNames.Railings[_primaryRailing.Symbol.FamilyName][17]).AsDouble()
+                != _secondaryRailing.Symbol.LookupParameter(FamilyParameterNames.Railings[_secondaryRailing.Symbol.FamilyName][17]).AsDouble())
+            {
+                AddFailureId(3, _primaryRailing.Id);
+                AddFailureId(3, _secondaryRailing.Id);
+            }
 
             if (!_failureModels.Any())
             {
                 if (new InputDataView(new InputDataVM()).ShowDialog() == false) return Result.Cancelled;
-                _railingsConnectAlignX = Properties.InputData.Default.RailingConnectionAlignX;
-                GetRailingsConnectAngle();
+
+                _primaryRailingData = new(_primaryRailing);
+                _secondaryRailingData = new(_secondaryRailing);
+
+                RailingEndData.ConnectAlignX = Properties.InputData.Default.RailingConnectionAlignX;
+                //RailingEndData.ConnectAngle = GetRailingsConnectAngle();
 
             }
 
@@ -101,10 +117,9 @@ namespace OLP.AutoConnector.Revit
             return Result.Succeeded;
         }
 
-        private void GetRailingsConnectAngle()
+        private void ExtenedRailingsData()
         {
-            List<Reference> refs = _primaryRailing.GetReferences(FamilyInstanceReferenceType.WeakReference).ToList();
-            List<Element> elem = refs.Select(r => Doc.GetElement(r)).ToList();
+            
         }
 
         
@@ -122,6 +137,9 @@ namespace OLP.AutoConnector.Revit
                         break;
                     case 2:
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.RailingsTooClose);
+                        break;
+                    case 3:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.HandrailDiametersAreDifferent);
                         break;
                 }
 

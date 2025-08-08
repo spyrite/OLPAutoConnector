@@ -88,6 +88,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Различные диаметры поручней ограждений.
+        /// </summary>
+        internal static string HandrailDiametersAreDifferent {
+            get {
+                return ResourceManager.GetString("HandrailDiametersAreDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Материал основы закладной детали не является бетоном, имя материала не содержит:.
         /// </summary>
         internal static string hostMaterialIsNotConcrete {
