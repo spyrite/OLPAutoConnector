@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OLP.AutoConnector.Customs;
 using Prism.Dialogs;
+using System;
 
 namespace OLP.AutoConnector.Revit
 {
@@ -23,8 +24,8 @@ namespace OLP.AutoConnector.Revit
 
         private FamilyInstance _primaryRailing;
         private FamilyInstance _secondaryRailing;
-        private RailingEndData _primaryRailingData;
-        private RailingEndData _secondaryRailingData;
+        private RailingData _upperRailingData;
+        private RailingData _lowerRailingData;
 
 
         private Dictionary<int, FailureModel> _failureModels;
@@ -32,6 +33,9 @@ namespace OLP.AutoConnector.Revit
 
         private double _minRailingsDistanceY;
         private double _railingsDistanceY;
+
+        private Plane _connectionPlane;
+        private RailingData _railingOnStartPointData;
 
         private double _railingsEndAngleIP;
         private double _railingsEndAngleOP;
@@ -67,7 +71,7 @@ namespace OLP.AutoConnector.Revit
             if (!_supportedFamilyNames.Contains(_secondaryRailing.Symbol.FamilyName)) AddFailureId(0, _secondaryRailing.Id);
 
             //Параллельность ограждений
-            if (!XYZExtensions.VecABS(_primaryRailing.HandOrientation).IsAlmostEqualTo(XYZExtensions.VecABS(_secondaryRailing.HandOrientation)))
+            if (!XYZExtensions.ABS(_primaryRailing.HandOrientation).IsAlmostEqualTo(XYZExtensions.ABS(_secondaryRailing.HandOrientation)))
             {
                 AddFailureId(1, _primaryRailing.Id);
                 AddFailureId(1, _secondaryRailing.Id);
@@ -98,10 +102,25 @@ namespace OLP.AutoConnector.Revit
             {
                 if (new InputDataView(new InputDataVM()).ShowDialog() == false) return Result.Cancelled;
 
-                _primaryRailingData = new(_primaryRailing);
-                _secondaryRailingData = new(_secondaryRailing);
+                switch ((_primaryRailing.Location as LocationPoint).Point.Z > (_secondaryRailing.Location as LocationPoint).Point.Z)
+                {
+                    case true:
+                        _upperRailingData = new(_primaryRailing);
+                        _lowerRailingData = new(_secondaryRailing);
+                        break;
+                    case false:
+                        _upperRailingData = new(_secondaryRailing);
+                        _lowerRailingData = new(_primaryRailing);
+                        break;
+                }
 
-                RailingEndData.ConnectAlignX = Properties.InputData.Default.RailingConnectionAlignX;
+
+
+                RailingData.ConnectAlignX = Properties.InputData.Default.RailingConnectionAlignX;
+                ExtendRailingsData();
+
+
+
                 //RailingEndData.ConnectAngle = GetRailingsConnectAngle();
 
             }
@@ -117,9 +136,52 @@ namespace OLP.AutoConnector.Revit
             return Result.Succeeded;
         }
 
-        private void ExtenedRailingsData()
+
+
+
+
+
+        private void ExtendRailingsData()
         {
+            switch (_upperRailingData.FamilyName)
+            {
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
+                    _connectionPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left)
+                        - RailingData.ConnectAlignX * _upperRailingData.DirX, _upperRailingData.DirY, _upperRailingData.DirZ, -_upperRailingData.DirX));
+
+                    _upperRailingData.ExtendData(RailingSide.Left);
+                    break;
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing2:
+
+
+                    _connectionPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right)
+                        - RailingData.ConnectAlignX * _upperRailingData.DirX, _upperRailingData.DirY, _upperRailingData.DirZ, _upperRailingData.DirX));
+
+                    _upperRailingData.ExtendData(RailingSide.Right);
+                    break;
+            }
+            switch (_lowerRailingData.FamilyName)
+            {
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
+                    _lowerRailingData.ExtendData(RailingSide.Right);
+                    break;
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing2:
+                    _lowerRailingData.ExtendData(RailingSide.Left);
+                    break;
+            } 
+        }
+
+        private void GetConnectionAngle()
+        {
+            _connectionPlane.Project(_lowerRailingData.HandrailOrigin, out UV uv, out double dst);
+            XYZ p0 = _connectionPlane.Origin + uv.U * _connectionPlane.XVec + uv.V * _connectionPlane.YVec + dst * Math.Atan(_lowerRailingData.StairsAngle) * XYZ.BasisZ;
+
+            _connectionPlane.Project(_upperRailingData.HandrailOrigin, out uv, out dst);
+            XYZ p1 = _connectionPlane.Origin + uv.U * _connectionPlane.XVec + uv.V * _connectionPlane.YVec - dst * Math.Atan(_upperRailingData.StairsAngle) * XYZ.BasisZ;
+
             
+
+            return Line.CreateBound(p0, p1).Direction.AngleOnPlaneTo();
         }
 
         

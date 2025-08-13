@@ -34,5 +34,41 @@ namespace OLP.AutoConnector.Properties {
                 this["RailingConnectionAlignX"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double CrossoverSolidX {
+            get {
+                return ((double)(this["CrossoverSolidX"]));
+            }
+            set {
+                this["CrossoverSolidX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
+        public double CrossoverSolidZ {
+            get {
+                return ((double)(this["CrossoverSolidZ"]));
+            }
+            set {
+                this["CrossoverSolidZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public double CrossoverSolidY {
+            get {
+                return ((double)(this["CrossoverSolidY"]));
+            }
+            set {
+                this["CrossoverSolidY"] = value;
+            }
+        }
     }
 }
