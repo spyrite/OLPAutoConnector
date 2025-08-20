@@ -50,9 +50,8 @@
 
     <Style x:Key="DGButtonStyle" TargetType="Button" BasedOn="{StaticResource MetroButton}">
         <Setter Property="Margin" Value="2,2,2,2"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="Width" Value="70"/>
     </Style>
 
     <Style x:Key="DGTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
@@ -72,25 +71,26 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Height" Value="30"/>
-        <Setter Property="Margin" Value="5,0,5,0"/>
+        <Setter Property="Margin" Value="5,10,10,10"/>
     </Style>
 
     <Style x:Key="TextBoxStyleDefault" TargetType="TextBox" BasedOn="{StaticResource MetroTextBox}">
+        <Setter Property="FontWeight" Value="DemiBold"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="Width" Value="90"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Width" Value="70"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Height" Value="30"/>
-        <Setter Property="Margin" Value="5,0,5,0"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
     <Style x:Key="TextBlockStyleDefault" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
-        <Setter Property="Foreground" Value="DodgerBlue"/>
-        <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="5,0,5,0"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
     <Style x:Key="ComboBoxStyleDefault" TargetType="ComboBox" BasedOn="{StaticResource MetroComboBox}">
@@ -100,11 +100,56 @@
         <Setter Property="Margin" Value="10,0,10,0"/>
     </Style>
 
-    <Style x:Key="RadioButtonStyleDefault" TargetType="RadioButton" BasedOn="{StaticResource MetroRadioButton}">
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,10,0,10"/>
-        <Setter Property="FontWeight" Value="DemiBold"/>
+    <Style x:Key="RadioButtonStyleDefault" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="#45C8C7"></Setter>
+        <Setter Property="Foreground" Value="White"></Setter>
+        <Setter Property="FontFamily" Value="Segoe UI"></Setter>
+        <Setter Property="FontSize" Value="13"></Setter>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid x:Name="grid" VerticalAlignment="Center" HorizontalAlignment="Left"  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0"></ColumnDefinition>
+                            <ColumnDefinition Width="90"></ColumnDefinition>
+                            <ColumnDefinition Width="0"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                   <ContentPresenter  x:Name="contentPresenter" 
+                                                                      ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                                                      Content="{TemplateBinding Content}" 
+                                                                      ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                                                      Focusable="False" 
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      Margin="{TemplateBinding Padding}" 
+                                                                      RecognizesAccessKey="True" 
+                                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </TextBlock>
+                        <Grid Grid.Column="2" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="True"/>
+                        <Trigger Property="IsMouseOver" Value="True"/>
+                        <Trigger Property="IsPressed" Value="True"/>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Grid.Background" TargetName="grid" Value="#45C8C7"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="False">
+                            <Setter Property="Grid.Background" TargetName="grid" Value="#DDE1E2"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="CheckBoxStyleDefault" TargetType="CheckBox" BasedOn="{StaticResource MetroCheckBox}">

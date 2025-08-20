@@ -152,8 +152,8 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="Prism.Core" Version="9.0.537" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
     <PackageReference Include="Revit.Async" Version="2.0.1" />
     <PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*" IncludeAssets="build; compile" PrivateAssets="All" />
   </ItemGroup>
@@ -183,6 +183,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>FailureMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\InputDataDescriptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InputDataDescriptions.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\SupportedFamilyNames.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -194,6 +199,10 @@
     <EmbeddedResource Update="Resources\FailureMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FailureMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\InputDataDescriptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InputDataDescriptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SupportedFamilyNames.resx">
       <Generator>ResXFileCodeGenerator</Generator>

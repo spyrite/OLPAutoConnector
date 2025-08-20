@@ -5,6 +5,7 @@ using OLP.AutoConnector.Models;
 using OLP.AutoConnector.Resources;
 using OLP.AutoConnector.ViewModels;
 using OLP.AutoConnector.Views;
+using OLP.AutoConnector.Customs;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -71,7 +72,9 @@ namespace OLP.AutoConnector.Revit
 ;           }
 
             //ѕоиск закладных деталей в коллекторе
-            _targetCIs = _ciCollector != null ? [.. _ciCollector.Cast<FamilyInstance>().Where(inst => inst.Symbol.FamilyName.Contains(ConcreteInsertFamilyNameKey))] : [];
+            _targetCIs = _ciCollector != null ? [.. _ciCollector.Cast<FamilyInstance>()
+                .Select(inst => inst.GetHigherSuperComponent())
+                .Where(inst => inst.Symbol.FamilyName.Contains(ConcreteInsertFamilyNameKey))] : [];
 
             if (!_targetCIs.Any())
             {
@@ -167,7 +170,7 @@ namespace OLP.AutoConnector.Revit
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.ConcreteCapMaterialParameterNotFound + $" \"{ConcreteCapMaterialParameterName}\"");
                         break;
                     case 3:
-                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.hostMaterialIsNotConcrete + $" {string.Join(", ", ConcreteMaterailKeys)}");
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.HostMaterialIsNotConcrete + $" {string.Join(", ", ConcreteMaterailKeys)}");
                         break;
                     case 4:
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.CannotJoinCICapsAndHost);

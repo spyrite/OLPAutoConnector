@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI.Selection;
 using System.Collections.Generic;
 
 namespace OLP.AutoConnector.Resources

@@ -97,11 +97,20 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на На поручне вместе стыка включена заглушка - следует отредактировать тип ограждения.
+        /// </summary>
+        internal static string HandrailEndCapIsEnabled {
+            get {
+                return ResourceManager.GetString("HandrailEndCapIsEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Материал основы закладной детали не является бетоном, имя материала не содержит:.
         /// </summary>
-        internal static string hostMaterialIsNotConcrete {
+        internal static string HostMaterialIsNotConcrete {
             get {
-                return ResourceManager.GetString("hostMaterialIsNotConcrete", resourceCulture);
+                return ResourceManager.GetString("HostMaterialIsNotConcrete", resourceCulture);
             }
         }
         

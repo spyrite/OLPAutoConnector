@@ -2,17 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OLP.AutoConnector.Properties" GeneratedClassName="InputData">
   <Profiles />
   <Settings>
-    <Setting Name="RailingConnectionAlignX" Type="System.Double" Scope="User">
+    <Setting Name="UpperRailingConnectionX" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CrossoverSolidX" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1</Value>
+    <Setting Name="UpperRailingConnectionDZ" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CrossoverSolidZ" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">4000</Value>
+    <Setting Name="LowerRailingConnectionDZ" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CrossoverSolidY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">2000</Value>
+    <Setting Name="RailingsConnectionType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>

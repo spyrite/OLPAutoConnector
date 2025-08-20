@@ -23,7 +23,7 @@ namespace OLP.AutoConnector.Revit
             ribbonPanel ??= application.CreateRibbonPanel(TabName, PanelName);
             pushButtonsData =
             [
-                new PushButtonData("Button_IntermodelCopier", "Соединить\nзаглушки ЗД", thisAssemblyPath, typeof(JoinCICapsAndHost).FullName)
+                new PushButtonData("Button_JoinCICapsAndHost", "Соединить\nзаглушки ЗД", thisAssemblyPath, typeof(JoinCICapsAndHost).FullName)
                 {
                     ToolTip = "Соединяет вложенные в закладные детали \"бетонные заглушки\" с основой, согласует материалы заглушек и основы.",
                     LongDescription = "Бетонные заглушки, выполненные тем же материалом что и основа, в соединенном положении позволяют скрыть выемки, образованные закладными деталями в основе." +

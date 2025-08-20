@@ -117,40 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotJoinCICapsAndHost" xml:space="preserve">
-    <value>Не удалось присоединить бетонные заглушки к основе</value>
+  <data name="LowerRailingConnectionDZ" xml:space="preserve">
+    <value>Смещение верха поручня нижнего ограждения</value>
   </data>
-  <data name="ConcreteCapMaterialParameterNotFound" xml:space="preserve">
-    <value>Не найден параметр материала для бетонных заглушек</value>
+  <data name="RailingsConnectionType" xml:space="preserve">
+    <value>Тип соединения ограждений</value>
   </data>
-  <data name="ConcreteCapsNotFound" xml:space="preserve">
-    <value>Не найдены заглушки в закладных деталях, имя семейства не содержит:</value>
+  <data name="UpperRailingConnectionX" xml:space="preserve">
+    <value>Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка поручня из плоскости</value>
   </data>
-  <data name="HostMaterialIsNotConcrete" xml:space="preserve">
-    <value>Материал основы закладной детали не является бетоном, имя материала не содержит:</value>
-  </data>
-  <data name="HostNotFound" xml:space="preserve">
-    <value>Не найдена основа закладной детали</value>
-  </data>
-  <data name="RailingFamilyNotSupported" xml:space="preserve">
-    <value>Семейство ограждения не поддерживается, имя семейства: </value>
-  </data>
-  <data name="RailingsNotParallel" xml:space="preserve">
-    <value>Ограждения не параллельны друг другу</value>
-  </data>
-  <data name="UnknowFailure" xml:space="preserve">
-    <value>Неизвестная ошибка</value>
-  </data>
-  <data name="RailingsTooClose" xml:space="preserve">
-    <value>Ограждения расположены слишком близко друг к другу, минимальное расстояние: </value>
-  </data>
-  <data name="RailingCapsTurnedOn" xml:space="preserve">
-    <value>Обнаружены заглушки на стыкуемых участках поручней ограждений. Необходимо отредактировать соответствующие параметры типа</value>
-  </data>
-  <data name="HandrailDiametersAreDifferent" xml:space="preserve">
-    <value>Различные диаметры поручней ограждений</value>
-  </data>
-  <data name="HandrailEndCapIsEnabled" xml:space="preserve">
-    <value>На поручне вместе стыка включена заглушка - следует отредактировать тип ограждения</value>
+  <data name="UpperRailingConnectionDZ" xml:space="preserve">
+    <value>Смещение верха поручня верхнего ограждения</value>
   </data>
 </root>

@@ -26,48 +26,48 @@ namespace OLP.AutoConnector.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double RailingConnectionAlignX {
+        public double UpperRailingConnectionX {
             get {
-                return ((double)(this["RailingConnectionAlignX"]));
+                return ((double)(this["UpperRailingConnectionX"]));
             }
             set {
-                this["RailingConnectionAlignX"] = value;
+                this["UpperRailingConnectionX"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public double CrossoverSolidX {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperRailingConnectionDZ {
             get {
-                return ((double)(this["CrossoverSolidX"]));
+                return ((double)(this["UpperRailingConnectionDZ"]));
             }
             set {
-                this["CrossoverSolidX"] = value;
+                this["UpperRailingConnectionDZ"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
-        public double CrossoverSolidZ {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LowerRailingConnectionDZ {
             get {
-                return ((double)(this["CrossoverSolidZ"]));
+                return ((double)(this["LowerRailingConnectionDZ"]));
             }
             set {
-                this["CrossoverSolidZ"] = value;
+                this["LowerRailingConnectionDZ"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
-        public double CrossoverSolidY {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int RailingsConnectionType {
             get {
-                return ((double)(this["CrossoverSolidY"]));
+                return ((int)(this["RailingsConnectionType"]));
             }
             set {
-                this["CrossoverSolidY"] = value;
+                this["RailingsConnectionType"] = value;
             }
         }
     }
