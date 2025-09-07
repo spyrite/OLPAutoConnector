@@ -112,7 +112,7 @@ namespace OLP.AutoConnector.Revit
                 if (!_failureModels.Any())
                 {
                     ExtendRailingsData();
-                    RailingData.ConnectAngle = GetConnectionAngle();
+                    RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
 
                     //Вычисления значений заполняемых параметров
                     _upperRailingData.CalculateData();
@@ -259,13 +259,13 @@ namespace OLP.AutoConnector.Revit
         }
 
         //Метод определяет угол наклона оси стыка ограждений
-        private double GetConnectionAngle()
+        private double GetConnectionAngle(out XYZ connectionAxisDir)
         {
             XYZ p0 = _lowerRailingData.HandrailOrigin.ProjectOnPlane(RailingData.ConnectionYOZPlane, _lowerRailingData.HandrailAngle, _lowerRailingData.DirZ);
             XYZ p1 = _upperRailingData.HandrailOrigin.ProjectOnPlane(RailingData.ConnectionYOZPlane, _upperRailingData.HandrailAngle, -_upperRailingData.DirZ);
-            XYZ connectionAxisDir = Line.CreateBound(p0, p1).Direction;
+            connectionAxisDir = Line.CreateBound(p0, p1).Direction;
 
-            //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionPlane)); tx.Commit(); }
+            //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
 
             return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.ConnectionYOZPlane.XVec.ABS()), RailingData.ConnectionYOZPlane.Normal);
         }
