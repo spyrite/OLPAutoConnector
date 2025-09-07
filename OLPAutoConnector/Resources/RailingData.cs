@@ -246,12 +246,10 @@ namespace OLP.AutoConnector.Resources
 
         internal void CalculateData()
         {
-            /*EndAngleOP = -(HandrailDirZ.AngleTo(-ConnectAxisDir));
-            EndAngleIP = PI - HandrailDirX.AngleTo(ConnectAxisDir);*/
 
-            double cZ = RailingsDistanceY / 2 * Tan(ConnectAngle);
+           /*double cZ = RailingsDistanceY / 2 * Tan(ConnectAngle);
             double cZD = cZ * Cos(HandrailAngle);
-            double OPcor = Atan(cZD / (RailingsDistanceY / 2));
+            double OPcor = Atan(cZD / (RailingsDistanceY / 2));*/
 
             switch (RailingPositionZ)
             {
@@ -259,14 +257,26 @@ namespace OLP.AutoConnector.Resources
                     switch (FamilyName)
                     {
                         case string when FamilyName == StairsRailing1:
-                            EndAngleOP = PI / 2 - OPcor;
+                                 EndAngleOP = (Mirrored ? 2 * PI: 0) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX) * (Mirrored ? -1 : 1);
+                                 EndAngleIP = (Mirrored ? 0 : 2 * PI) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX, 
+                                     Transform.CreateRotation(HandrailDirX * (Mirrored ? -1 : 1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? 1 : -1);
+                                 break;
+                        case string when FamilyName == StairsRailing2:
+                            EndAngleOP = (Mirrored ? -2 * PI : 0) + PI - ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX) * (Mirrored ? -1 : 1);
+                            EndAngleIP = (Mirrored ? 2 * PI : 0) - PI + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX,
+                                Transform.CreateRotation(HandrailDirX * (Mirrored ? -1 : 1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? -1 : 1);
+                            break;
+
+
+
+                            /*EndAngleOP = PI / 2 - OPcor;
                             break;
                         case string when FamilyName == StairsRailing2:
                             EndAngleOP = PI / 2 + OPcor;
                             break;
                         case string when FamilyName == StairsRailing3:
                             EndAngleOP = -PI / 2 + OPcor;
-                            break;
+                            break;*/
                     }
                     break;
                 case RailingPositionZ.Lower:
@@ -274,19 +284,26 @@ namespace OLP.AutoConnector.Resources
                     {
                         case string when FamilyName == StairsRailing1:
                         case string when FamilyName == StairsRailing2:
+                            EndAngleOP = (PI - ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX)) * (Mirrored ? 1 : -1);
+                            EndAngleIP = (Mirrored ? 2 *PI : 0) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX,
+                                Transform.CreateRotation(HandrailDirX * (Mirrored ? 1 : -1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? -1 : 1);
+                            break;
+
+                        /*case string when FamilyName == StairsRailing1:
+                        case string when FamilyName == StairsRailing2:
                             EndAngleOP = PI / 2 + OPcor;
                             break;
                         case string when FamilyName == StairsRailing3:
                             EndAngleOP = -PI / 2 + OPcor;
-                            break;
+                            break;*/
                     }
                     break;
             }
 
-            double cZhr = cZ * Sin(HandrailAngle);
+            /*double cZhr = cZ * Sin(HandrailAngle);
             double c2Y2 = (RailingsDistanceY / 2) / Cos(ConnectAngle);
             double IPcor = Asin(cZhr / c2Y2);
-            EndAngleIP = PI / 2 - IPcor;
+            EndAngleIP = PI / 2 - IPcor;*/
 
             double a2Axis = EndAxisRadius * Tan(EndAngleIP / 2);
 

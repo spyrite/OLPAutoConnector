@@ -265,7 +265,7 @@ namespace OLP.AutoConnector.Revit
             XYZ p1 = _upperRailingData.HandrailOrigin.ProjectOnPlane(RailingData.ConnectionYOZPlane, _upperRailingData.HandrailAngle, -_upperRailingData.DirZ);
             connectionAxisDir = Line.CreateBound(p0, p1).Direction;
 
-            //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
+            using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
 
             return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.ConnectionYOZPlane.XVec.ABS()), RailingData.ConnectionYOZPlane.Normal);
         }
