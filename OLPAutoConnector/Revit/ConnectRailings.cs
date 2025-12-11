@@ -11,6 +11,7 @@ using OLP.AutoConnector.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Markup.Localizer;
 
 namespace OLP.AutoConnector.Revit
 {
@@ -22,6 +23,8 @@ namespace OLP.AutoConnector.Revit
         public static Autodesk.Revit.ApplicationServices.Application App;
         public static Document Doc;
 
+        private List<RailingConnectionType> _allowedConnectionTypes;
+        
         private FamilyInstance _primaryRailing;
         private FamilyInstance _secondaryRailing;
         private RailingData _upperRailingData;
@@ -32,6 +35,7 @@ namespace OLP.AutoConnector.Revit
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            //Инициализация
             UIApp = commandData.Application;
             UIDoc = commandData.Application.ActiveUIDocument;
             App = commandData.Application.Application;
@@ -39,17 +43,18 @@ namespace OLP.AutoConnector.Revit
             _failureModels = [];
             _supportedFamilyNames = [.. FamilyParameterNames.Railings.Keys];
 
+            //Выбор ограждений
             try
             {
                 _primaryRailing = Doc.GetElement(UIDoc.Selection.PickObject(ObjectType.Element, new RailingSelectionFilter(),
-                "Выберите первый экземпляр поддерживаемого семейства ограждения")) as FamilyInstance;
+                "Выберите первый экземпляр поддерживаемого плагином семейства ограждения")) as FamilyInstance;
             }
             catch { return Result.Cancelled; }
 
             try
             {
                 _secondaryRailing = Doc.GetElement(UIDoc.Selection.PickObject(ObjectType.Element, new RailingSelectionFilter([ _primaryRailing.Id ]), 
-                "Выберите второй экземпляр поддерживаемого семейства ограждения")) as FamilyInstance;
+                "Выберите второй экземпляр поддерживаемого плагином семейства ограждения")) as FamilyInstance;
             }
             catch { return Result.Cancelled; }
 
@@ -57,136 +62,163 @@ namespace OLP.AutoConnector.Revit
             if (!_supportedFamilyNames.Contains(_primaryRailing.Symbol.FamilyName)) AddFailureId(0, _primaryRailing.Id);
             if (!_supportedFamilyNames.Contains(_secondaryRailing.Symbol.FamilyName)) AddFailureId(0, _secondaryRailing.Id);
 
-            if (!_failureModels.Any())
+            //Контрольная точка
+            if (_failureModels.Any()) { new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show(); return Result.Cancelled; }
+            
+            //Определение вышестоящего и нижестоящего ограждений
+            switch ((_primaryRailing.Location as LocationPoint).Point.Z > (_secondaryRailing.Location as LocationPoint).Point.Z)
             {
-                //Ввод исходных данных
-                if (new InputDataView(new InputDataVM()).ShowDialog() == false) return Result.Cancelled;
-                RailingData.ConnectionType = (RailingConnectionType)Properties.InputData.Default.RailingsConnectionType;
-                RailingData.ConnectXFromEdgeSupport = Properties.InputData.Default.UpperRailingConnectionX;
+                case true:
+                    _upperRailingData = new(_primaryRailing) { RailingPositionZ = RailingPositionZ.Upper };
+                    _lowerRailingData = new(_secondaryRailing) { RailingPositionZ = RailingPositionZ.Lower };
+                    break;
 
-                //Определение вышестоящего и нижестоящего ограждений
-                switch ((_primaryRailing.Location as LocationPoint).Point.Z > (_secondaryRailing.Location as LocationPoint).Point.Z)
-                {
-                    case true:
-                        _upperRailingData = new(_primaryRailing) { RailingPositionZ = RailingPositionZ.Upper, 
-                            ConnectDZFromHandrailTop = Properties.InputData.Default.UpperRailingConnectionDZ };
-                        _lowerRailingData = new(_secondaryRailing) { RailingPositionZ = RailingPositionZ.Lower,
-                            ConnectDZFromHandrailTop = Properties.InputData.Default.LowerRailingConnectionDZ };
-                        break;
-
-                    case false:
-                        _upperRailingData = new(_secondaryRailing) { RailingPositionZ = RailingPositionZ.Upper,
-                            ConnectDZFromHandrailTop = Properties.InputData.Default.UpperRailingConnectionDZ };
-                        _lowerRailingData = new(_primaryRailing) { RailingPositionZ = RailingPositionZ.Lower,
-                            ConnectDZFromHandrailTop = Properties.InputData.Default.LowerRailingConnectionDZ };
-                        break;
-                }
-
-                //Проверки геометрии выбранных ограждений
-                //Параллельность ограждений
-                if (!XYZExtensions.ABS(_upperRailingData.DirX).IsAlmostEqualTo(XYZExtensions.ABS(_lowerRailingData.DirX)))
-                {
-                    AddFailureId(1, _upperRailingData.Id);
-                    AddFailureId(1, _lowerRailingData.Id);
-                }
-
-                //Минимальное межосевое расстояние между ограждениями
-                RailingData.MinRailingsDistanceY = _upperRailingData.EndAxisRadius + _lowerRailingData.EndAxisRadius;
-                //Фактическое межосевое расстояние между ограждениями
-                Plane.CreateByOriginAndBasis(_upperRailingData.HandrailOrigin, _upperRailingData.DirX, _upperRailingData.DirZ)
-                .Project(_lowerRailingData.HandrailOrigin, out _, out RailingData.RailingsDistanceY);
-
-                if (RailingData.RailingsDistanceY < RailingData.MinRailingsDistanceY)
-                {
-                    AddFailureId(2, _upperRailingData.Id);
-                    AddFailureId(2, _lowerRailingData.Id);
-                }
-
-                //Диаметры поручней
-                if (_upperRailingData.HandrailDiameter != _lowerRailingData.HandrailDiameter)
-                {
-                    AddFailureId(3, _upperRailingData.Id);
-                    AddFailureId(3, _lowerRailingData.Id);
-                }
-
-                if (!_failureModels.Any())
-                {
-                    ExtendRailingsData();
-                    RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
-
-                    //Вычисления значений заполняемых параметров
-                    _upperRailingData.CalculateData();
-                    _lowerRailingData.CalculateData();
-
-                    using (Transaction tx = new(Doc, "OLP: Автосоединение поручней ограждений"))
-                    {
-                        FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
-                        failureHandlingOptions.SetForcedModalHandling(false);
-                        failureHandlingOptions.SetDelayedMiniWarnings(false);
-                        failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
-                        tx.SetFailureHandlingOptions(failureHandlingOptions);
-
-                        tx.Start();
-
-                        _upperRailingData.HandrailAngleExtendPar.Set(_upperRailingData.HandrailAngleExtend);
-                        _upperRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
-                        _upperRailingData.EndIsEnabledPar.Set(1);
-                        _upperRailingData.EndAngleIPPar.Set(_upperRailingData.EndAngleIP);
-                        _upperRailingData.EndAngleOPPar.Set(_upperRailingData.EndAngleOP);
-                        _upperRailingData.EndLengthPar.Set(_upperRailingData.EndLength);
-                        _upperRailingData.EndCapIsEnabledPar.Set(0);
-
-                        _lowerRailingData.HandrailAngleExtendPar.Set(_lowerRailingData.HandrailAngleExtend);
-                        _lowerRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
-                        _lowerRailingData.EndIsEnabledPar.Set(1);
-                        _lowerRailingData.EndAngleIPPar.Set(_lowerRailingData.EndAngleIP);
-                        _lowerRailingData.EndAngleOPPar.Set(_lowerRailingData.EndAngleOP);
-                        _lowerRailingData.EndLengthPar.Set(_lowerRailingData.EndLength);
-                        _lowerRailingData.EndCapIsEnabledPar.Set(0);
-
-                        switch (RailingData.ConnectionType)
-                        {
-                            case RailingConnectionType.AngleAngle:
-                                foreach (Parameter par in _upperRailingData.EndOtherPars) par.Set(0);
-                                foreach (Parameter par in _lowerRailingData.EndOtherPars) par.Set(0);
-                                break;
-
-                            case RailingConnectionType.HorizontHorizont:
-                                _upperRailingData.HandrailHorizontExtendPar.Set(_upperRailingData.HandrailHorizontExtend);
-                                _upperRailingData.HandrailAngleIPPar.Set(_upperRailingData.HandrailAngleIP);
-                                _upperRailingData.HandrailAngleOPPar.Set(_upperRailingData.HandrailAngleOP);
-                                _lowerRailingData.HandrailHorizontExtendPar.Set(_lowerRailingData.HandrailHorizontExtend);
-                                _lowerRailingData.HandrailAngleIPPar.Set(_lowerRailingData.HandrailAngleIP);
-                                _lowerRailingData.HandrailAngleOPPar.Set(_lowerRailingData.HandrailAngleOP);
-                                break;
-
-                            case RailingConnectionType.AngleHorizont:
-                                foreach (Parameter par in _upperRailingData.EndOtherPars) par.Set(0);
-                                _lowerRailingData.HandrailHorizontExtendPar.Set(_lowerRailingData.HandrailHorizontExtend);
-                                _lowerRailingData.HandrailAngleIPPar.Set(_lowerRailingData.HandrailAngleIP);
-                                _lowerRailingData.HandrailAngleOPPar.Set(_lowerRailingData.HandrailAngleOP);
-                                break;
-
-                            case RailingConnectionType.HorizontAngle:
-                                _upperRailingData.HandrailHorizontExtendPar.Set(_upperRailingData.HandrailHorizontExtend);
-                                _upperRailingData.HandrailAngleIPPar.Set(_upperRailingData.HandrailAngleIP);
-                                _upperRailingData.HandrailAngleOPPar.Set(_upperRailingData.HandrailAngleOP);
-                                foreach (Parameter par in _lowerRailingData.EndOtherPars) par.Set(0);
-                                break;
-                        }
-
-                        tx.Commit();
-                    }
-                }
-
-
+                case false:
+                    _upperRailingData = new(_secondaryRailing) { RailingPositionZ = RailingPositionZ.Upper };
+                    _lowerRailingData = new(_primaryRailing) { RailingPositionZ = RailingPositionZ.Lower };
+                    break;
             }
 
-            if (_failureModels.Any())
+            //Проверки геометрии выбранных ограждений
+            //Параллельность ограждений
+            if (!XYZExtensions.ABS(_upperRailingData.DirX).IsAlmostEqualTo(XYZExtensions.ABS(_lowerRailingData.DirX)))
             {
-                new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show();
+                AddFailureId(1, _upperRailingData.Id);
+                AddFailureId(1, _lowerRailingData.Id);
             }
 
+            //Минимальное межосевое расстояние между ограждениями
+            RailingData.MinRailingsDistanceY = _upperRailingData.EndAxisRadius + _lowerRailingData.EndAxisRadius;
+            //Фактическое межосевое расстояние между ограждениями
+            Plane.CreateByOriginAndBasis(_upperRailingData.HandrailOrigin, _upperRailingData.DirX, _upperRailingData.DirZ)
+            .Project(_lowerRailingData.HandrailOrigin, out _, out RailingData.RailingsDistanceY);
+
+            if (RailingData.RailingsDistanceY < RailingData.MinRailingsDistanceY)
+            {
+                AddFailureId(2, _upperRailingData.Id);
+                AddFailureId(2, _lowerRailingData.Id);
+            }
+
+            //Диаметры поручней
+            if (_upperRailingData.HandrailDiameter != _lowerRailingData.HandrailDiameter)
+            {
+                AddFailureId(3, _upperRailingData.Id);
+                AddFailureId(3, _lowerRailingData.Id);
+            }
+
+            //Контрольная точка
+            if (_failureModels.Any()) { new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show(); return Result.Cancelled; }
+
+            
+            //Сбор допустимых типов соединений для выбранных ограждений
+            _allowedConnectionTypes = [RailingConnectionType.HorizontHorizont];
+            if (_upperRailingData.SupportsRight == false) _allowedConnectionTypes.Add(RailingConnectionType.AngleHorizont);
+            if (_lowerRailingData.SupportsLeft == false) _allowedConnectionTypes.Add(RailingConnectionType.HorizontAngle);
+            if (_upperRailingData.SupportsRight == false & _lowerRailingData.SupportsLeft == false) _allowedConnectionTypes.Add(RailingConnectionType.AngleAngle);
+                    
+
+            //Ввод исходных данных
+            if (new InputDataView(new InputDataVM(_upperRailingData.Height, _lowerRailingData.Height, _allowedConnectionTypes,
+                _upperRailingData.SupportsRight == false, 
+                _lowerRailingData.SupportsLeft == false))
+                .ShowDialog() == false) return Result.Cancelled;
+            RailingData.ConnectionType = (RailingConnectionType)Properties.InputData.Default.RailingsConnectionType;
+            RailingData.ConnectXFromEdgeSupport = Properties.InputData.Default.UpperRailingConnectionX;
+            _upperRailingData.ConnectDZFromHandrailTop = Properties.InputData.Default.UpperRailingConnectionDZ;
+            _lowerRailingData.ConnectDZFromHandrailTop = Properties.InputData.Default.LowerRailingConnectionDZ;
+
+            //Определение горизонтальных плоскостей
+            switch (RailingData.ConnectionType)
+            {
+                case RailingConnectionType.AngleAngle:
+                    break;
+                case RailingConnectionType.HorizontAngle:
+                    _upperRailingData.SetConnectionXOYPlane();
+                    break;
+                case RailingConnectionType.AngleHorizont:
+                    _lowerRailingData.SetConnectionXOYPlane();
+                    break;
+                case RailingConnectionType.HorizontHorizont:
+                    _upperRailingData.SetConnectionXOYPlane();
+                    _lowerRailingData.SetConnectionXOYPlane();
+                    break;
+            }
+
+            //Расширение исходных данных, промежуточные вычисления
+            ExtendRailingsData();
+            RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
+
+            //Вычисления значений заполняемых параметров
+            if (_upperRailingData.CalculateData(out List<int> failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _upperRailingData.Id));
+            if (_lowerRailingData.CalculateData(out failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _lowerRailingData.Id));
+
+            //Контрольная точка
+            if (_failureModels.Any()) { new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show(); return Result.Cancelled; }
+            
+            using (Transaction tx = new(Doc, "OLP: Автосоединение поручней ограждений"))
+            {
+                FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
+                failureHandlingOptions.SetForcedModalHandling(false);
+                failureHandlingOptions.SetDelayedMiniWarnings(false);
+                failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
+                tx.SetFailureHandlingOptions(failureHandlingOptions);
+
+                tx.Start();
+
+                _upperRailingData.HandrailAngleExtendPar.Set(_upperRailingData.HandrailAngleExtend);
+                _upperRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
+                _upperRailingData.EndIsEnabledPar.Set(1);
+                _upperRailingData.EndAngleIPPar.Set(_upperRailingData.EndAngleIP);
+                _upperRailingData.EndAngleOPPar.Set(_upperRailingData.EndAngleOP);
+                _upperRailingData.EndLengthPar.Set(_upperRailingData.EndLength);
+                _upperRailingData.EndCapIsEnabledPar.Set(0);
+
+                _lowerRailingData.HandrailAngleExtendPar.Set(_lowerRailingData.HandrailAngleExtend);
+                _lowerRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
+                _lowerRailingData.EndIsEnabledPar.Set(1);
+                _lowerRailingData.EndAngleIPPar.Set(_lowerRailingData.EndAngleIP);
+                _lowerRailingData.EndAngleOPPar.Set(_lowerRailingData.EndAngleOP);
+                _lowerRailingData.EndLengthPar.Set(_lowerRailingData.EndLength);
+                _lowerRailingData.EndCapIsEnabledPar.Set(0);
+
+                switch (RailingData.ConnectionType)
+                {
+                    case RailingConnectionType.AngleAngle:
+                        foreach (Parameter par in _upperRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par.Set(0);
+                        foreach (Parameter par in _lowerRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par.Set(0);
+                        break;
+
+                    case RailingConnectionType.HorizontHorizont:
+                        _upperRailingData.HandrailHorizontExtendPar.Set(_upperRailingData.HandrailHorizontExtend);
+                        _upperRailingData.HandrailAngleIPPar.Set(_upperRailingData.HandrailAngleIP);
+                        _upperRailingData.HandrailAngleOPPar.Set(_upperRailingData.HandrailAngleOP);
+                        if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar.Set(_upperRailingData.EdgeSupportAlign);
+                        _lowerRailingData.HandrailHorizontExtendPar.Set(_lowerRailingData.HandrailHorizontExtend);
+                        _lowerRailingData.HandrailAngleIPPar.Set(_lowerRailingData.HandrailAngleIP);
+                        _lowerRailingData.HandrailAngleOPPar.Set(_lowerRailingData.HandrailAngleOP);
+                        if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar.Set(_lowerRailingData.EdgeSupportAlign);
+                        break;
+
+                    case RailingConnectionType.AngleHorizont:
+                        foreach (Parameter par in _upperRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par.Set(0);
+                        _lowerRailingData.HandrailHorizontExtendPar.Set(_lowerRailingData.HandrailHorizontExtend);
+                        _lowerRailingData.HandrailAngleIPPar.Set(_lowerRailingData.HandrailAngleIP);
+                        _lowerRailingData.HandrailAngleOPPar.Set(_lowerRailingData.HandrailAngleOP);
+                        if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar.Set(_lowerRailingData.EdgeSupportAlign);
+                        break;
+
+                    case RailingConnectionType.HorizontAngle:
+                        _upperRailingData.HandrailHorizontExtendPar.Set(_upperRailingData.HandrailHorizontExtend);
+                        _upperRailingData.HandrailAngleIPPar.Set(_upperRailingData.HandrailAngleIP);
+                        _upperRailingData.HandrailAngleOPPar.Set(_upperRailingData.HandrailAngleOP);
+                        if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar.Set(_upperRailingData.EdgeSupportAlign);
+                        foreach (Parameter par in _lowerRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par.Set(0);
+                        break;
+                }
+
+                tx.Commit();
+            }
+            
             return Result.Succeeded;
         }
 
@@ -194,66 +226,77 @@ namespace OLP.AutoConnector.Revit
         //Метод определеляет плоскости стыка,
         //расстояние от плоскости стыка до начальной/конечной опорной плоскости ограждния,
         //производит выбор заполняемых параметров для ограждений
+
         private void ExtendRailingsData()
         {
-            _upperRailingData.SetConnectionXOYPlane();
-            _lowerRailingData.SetConnectionXOYPlane();
-
+            //Определение вертикальной плоскости стыка
             switch (_upperRailingData.FamilyName)
             {
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
-                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left)
+                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, false)
                         - RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
                         _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
 
-                    RailingData.ConnectionYOZPlane.Project(_upperRailingData.Origin, out _, out _upperRailingData.ConnectXFromRefPlane);
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin, out _upperRailingData.ConnectXFromRefPlane);
 
                     _upperRailingData.InitilizeParameters(RailingSide.Left);
+                    
                     break;
 
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing2:
-                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right)
+                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
                         + RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
                         _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
 
-                    RailingData.ConnectionYOZPlane.Project(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
-                        , out _, out _upperRailingData.ConnectXFromRefPlane);
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
+                        , out _upperRailingData.ConnectXFromRefPlane);
 
                     _upperRailingData.InitilizeParameters(RailingSide.Right);
+                    _upperRailingData.EdgeSupportOrigin = _upperRailingData.SupportsRight == true 
+                        ? _upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, true) 
+                        : null;
                     break;
 
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing3:
-                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right)
+                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
                         + RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
                         _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
 
-                    RailingData.ConnectionYOZPlane.Project(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
-    ,                   out _, out _upperRailingData.ConnectXFromRefPlane);
-
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
+                        , out _upperRailingData.ConnectXFromRefPlane);
                     _upperRailingData.InitilizeParameters(RailingSide.Right);
+                    _upperRailingData.EdgeSupportOrigin = _upperRailingData.SupportsRight == true
+                        ? _upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, true)
+                        : null;
                     break;
             }
 
             switch (_lowerRailingData.FamilyName)
             {
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
-                    RailingData.ConnectionYOZPlane.Project(_lowerRailingData.Origin + _lowerRailingData.StartEndRefDistance * _lowerRailingData.DirX
-                        , out _, out _lowerRailingData.ConnectXFromRefPlane);
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin + _lowerRailingData.StartEndRefDistance * _lowerRailingData.DirX
+                        , out _lowerRailingData.ConnectXFromRefPlane);
 
                     _lowerRailingData.InitilizeParameters(RailingSide.Right);
-
+                    
                     break;
 
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing2:
-                    RailingData.ConnectionYOZPlane.Project(_lowerRailingData.Origin, out _, out _lowerRailingData.ConnectXFromRefPlane);
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
 
                     _lowerRailingData.InitilizeParameters(RailingSide.Left);
+                    _lowerRailingData.EdgeSupportOrigin = _lowerRailingData.SupportsLeft == true
+                        ? _lowerRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, true)
+                        : null;
                     break;
 
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing3:
-                    RailingData.ConnectionYOZPlane.Project(_lowerRailingData.Origin, out _, out _lowerRailingData.ConnectXFromRefPlane);
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
 
                     _lowerRailingData.InitilizeParameters(RailingSide.Left);
+                    _lowerRailingData.EdgeSupportOrigin = _lowerRailingData.SupportsLeft == true
+                        ? _lowerRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, true)
+                        :null;
                     break;
             } 
         }
@@ -263,13 +306,34 @@ namespace OLP.AutoConnector.Revit
         {
             XYZ p0 = _lowerRailingData.HandrailOrigin.ProjectOnPlane(RailingData.ConnectionYOZPlane, _lowerRailingData.HandrailAngle, _lowerRailingData.DirZ);
             XYZ p1 = _upperRailingData.HandrailOrigin.ProjectOnPlane(RailingData.ConnectionYOZPlane, _upperRailingData.HandrailAngle, -_upperRailingData.DirZ);
+
+            switch (RailingData.ConnectionType)
+            {
+                case RailingConnectionType.AngleAngle:
+                    break;
+                case RailingConnectionType.HorizontAngle:
+                    p1 = p1.ProjectOnPlane(_upperRailingData.ConnectionXOYPlane);
+                    break;
+                case RailingConnectionType.AngleHorizont:
+                    p0 = p0.ProjectOnPlane(_lowerRailingData.ConnectionXOYPlane);
+                    break;
+                case RailingConnectionType.HorizontHorizont:
+                    p0 = p0.ProjectOnPlane(_lowerRailingData.ConnectionXOYPlane);
+                    p1 = p1.ProjectOnPlane(_upperRailingData.ConnectionXOYPlane);
+                    break;
+            }
+
+
             connectionAxisDir = Line.CreateBound(p0, p1).Direction;
 
+
+            //ТЕСТ
             using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
 
             return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.ConnectionYOZPlane.XVec.ABS()), RailingData.ConnectionYOZPlane.Normal);
         }
 
+        //Регистрация ошибки
         private void AddFailureId(int failureKey, ElementId failureId)
         {
             if (!_failureModels.ContainsKey(failureKey))
@@ -289,6 +353,9 @@ namespace OLP.AutoConnector.Revit
                         break;
                     case 4:
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.HandrailEndCapIsEnabled);
+                        break;
+                    case 5:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.NegativeEdgeSupportAlign);
                         break;
                 }
 

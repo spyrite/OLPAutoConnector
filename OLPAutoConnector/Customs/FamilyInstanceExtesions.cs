@@ -21,5 +21,8 @@ namespace OLP.AutoConnector.Customs
 
             return higherSuperComponent;
         }
+
+        public static Parameter GetParameterFromInstOrSym(this FamilyInstance sourceInst, string parName) 
+            => sourceInst.LookupParameter(parName) ?? sourceInst.Symbol.LookupParameter(parName);
     }
 }

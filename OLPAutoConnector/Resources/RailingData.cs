@@ -1,10 +1,15 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.UI;
 using OLP.AutoConnector.Customs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using static OLP.AutoConnector.Customs.XYZExtensions;
 using static OLP.AutoConnector.Resources.SupportedFamilyNames;
 using static System.Math;
+using Frame = Autodesk.Revit.DB.Frame;
 
 namespace OLP.AutoConnector.Resources
 {
@@ -12,7 +17,7 @@ namespace OLP.AutoConnector.Resources
 
     internal enum RailingSide { Left, Right }
 
-    internal enum RailingConnectionType
+    public enum RailingConnectionType
     {
         AngleAngle,
         HorizontAngle,
@@ -43,6 +48,10 @@ namespace OLP.AutoConnector.Resources
         internal readonly double HandrailDiameter;
         internal readonly double HandrailAngle;
         internal readonly double StartEndRefDistance;
+        internal readonly double BottomTopRefDistance;
+        internal readonly double Height;
+        internal readonly bool SupportsLeft;
+        internal readonly bool SupportsRight;
 
         internal readonly XYZ Origin;
         internal readonly XYZ DirX;
@@ -52,6 +61,7 @@ namespace OLP.AutoConnector.Resources
         internal readonly XYZ HandrailDirX;
         internal readonly XYZ HandrailDirY;
         internal readonly XYZ HandrailDirZ;
+        internal XYZ EdgeSupportOrigin;
 
         internal RailingPositionZ RailingPositionZ;
 
@@ -69,6 +79,7 @@ namespace OLP.AutoConnector.Resources
         internal double EndAngleIP;
         internal double EndAngleOP;
         internal double EndLength;
+        internal double EdgeSupportAlign;
 
         //Редактируемые параметры
         internal Parameter HandrailAngleExtendPar;
@@ -81,6 +92,7 @@ namespace OLP.AutoConnector.Resources
         internal Parameter EndAngleOPPar;
         internal Parameter EndLengthPar;
         internal Parameter EndCapIsEnabledPar;
+        internal Parameter EdgeSupportAlignPar;
 
         internal List<Parameter> EndOtherPars;
 
@@ -96,8 +108,13 @@ namespace OLP.AutoConnector.Resources
 
             EndAxisRadius = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][16]).AsDouble();
             HandrailDiameter = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][17]).AsDouble();
-            HandrailAngle = GetHandrailAngle();
+            HandrailAngle = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[FamilyName][18]).AsDouble();
             StartEndRefDistance = GetStartEndDistance();
+            BottomTopRefDistance = StartEndRefDistance * Tan(HandrailAngle);
+            Height = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][30]).AsDouble();
+
+            SupportsLeft = _railing.GetParameterFromInstOrSym(FamilyParameterNames.Railings[FamilyName][26])?.AsInteger() == 1;
+            SupportsRight = _railing.GetParameterFromInstOrSym(FamilyParameterNames.Railings[FamilyName][28])?.AsInteger() == 1;
 
             FamilyInstance handrail = railing.GetSubComponentIds().Select(id => _doc.GetElement(id) as FamilyInstance)
                 .First(inst => inst.Symbol.FamilyName == SubFamilyNames.Railings[FamilyName][0]);
@@ -114,18 +131,6 @@ namespace OLP.AutoConnector.Resources
             DirZ = XYZ.BasisZ;
 
             Mirrored = railing.Mirrored;
-
-        }
-
-        private double GetHandrailAngle()
-        {
-            return (ConnectionType, RailingPositionZ) switch
-            {
-                (RailingConnectionType.HorizontAngle, RailingPositionZ.Upper) => 0,
-                (RailingConnectionType.AngleHorizont, RailingPositionZ.Lower) => 0,
-                (RailingConnectionType.HorizontHorizont, _) => 0,
-                _ => _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[FamilyName][18]).AsDouble(),
-            };
         }
 
         private double GetStartEndDistance()
@@ -142,18 +147,37 @@ namespace OLP.AutoConnector.Resources
 
         internal void SetConnectionXOYPlane()
         {
-            ConnectionXOYPlane = Plane.CreateByOriginAndBasis(Origin +
-                (_railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][30]).AsDouble()
-                + ConnectDZFromHandrailTop - HandrailDiameter/2) * DirZ,
-                DirX, DirY);
+            XYZ origin = Origin + (Height + ConnectDZFromHandrailTop - HandrailDiameter / 2) * DirZ;
+            XYZ dirX = (Mirrored ? -1 : 1) * DirX;
+
+            switch (RailingPositionZ)
+            {
+                //Нижнее, тип 2, 3; Верхнее, тип 1
+                case RailingPositionZ.Upper when FamilyName == StairsRailing1:
+                case RailingPositionZ.Lower when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
+                    break;
+
+                //Верхнее, тип 2, 3; Нижнее, тип 1
+                case RailingPositionZ.Upper when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
+                case RailingPositionZ.Lower when FamilyName == StairsRailing1:
+                    dirX = -dirX;
+                    origin -= BottomTopRefDistance * DirZ;
+                    break;
+            }
+
+            XYZ dirY = dirX.CrossProduct(DirZ);
+
+            ConnectionXOYPlane = Plane.Create(new Frame(origin, dirX, dirY, DirZ));
         }
 
-        internal XYZ GetEdgeRailingSupportOrigin(RailingSide side)
+        internal XYZ GetEdgeRailingSupportOrigin(RailingSide side, bool includeLRSegments)
         {
+            //Поиск всех стоек/кронштейнов
             List<FamilyInstance> supports = [.. _railing.GetSubComponentIds().Select(id => _doc.GetElement(id))
                 .Cast<FamilyInstance>().Where(inst => inst.Symbol.FamilyName == SubFamilyNames.Railings[FamilyName][1])];
-            List<XYZ> supportOrigins = [];
 
+            //Определение центральных точек
+            List<XYZ> supportOrigins = [];
             switch (FamilyName)
             {
                 case string when FamilyName == StairsRailing1:
@@ -165,7 +189,11 @@ namespace OLP.AutoConnector.Resources
                         supportOrigins.AddRange(SolidExtensions.GetSolids(support).Select(s => s.ComputeCentroid()));
                     break;
             }
-            
+
+            //Исключение стоек/кронштейнов на прямых участках ограждения
+            if (SupportsLeft == true & includeLRSegments == false) supportOrigins = [.. supportOrigins.Where(p => Multiply(p, DirZ) != supportOrigins.Select(o => Multiply(o, DirZ)).Max())];
+            if (SupportsRight == true & includeLRSegments == false) supportOrigins = [.. supportOrigins.Where(p => Multiply(p, DirZ) != supportOrigins.Select(o => Multiply(o, DirZ)).Min())];
+
             return side switch
             {
                 RailingSide.Left => supportOrigins.First(p => Multiply(p, DirX) == supportOrigins.Select(o => Multiply(o, DirX)).Min()),
@@ -186,6 +214,7 @@ namespace OLP.AutoConnector.Resources
                     EndIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][2]);
                     EndCapIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][20]);
                     EndTypePar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][22]);
+                    EdgeSupportAlignPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][35]);
                     break;
                 case RailingSide.Right:
                     HandrailAngleExtendPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][1]);
@@ -195,6 +224,7 @@ namespace OLP.AutoConnector.Resources
                     EndIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][9]);
                     EndCapIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][21]);
                     EndTypePar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][23]);
+                    EdgeSupportAlignPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][36]);
                     break;
             }
 
@@ -222,98 +252,121 @@ namespace OLP.AutoConnector.Resources
                     break;
             }
 
-            
-
             EndAngleIPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][Ns[0]]);
             EndAngleOPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][Ns[1]]);
             EndLengthPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][Ns[2]]);
             EndOtherPars = [.. new List<int> { Ns[3], Ns[4], Ns[5] }
                     .Select(i => _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][i]))];
 
-            if (FamilyName == StairsRailing1)
+            switch (side)
             {
-                switch (side)
-                {
-                    case RailingSide.Left:
-                        EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
-                        break;
-                    case RailingSide.Right:
-                        EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
-                        break;
-                }
+                case RailingSide.Left when FamilyName == StairsRailing1:
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
+                    break;
+                case RailingSide.Left when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]));
+                    break;
+                case RailingSide.Right when FamilyName == StairsRailing1:
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
+                    break;
+                case RailingSide.Right when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][34]));
+                    break;
             }
         }
 
-        internal void CalculateData()
+        internal bool CalculateData(out List<int> failureKeys)
         {
+            /*EndAngleOP = -(HandrailDirZ.AngleTo(-ConnectAxisDir));
+            EndAngleIP = PI - HandrailDirX.AngleTo(ConnectAxisDir);*/
+            failureKeys = [];
+            double endPreAngle = 0; //Угол поручня до концевика
 
-           /*double cZ = RailingsDistanceY / 2 * Tan(ConnectAngle);
-            double cZD = cZ * Cos(HandrailAngle);
-            double OPcor = Atan(cZD / (RailingsDistanceY / 2));*/
-
-            switch (RailingPositionZ)
+            switch (RailingPositionZ, ConnectionType)
             {
-                case RailingPositionZ.Upper:
-                    switch (FamilyName)
-                    {
-                        case string when FamilyName == StairsRailing1:
-                                 EndAngleOP = (Mirrored ? 2 * PI: 0) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX) * (Mirrored ? -1 : 1);
-                                 EndAngleIP = (Mirrored ? 0 : 2 * PI) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX, 
-                                     Transform.CreateRotation(HandrailDirX * (Mirrored ? -1 : 1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? 1 : -1);
-                                 break;
-                        case string when FamilyName == StairsRailing2:
-                            EndAngleOP = (Mirrored ? -2 * PI : 0) + PI - ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX) * (Mirrored ? -1 : 1);
-                            EndAngleIP = (Mirrored ? 2 * PI : 0) - PI + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX,
-                                Transform.CreateRotation(HandrailDirX * (Mirrored ? -1 : 1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? -1 : 1);
-                            break;
-
-
-
-                            /*EndAngleOP = PI / 2 - OPcor;
-                            break;
-                        case string when FamilyName == StairsRailing2:
-                            EndAngleOP = PI / 2 + OPcor;
-                            break;
-                        case string when FamilyName == StairsRailing3:
-                            EndAngleOP = -PI / 2 + OPcor;
-                            break;*/
-                    }
-                    break;
-                case RailingPositionZ.Lower:
-                    switch (FamilyName)
-                    {
-                        case string when FamilyName == StairsRailing1:
-                        case string when FamilyName == StairsRailing2:
-                            EndAngleOP = (PI - ConnectAxisDir.AngleOnPlaneTo(HandrailDirZ, HandrailDirX)) * (Mirrored ? 1 : -1);
-                            EndAngleIP = (Mirrored ? 2 *PI : 0) + ConnectAxisDir.AngleOnPlaneTo(HandrailDirX,
-                                Transform.CreateRotation(HandrailDirX * (Mirrored ? 1 : -1), ConnectAngle).OfVector(HandrailDirZ)) * (Mirrored ? -1 : 1);
-                            break;
-
-                        /*case string when FamilyName == StairsRailing1:
-                        case string when FamilyName == StairsRailing2:
-                            EndAngleOP = PI / 2 + OPcor;
-                            break;
-                        case string when FamilyName == StairsRailing3:
-                            EndAngleOP = -PI / 2 + OPcor;
-                            break;*/
-                    }
+                case (RailingPositionZ.Upper, RailingConnectionType.AngleHorizont):
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontAngle):
+                case (_, RailingConnectionType.AngleAngle):
+                    endPreAngle = HandrailAngle;
                     break;
             }
 
-            /*double cZhr = cZ * Sin(HandrailAngle);
-            double c2Y2 = (RailingsDistanceY / 2) / Cos(ConnectAngle);
-            double IPcor = Asin(cZhr / c2Y2);
-            EndAngleIP = PI / 2 - IPcor;*/
-
-            double a2Axis = EndAxisRadius * Tan(EndAngleIP / 2);
-
-            switch (ConnectionType, RailingPositionZ)
+            //Вычисление угла из плоскости
+            double cZ = RailingsDistanceY / 2 * Tan(ConnectAngle); //Превышение стыка поручня из плоскости (проекция Z)
+            double cZD = cZ * Cos(endPreAngle); //Проекция превышения на плоскоть сечения поручня
+            double OPcor = Atan(cZD / (RailingsDistanceY / 2)); //Корректировка угла из плоскости 90 градусов
+            switch (RailingPositionZ, ConnectionType)
             {
-                case (RailingConnectionType.HorizontAngle, RailingPositionZ.Upper)
-                or (RailingConnectionType.AngleHorizont, RailingPositionZ.Lower)
-                or (RailingConnectionType.HorizontHorizont, _):
+                //Семейство ограждения лестницы 1.1
+                case (RailingPositionZ.Upper, _) when FamilyName == StairsRailing1:
+                    EndAngleOP = PI / 2 - OPcor;
+                    break;
+                case (RailingPositionZ.Lower, _) when FamilyName == StairsRailing1:
+                    EndAngleOP = PI / 2 + OPcor;
+                    break;
+
+
+                //Семейство ограждения лестницы 1.3
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing2:
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing2:
+                case (RailingPositionZ.Upper, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing2:
+                    EndAngleOP = PI / 2 - OPcor;
+                    break;
+
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing2:
+                case (RailingPositionZ.Lower, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing2:
+                case (RailingPositionZ.Lower, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing2:
+
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing2:
+                    EndAngleOP = PI / 2 + OPcor;
+                    break;
+
+                case (RailingPositionZ.Upper, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing2:
+                
+                    EndAngleOP = PI / 2 - OPcor * (EndOtherPars[3]?.AsInteger() == 1 ? 1 : -1); 
+                    break;
+
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing2:
+                
+                    EndAngleOP = PI / 2 + OPcor * (EndOtherPars[3]?.AsInteger() == 1 ? -1 : 1);
+                    break;
+
+
+
+
+                //Семейство поручня
+                case (RailingPositionZ.Upper, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing3:
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing3:
+                case (_, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing3:
+                    EndAngleOP = -PI / 2 + OPcor;
+                    break;
+
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing3:
+                case (RailingPositionZ.Lower, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing3:
+                case (_, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing3:
+                    EndAngleOP = -PI / 2 + OPcor * (EndOtherPars[3]?.AsInteger() == 1 ? 1 : -1);
+                    break;
+            }
+
+            //Вычисление угла в плоскости
+            double cZhr = cZ * Sin(endPreAngle); //Проекция превышения на ось поручня
+            double c2Y2 = (RailingsDistanceY / 2) / Cos(ConnectAngle); //Гипотенуза между превышением и половиной осевого расстояния между ограждениями
+            double IPcor = Asin(cZhr / c2Y2); //Корректировка угла в плоскости 90 градусов
+            EndAngleIP = PI / 2 + IPcor;
+
+            //Вычисление удлинения поручня
+            double a2Axis = EndAxisRadius * Tan(EndAngleIP / 2);
+            switch (RailingPositionZ, ConnectionType)
+            {
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle)
+                or (RailingPositionZ.Lower, RailingConnectionType.AngleHorizont)
+                or (_, RailingConnectionType.HorizontHorizont):
                     CalculateHandrailAngles();
-                    CalculateHorizontHandrailExtend(a2Axis);
+                    if (CalculateHorizontHandrailExtend(a2Axis) == false)
+                    {
+                        failureKeys.Add(5);
+                        return false;
+                    }
                     break;
 
                 default:
@@ -321,15 +374,35 @@ namespace OLP.AutoConnector.Resources
                     break;
             }
 
+            //Вычисление удлинения концевика
             EndLength = (RailingsDistanceY / 2) / Cos(ConnectAngle) - a2Axis;
+            return true;
         }
 
-        private void CalculateHorizontHandrailExtend(double a2Axis)
+        private bool CalculateHorizontHandrailExtend(double a2Axis)
         {   
-            HandrailAngleExtend = ConnectDZFromHandrailTop / Tan(HandrailAngle);
-            ConnectionYOZPlane.Project(HandrailOrigin.ProjectOnPlane(ConnectionXOYPlane, PI - HandrailAngle, ConnectionXOYPlane.XVec),
-                out _, out HandrailHorizontExtend);
+            HandrailAngleExtend = ConnectDZFromHandrailTop * (RailingPositionZ == RailingPositionZ.Upper ? -1 : 1) / Sin(HandrailAngle);
+            XYZ p0 = HandrailOrigin;
+            XYZ p1 = HandrailOrigin.ProjectOnPlane(ConnectionXOYPlane, (PI/2 - HandrailAngle) * (Mirrored ? 1 : -1), ConnectionXOYPlane.XVec);
+
+
+
+
+            //ТЕСТ
+            /*Plane railingPlane = Plane.Create(new Frame(HandrailOrigin, DirX, DirZ, DirY));
+            using (Transaction tx = new(_doc, "OLP test")) { tx.Start(); _doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(_doc, railingPlane)); tx.Commit(); }*/
+
+            ConnectionYOZPlane.Project(p1, out _, out HandrailHorizontExtend);
             HandrailHorizontExtend -= a2Axis + EndAxisRadius * Tan(HandrailAngle / 2);
+
+            if (EdgeSupportOrigin != null)
+            {
+                ConnectionYOZPlane.ProjectWithToken(EdgeSupportOrigin, out EdgeSupportAlign);
+                EdgeSupportAlign = -EdgeSupportAlign - EndAxisRadius;
+                if (EdgeSupportAlign < 0) return false;
+            }
+
+            return true;
         }
 
 
@@ -347,13 +420,12 @@ namespace OLP.AutoConnector.Resources
                     switch (RailingPositionZ)
                     {
                         case RailingPositionZ.Upper:
-                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) - (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle));
+                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) * (Mirrored ? -1 : 1) - (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle));
                             break;
                         case RailingPositionZ.Lower:
-                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) + (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle)); ;
+                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) * (Mirrored ? -1 : 1) + (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle));
                             break;
                     }
-                    
                     break;
             }
         }

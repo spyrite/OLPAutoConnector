@@ -153,4 +153,10 @@
   <data name="HandrailEndCapIsEnabled" xml:space="preserve">
     <value>На поручне вместе стыка включена заглушка - следует отредактировать тип ограждения</value>
   </data>
+  <data name="IncoorectInputValue" xml:space="preserve">
+    <value>Некорректный ввод значений</value>
+  </data>
+  <data name="NegativeEdgeSupportAlign" xml:space="preserve">
+    <value>Получено недопустимое отрицательное значение параметра привязки крайней опоры к краю поручня</value>
+  </data>
 </root>

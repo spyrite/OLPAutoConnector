@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.UI;
 using MahApps.Metro.Controls;
+using OLP.AutoConnector.Resources;
 using OLP.AutoConnector.ViewModels;
 using System;
 
@@ -16,27 +17,32 @@ namespace OLP.AutoConnector.Views
         private void OKButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             DialogResult = true;
-
-            if (RadioButton1.IsChecked == true)
-                Properties.InputData.Default.RailingsConnectionType = 0;
-            else if (RadioButton2.IsChecked == true)
-                Properties.InputData.Default.RailingsConnectionType = 1;
-            else if (RadioButton3.IsChecked == true)
-                Properties.InputData.Default.RailingsConnectionType = 2;
-            else if (RadioButton4.IsChecked == true)
-                Properties.InputData.Default.RailingsConnectionType = 3;
-
-            Properties.InputData.Default.UpperRailingConnectionX = double.Parse(TextBox1.Text) / 304.8;
-            Properties.InputData.Default.UpperRailingConnectionDZ = double.Parse(TextBox2.Text) / 304.8;
-            Properties.InputData.Default.LowerRailingConnectionDZ = double.Parse(TextBox3.Text) / 304.8;
             Properties.InputData.Default.Save();
             Close();
+            /*if (TextBoxes_InputCheck())
+            {
+                DialogResult = true;
+                Properties.InputData.Default.Save();
+                Close();
+            }
+            else new MessageView("Проверка", FailureMessages.IncoorectInputValue, 150, 250, ButtonsVisibility.Ok).ShowDialog();*/
         }
 
         private void TextBox1_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
-            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") && (!TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0)))
+            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
                 e.Handled = true;
         }
+
+        private void TextBox23_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") || (e.Text == "-") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
+                e.Handled = true;
+        }
+
+        private bool TextBoxes_InputCheck() => 
+            double.TryParse(TextBox1.Text, out _) 
+            & double.TryParse(TextBox2.Text, out _)
+            & double.TryParse(TextBox3.Text, out _);
     }
 }

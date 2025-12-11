@@ -85,6 +85,46 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="TextBoxAllowUpperRailingConnectionX" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding UpperRailingConnectionX}"/>
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxAllowUpperRailingConnectionDZ" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding UpperRailingConnectionDZ}"/>
+                <Setter Property="IsEnabled" Value="{Binding AllowInputDZ1}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxAllowLowerRailingConnectionDZ" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding LowerRailingConnectionDZ}"/>
+                <Setter Property="IsEnabled" Value="{Binding AllowInputDZ2}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
     <Style x:Key="TextBlockStyleDefault" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
         <Setter Property="FontWeight" Value="DemiBold"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -92,6 +132,40 @@
         <Setter Property="Margin" Value="5,5,5,5"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
+
+    <Style x:Key="TextBlockAllowUpperRailingConnectionX" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBlockAllowUpperRailingConnectionDZ" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBlockAllowLowerRailingConnectionDZ" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 
     <Style x:Key="ComboBoxStyleDefault" TargetType="ComboBox" BasedOn="{StaticResource MetroComboBox}">
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

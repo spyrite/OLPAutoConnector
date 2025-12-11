@@ -19,7 +19,7 @@ namespace OLP.AutoConnector.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class FailureMessages {
@@ -120,6 +120,24 @@ namespace OLP.AutoConnector.Resources {
         internal static string HostNotFound {
             get {
                 return ResourceManager.GetString("HostNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Некорректный ввод значений.
+        /// </summary>
+        internal static string IncoorectInputValue {
+            get {
+                return ResourceManager.GetString("IncoorectInputValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Получено недопустимое отрицательное значение параметра привязки крайней опоры к краю поручня.
+        /// </summary>
+        internal static string NegativeEdgeSupportAlign {
+            get {
+                return ResourceManager.GetString("NegativeEdgeSupportAlign", resourceCulture);
             }
         }
         

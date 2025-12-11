@@ -10,8 +10,8 @@ namespace OLP.AutoConnector.Revit
 {
     public class App : IExternalApplication
     {
-        private const string TabName = "Олимп.ОСК";
-        private const string PanelName = "Утилиты";
+        private const string TabName = "OSK.Olimproekt";
+        private const string PanelName1 = "КЖ";
 
         private static readonly string thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
         private static RibbonPanel ribbonPanel;
@@ -19,8 +19,8 @@ namespace OLP.AutoConnector.Revit
 
         public Result OnStartup(UIControlledApplication application)
         {
-            ribbonPanel = application.GetRibbonPanels(TabName).FirstOrDefault(p => p.Name == PanelName);
-            ribbonPanel ??= application.CreateRibbonPanel(TabName, PanelName);
+            ribbonPanel = application.GetRibbonPanels(TabName).FirstOrDefault(p => p.Name == PanelName1);
+            ribbonPanel ??= application.CreateRibbonPanel(TabName, PanelName1);
             pushButtonsData =
             [
                 new PushButtonData("Button_JoinCICapsAndHost", "Соединить\nзаглушки ЗД", thisAssemblyPath, typeof(JoinCICapsAndHost).FullName)

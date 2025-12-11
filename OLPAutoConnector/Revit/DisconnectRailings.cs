@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using OLP.AutoConnector.Customs;
 using OLP.AutoConnector.Resources;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,11 +51,11 @@ namespace OLP.AutoConnector.Revit
                         foreach (FamilyInstance inst in insts)
                         {
                             //Проверка включены ли стойки/кронштейны на прямых участках ограждений
-                            bool condition1 = GetParameterFromInstOrSym(inst, FamilyParameterNames.Railings[inst.Symbol.FamilyName][26])?.AsInteger() == 1;
-                            bool condition2 = GetParameterFromInstOrSym(inst, FamilyParameterNames.Railings[inst.Symbol.FamilyName][27])?.AsInteger() == 1;
-                            bool condition3 = GetParameterFromInstOrSym(inst, FamilyParameterNames.Railings[inst.Symbol.FamilyName][28])?.AsInteger() == 1;
-                            bool condition4 = GetParameterFromInstOrSym(inst, FamilyParameterNames.Railings[inst.Symbol.FamilyName][29])?.AsInteger() == 1;
-
+                            bool condition1 = inst.GetParameterFromInstOrSym(FamilyParameterNames.Railings[inst.Symbol.FamilyName][26])?.AsInteger() == 1;
+                            bool condition2 = inst.GetParameterFromInstOrSym(FamilyParameterNames.Railings[inst.Symbol.FamilyName][27])?.AsInteger() == 1;
+                            bool condition3 = inst.GetParameterFromInstOrSym(FamilyParameterNames.Railings[inst.Symbol.FamilyName][28])?.AsInteger() == 1;
+                            bool condition4 = inst.GetParameterFromInstOrSym(FamilyParameterNames.Railings[inst.Symbol.FamilyName][29])?.AsInteger() == 1;
+                            
                             for (int i = 0; i <= 15; i++)
                             {
 
@@ -81,7 +82,5 @@ namespace OLP.AutoConnector.Revit
 
             return Result.Succeeded;
         }
-
-        private Parameter GetParameterFromInstOrSym(FamilyInstance inst, string parName) => inst.LookupParameter(parName) ?? inst.Symbol.LookupParameter(parName);
     }
 }

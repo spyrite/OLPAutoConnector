@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:InputDataVM}"
                  
         mc:Ignorable="d"
-        Title="Автосоединение ограждений" Height="420" Width="400"
+        Title="Автосоединение ограждений" Height="500" Width="400"
                  ResizeMode="NoResize"
                  WindowStartupLocation="CenterScreen">
 
@@ -31,7 +31,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="210"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -40,6 +40,10 @@
                   Header="Выберите тип соединения"
                   Margin="0,5,0,0">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -47,29 +51,46 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <RadioButton x:Name="RadioButton1"
-                             Grid.Column="0"
+                             Grid.Column="0" Grid.Row="0"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              Content="1"
-                             IsChecked="{Binding ConnectionType1Selected}"/>
+                             IsChecked="{Binding ConnectionType1Selected}"
+                             IsEnabled="{Binding AllowConnectionType1}"/>
                 <RadioButton x:Name="RadioButton2"
-                             Grid.Column="1"
+                             Grid.Column="1" Grid.Row="0"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              Content="2"
-                             IsChecked="{Binding ConnectionType2Selected}"/>
+                             IsChecked="{Binding ConnectionType2Selected}"
+                             IsEnabled="{Binding AllowConnectionType2}"/>
                 <RadioButton x:Name="RadioButton3"
-                             Grid.Column="2"
+                             Grid.Column="2" Grid.Row="0"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              Content="3"
-                             IsChecked="{Binding ConnectionType3Selected}"/>
+                             IsChecked="{Binding ConnectionType3Selected}"
+                             IsEnabled="{Binding AllowConnectionType3}"/>
                 <RadioButton x:Name="RadioButton4"
-                             Grid.Column="3"
+                             Grid.Column="3" Grid.Row="0"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              Content="4"
-                             IsChecked="{Binding ConnectionType4Selected}"/>
+                             IsChecked="{Binding ConnectionType4Selected}"
+                             IsEnabled="{Binding AllowConnectionType4}"/>
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="4"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{Binding UpperRailingHeightInfo, Mode=OneTime}"
+                               Style="{StaticResource TextBlockStyleDefault}"
+                               Foreground="DarkGray"/>
+                    <TextBlock Text="{Binding LowerRailingHeightInfo, Mode=OneTime}"
+                               Style="{StaticResource TextBlockStyleDefault}"
+                               Foreground="DarkGray"/>
+                </StackPanel>
+                
             </Grid>
         </GroupBox>
 
@@ -89,26 +110,25 @@
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
                            Text="{Binding UpperRailingConnectionXDesctription}"
-                           Style="{StaticResource TextBlockStyleDefault}"/>
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
                 <TextBlock Grid.Row="1" Grid.Column="0"
                            Text="{Binding UpperRailingConnectionDZDesctription}"
-                           Style="{StaticResource TextBlockStyleDefault}"/>
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                 <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="{Binding LowerRailingConnectionXDesctription}"
-                           Style="{StaticResource TextBlockStyleDefault}"/>
+                           Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
 
                 <StackPanel Grid.Row="0" Grid.Column="1"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
                     <TextBlock Text=" X = "
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
                     <TextBox x:Name="TextBox1"
-                             Text="{Binding UpperRailingConnectionX}"
-                             Style="{StaticResource TextBoxStyleDefault}"
+                             Style="{StaticResource TextBoxAllowUpperRailingConnectionX}"
                              PreviewTextInput="TextBox1_PreviewTextInput"/>
                     <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
                 </StackPanel>
 
 
@@ -117,13 +137,12 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
                     <TextBlock Text="Z1 = "
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox2"
-                             Text="{Binding UpperRailingConnectionDZ}"
-                             Style="{StaticResource TextBoxStyleDefault}"
-                             PreviewTextInput="TextBox1_PreviewTextInput"/>
+                             Style="{StaticResource TextBoxAllowUpperRailingConnectionDZ}"
+                             PreviewTextInput="TextBox23_PreviewTextInput"/>
                     <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                 </StackPanel>
 
 
@@ -132,13 +151,12 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
                     <TextBlock Text="Z2 = "
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox3"
-                             Text="{Binding LowerRailingConnectionDZ}"
-                             Style="{StaticResource TextBoxStyleDefault}"
-                             PreviewTextInput="TextBox1_PreviewTextInput"/>
+                             Style="{StaticResource TextBoxAllowLowerRailingConnectionDZ}"
+                             PreviewTextInput="TextBox23_PreviewTextInput"/>
                     <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockStyleDefault}"/>
+                               Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                 </StackPanel>
 
             </Grid>
