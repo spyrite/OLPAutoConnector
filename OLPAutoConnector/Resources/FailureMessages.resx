@@ -159,4 +159,13 @@
   <data name="NegativeEdgeSupportAlign" xml:space="preserve">
     <value>Получено недопустимое отрицательное значение параметра привязки крайней опоры к краю поручня</value>
   </data>
+  <data name="RailingsMustBeOpposite" xml:space="preserve">
+    <value>Горизонтальные направления в плоскости ограждений - совпадают. Данный случай плагином пока не обрабатывается.</value>
+  </data>
+  <data name="NegativeHandrailExtend" xml:space="preserve">
+    <value>Получено недопустимое отрицательное значение параметра удлинения поручня</value>
+  </data>
+  <data name="AttemptToConnectMirroredNonMirrored" xml:space="preserve">
+    <value>Попытка соединить зеркальный и незеркальный экземпляры одного и того же семейства ограждения</value>
+  </data>
 </root>

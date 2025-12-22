@@ -61,6 +61,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Попытка соединить зеркальный и незеркальный экземпляры одного и того же семейства ограждения.
+        /// </summary>
+        internal static string AttemptToConnectMirroredNonMirrored {
+            get {
+                return ResourceManager.GetString("AttemptToConnectMirroredNonMirrored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Не удалось присоединить бетонные заглушки к основе.
         /// </summary>
         internal static string CannotJoinCICapsAndHost {
@@ -142,6 +151,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Получено недопустимое отрицательное значение параметра удлинения поручня.
+        /// </summary>
+        internal static string NegativeHandrailExtend {
+            get {
+                return ResourceManager.GetString("NegativeHandrailExtend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Обнаружены заглушки на стыкуемых участках поручней ограждений. Необходимо отредактировать соответствующие параметры типа.
         /// </summary>
         internal static string RailingCapsTurnedOn {
@@ -156,6 +174,15 @@ namespace OLP.AutoConnector.Resources {
         internal static string RailingFamilyNotSupported {
             get {
                 return ResourceManager.GetString("RailingFamilyNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Горизонтальные направления в плоскости ограждений - совпадают. Данный случай плагином пока не обрабатывается..
+        /// </summary>
+        internal static string RailingsMustBeOpposite {
+            get {
+                return ResourceManager.GetString("RailingsMustBeOpposite", resourceCulture);
             }
         }
         

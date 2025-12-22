@@ -22,5 +22,20 @@ namespace OLP.AutoConnector.Customs
             plane.Project(sourcePoint, out UV uv, out double dst);
             return plane.Origin + uv.U * plane.XVec + uv.V * plane.YVec + dst * Math.Tan(angle) * offsetDir;
         }
+
+        public static bool IsCollinearAndCounterTo(this XYZ vec1, XYZ vec2, XYZ origin1, XYZ origin2)
+        {
+            if (!vec1.Normalize().ABS().IsAlmostEqualTo(vec2.Normalize().ABS())) return false;
+
+            Plane midPlane = Plane.CreateByNormalAndOrigin(vec1, Line.CreateBound(origin1, origin2).Evaluate(0.5, true));
+            midPlane.Project(origin1, out _, out double dst);
+
+            bool condition1 = origin1.ProjectOnPlane(midPlane)
+                .IsAlmostEqualTo(Transform.CreateTranslation(vec1*dst).OfPoint(origin1));
+            bool condition2 = origin2.ProjectOnPlane(midPlane)
+                .IsAlmostEqualTo(Transform.CreateTranslation(vec2*dst).OfPoint(origin2));
+
+            return condition1 & condition2;
+        }
     }
 }

@@ -106,6 +106,21 @@ namespace OLP.AutoConnector.Revit
                 AddFailureId(3, _lowerRailingData.Id);
             }
 
+            //Проверка горизонтальных направлений орграждений (должны быть направлены друг на друга)
+            /*if (_upperRailingData.DirX.IsAlmostEqualTo(_lowerRailingData.DirX))
+            {
+                AddFailureId(6, _upperRailingData.Id);
+                AddFailureId(6, _lowerRailingData.Id);
+            }*/
+
+            //Проверка на зеркальность/незеркальность пары ограждений в пределах одного и того же семейства (оба должны быть либо зеркальными, либо незеркальными)
+            if (((_upperRailingData.Mirrored & !_lowerRailingData.Mirrored) || (!_upperRailingData.Mirrored & _lowerRailingData.Mirrored)) 
+                & _upperRailingData.FamilyName == _lowerRailingData.FamilyName)
+            {
+                AddFailureId(8, _upperRailingData.Id);
+                AddFailureId(8, _lowerRailingData.Id);
+            }
+
             //Контрольная точка
             if (_failureModels.Any()) { new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show(); return Result.Cancelled; }
 
@@ -127,6 +142,9 @@ namespace OLP.AutoConnector.Revit
             _upperRailingData.ConnectDZFromHandrailTop = Properties.InputData.Default.UpperRailingConnectionDZ;
             _lowerRailingData.ConnectDZFromHandrailTop = Properties.InputData.Default.LowerRailingConnectionDZ;
 
+            //Ограждения смотрят друг на друга?
+            RailingData.RailingsAreCounter = _upperRailingData.DirY.IsCollinearAndCounterTo(_lowerRailingData.DirY, _upperRailingData.HandrailOrigin, _lowerRailingData.HandrailOrigin);
+
             //Определение горизонтальных плоскостей
             switch (RailingData.ConnectionType)
             {
@@ -147,6 +165,11 @@ namespace OLP.AutoConnector.Revit
             //Расширение исходных данных, промежуточные вычисления
             ExtendRailingsData();
             RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
+
+            /*XYZ vec1 = Transform.CreateTranslation(_upperRailingData.DirY * RailingData.RailingsDistanceY/2).OfPoint(_upperRailingData.HandrailOrigin);
+            XYZ vec2 = Transform.CreateTranslation(_lowerRailingData.DirY * RailingData.RailingsDistanceY/2).OfPoint(_lowerRailingData.HandrailOrigin);
+
+            XYZ test = vec1 - vec2;*/
 
             //Вычисления значений заполняемых параметров
             if (_upperRailingData.CalculateData(out List<int> failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _upperRailingData.Id));
@@ -235,7 +258,7 @@ namespace OLP.AutoConnector.Revit
                 case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
                     RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, false)
                         - RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
-                        _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
+                        _upperRailingData.DirY, _upperRailingData.DirZ, _upperRailingData.DirX));
 
                     RailingData.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin, out _upperRailingData.ConnectXFromRefPlane);
 
@@ -328,7 +351,7 @@ namespace OLP.AutoConnector.Revit
 
 
             //ТЕСТ
-            using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
+            //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
 
             return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.ConnectionYOZPlane.XVec.ABS()), RailingData.ConnectionYOZPlane.Normal);
         }
@@ -356,6 +379,15 @@ namespace OLP.AutoConnector.Revit
                         break;
                     case 5:
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.NegativeEdgeSupportAlign);
+                        break;
+                    case 6:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.RailingsMustBeOpposite);
+                        break;
+                    case 7:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.NegativeHandrailExtend);
+                        break;
+                    case 8:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.AttemptToConnectMirroredNonMirrored);
                         break;
                 }
 
