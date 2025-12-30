@@ -146,6 +146,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="D:\Repositories\OLPAutoConnector\OLPAutoConnector\.editorconfig" />
     <None Include="Revit\JoinCICapsAndHost.cs" />
   </ItemGroup>
 
@@ -280,6 +281,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>ConnectRailings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Repositories\OLPAutoConnector\OLPAutoConnector\.editorconfig" />
   </ItemGroup>
 
 </Project>
