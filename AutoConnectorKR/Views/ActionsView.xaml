@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OLP.AutoConnector.Views"
+        xmlns:local="clr-namespace:OLP.AutoConnectorKR.Views"
         xmlns:viewmodels="clr-namespace:OLP.AutoConnectorKR.ViewModels" 
         xmlns:resources="clr-namespace:OLP.AutoConnectorKR.Resources"
         

@@ -129,14 +129,6 @@
     <Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Revit\JoinCICapsAndHost.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Revit\JoinCICapsAndHost.cs" />
-  </ItemGroup>
-
   <!-- Fody -->
   <PropertyGroup>
     <WeaverConfiguration>
