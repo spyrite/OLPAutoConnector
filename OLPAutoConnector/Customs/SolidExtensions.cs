@@ -3,7 +3,7 @@ using OLP.AutoConnector.Resources;
 using System.Collections.Generic;
 using System.Linq;
 using static OLP.AutoConnector.Customs.XYZExtensions;
-using static OLP.AutoConnector.Properties.InputData;
+using static OLP.AutoConnector.Properties.ConnectRailings;
 
 namespace OLP.AutoConnector.Customs
 {

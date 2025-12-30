@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OLP.AutoConnector.Properties" GeneratedClassName="AutoConnector">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConnectRailingsHelpURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.sshawpz9zd4z</Value>
+    </Setting>
+    <Setting Name="DisconnectRailingsHelpURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.xzypimv1eci7#heading=h.y18n6vjhoxd5</Value>
+    </Setting>
+    <Setting Name="JoinCICapsAndHostHelpURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.vku41tjbv71v#heading=h.38xcujhq4ut</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="OLP.AutoConnector.Views.InputDataView"
+﻿<mah:MetroWindow x:Class="OLP.AutoConnector.Views.ConnectRailingsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:OLP.AutoConnector.Views"
         xmlns:viewmodels="clr-namespace:OLP.AutoConnector.ViewModels" 
         xmlns:resources="clr-namespace:OLP.AutoConnector.Resources"
-        d:DataContext="{d:DesignInstance Type=viewmodels:InputDataVM}"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ConnectRailingsVM}"
                  
         mc:Ignorable="d"
         Title="Автосоединение ограждений" Height="500" Width="400"
@@ -16,6 +16,14 @@
 
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
+            <Image x:Key="RadioButton1_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_ON.png"/>
+            <Image x:Key="RadioButton2_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_ON.png"/>
+            <Image x:Key="RadioButton3_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_ON.png"/>
+            <Image x:Key="RadioButton4_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_ON.png"/>
+            <Image x:Key="RadioButton1_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_OFF.png"/>
+            <Image x:Key="RadioButton2_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_OFF.png"/>
+            <Image x:Key="RadioButton3_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_OFF.png"/>
+            <Image x:Key="RadioButton4_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_OFF.png"/>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
@@ -27,11 +35,24 @@
                 <ResourceDictionary Source="pack://application:,,,/AutoConnector;component/resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+        
     </mah:MetroWindow.Resources>
+
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Справка" 
+                        VerticalAlignment="Center"
+                        Command="{Binding HelpOpen}"
+                        Margin="10,0,10,0"/>
+            </StackPanel>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="210"/>
+            <RowDefinition Height="230"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -44,42 +65,34 @@
                     <RowDefinition/>
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <RadioButton x:Name="RadioButton1"
+                <StackPanel Grid.Row="0" 
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <RadioButton x:Name="RadioButton1"
                              Grid.Column="0" Grid.Row="0"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
-                             Content="1"
                              IsChecked="{Binding ConnectionType1Selected}"
-                             IsEnabled="{Binding AllowConnectionType1}"/>
-                <RadioButton x:Name="RadioButton2"
-                             Grid.Column="1" Grid.Row="0"
+                             IsEnabled="{Binding AllowConnectionType1}">
+                    </RadioButton>
+                    <RadioButton x:Name="RadioButton2" 
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
-                             Content="2"
                              IsChecked="{Binding ConnectionType2Selected}"
                              IsEnabled="{Binding AllowConnectionType2}"/>
-                <RadioButton x:Name="RadioButton3"
-                             Grid.Column="2" Grid.Row="0"
+                    <RadioButton x:Name="RadioButton3"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
-                             Content="3"
                              IsChecked="{Binding ConnectionType3Selected}"
                              IsEnabled="{Binding AllowConnectionType3}"/>
-                <RadioButton x:Name="RadioButton4"
-                             Grid.Column="3" Grid.Row="0"
+                    <RadioButton x:Name="RadioButton4" 
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
-                             Content="4"
                              IsChecked="{Binding ConnectionType4Selected}"
                              IsEnabled="{Binding AllowConnectionType4}"/>
-
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="4"
+                </StackPanel>
+                <StackPanel Grid.Row="1"
                             Orientation="Vertical"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center">

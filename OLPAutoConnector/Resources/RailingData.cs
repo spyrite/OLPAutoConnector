@@ -207,6 +207,7 @@ namespace OLP.AutoConnector.Resources
             };
         }
 
+        //Определение (инициализация) заполняемых и обнуляемых параметров
         internal void InitilizeParameters(RailingSide side)
         {
             switch (side)

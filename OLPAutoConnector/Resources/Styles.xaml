@@ -5,6 +5,7 @@
                     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     xmlns:resources="clr-namespace:OLP.AutoConnector.Resources">
 
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -47,6 +48,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    
 
     <Style x:Key="DGButtonStyle" TargetType="Button" BasedOn="{StaticResource MetroButton}">
         <Setter Property="Margin" Value="2,2,2,2"/>
@@ -175,50 +178,45 @@
     </Style>
 
     <Style x:Key="RadioButtonStyleDefault" TargetType="{x:Type ToggleButton}">
-        <Setter Property="Background" Value="#45C8C7"></Setter>
-        <Setter Property="Foreground" Value="White"></Setter>
-        <Setter Property="FontFamily" Value="Segoe UI"></Setter>
-        <Setter Property="FontSize" Value="13"></Setter>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Margin" Value="5,5,5,5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid x:Name="grid" VerticalAlignment="Center" HorizontalAlignment="Left"  >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0"></ColumnDefinition>
-                            <ColumnDefinition Width="90"></ColumnDefinition>
-                            <ColumnDefinition Width="0"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                   <ContentPresenter  x:Name="contentPresenter" 
-                                                                      ContentTemplate="{TemplateBinding ContentTemplate}" 
-                                                                      Content="{TemplateBinding Content}" 
-                                                                      ContentStringFormat="{TemplateBinding ContentStringFormat}" 
-                                                                      Focusable="False" 
-                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                      Margin="{TemplateBinding Padding}" 
-                                                                      RecognizesAccessKey="True" 
-                                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
-                                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </TextBlock>
-                        <Grid Grid.Column="2" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Grid>
-                    </Grid>
+                    <Border x:Name="grid_border" BorderThickness="4">
+                        <Grid x:Name="grid" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <ContentPresenter  x:Name="contentPresenter" 
+                                                                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                                                            Content="{TemplateBinding Content}" 
+                                                                            ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                                                            Focusable="False" 
+                                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                            Margin="{TemplateBinding Padding}" 
+                                                                            RecognizesAccessKey="True" 
+                                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="Button.IsDefaulted" Value="True"/>
                         <Trigger Property="IsMouseOver" Value="True"/>
                         <Trigger Property="IsPressed" Value="True"/>
                         <Trigger Property="ToggleButton.IsChecked" Value="True">
-                            <Setter Property="Grid.Background" TargetName="grid" Value="#45C8C7"/>
+                            <Setter Property="BorderBrush" TargetName="grid_border" Value="#FF2F90EA"/>
                         </Trigger>
                         <Trigger Property="ToggleButton.IsChecked" Value="False">
-                            <Setter Property="Grid.Background" TargetName="grid" Value="#DDE1E2"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="BorderBrush" TargetName="grid_border" Value="#DDE1E2"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

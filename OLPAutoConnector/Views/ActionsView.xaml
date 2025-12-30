@@ -13,7 +13,7 @@
                  
         mc:Ignorable="d"
         
-        Title="Автосоединение элементов" Height="400" Width="400"
+        Title="Автосоединение элементов" Height="250" Width="400"
                  MaxHeight="{Binding WindowHeight}"
                  ResizeMode="NoResize"
                  WindowStartupLocation="CenterScreen">
@@ -58,17 +58,23 @@
                     Margin="10,0,0,0"
                     Visibility="{Binding AllowDisplayNextActions}">
             <RadioButton x:Name="radioButton1"
-                         Style="{StaticResource RadioButtonStyleDefault}"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="5,5,5,5"
                          GroupName="NextActions"
                          Content="Выбрать закладные детали вручную на активном виде"
                          Checked="radioButton1_Checked"/>
             <RadioButton x:Name="radioButton2"
-                         Style="{StaticResource RadioButtonStyleDefault}"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="5,5,5,5"
                          GroupName="NextActions"
                          Content="Выбрать все закладные детали видимые на активном виде"
                          Checked="radioButton2_Checked"/>
             <RadioButton x:Name="radioButton3"
-                         Style="{StaticResource RadioButtonStyleDefault}"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Center"
+                         Margin="5,5,5,5"
                          GroupName="NextActions"
                          Content="Выбрать все закладные детали во всем проекте "
                          Checked="radioButton3_Checked"/>

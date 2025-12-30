@@ -13,11 +13,11 @@ namespace OLP.AutoConnector.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
-    internal sealed partial class InputData : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class ConnectRailings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static InputData defaultInstance = ((InputData)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new InputData())));
+        private static ConnectRailings defaultInstance = ((ConnectRailings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ConnectRailings())));
         
-        public static InputData Default {
+        public static ConnectRailings Default {
             get {
                 return defaultInstance;
             }

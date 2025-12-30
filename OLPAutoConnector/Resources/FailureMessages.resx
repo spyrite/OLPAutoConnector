@@ -118,54 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CannotJoinCICapsAndHost" xml:space="preserve">
-    <value>Не удалось присоединить бетонные заглушки к основе</value>
+    <value>Не удалось присоединить бетонные заглушки к основе. Код ошибки 5</value>
   </data>
   <data name="ConcreteCapMaterialParameterNotFound" xml:space="preserve">
-    <value>Не найден параметр материала для бетонных заглушек</value>
+    <value>Не найден параметр материала для бетонных заглушек. Код ошибки 3</value>
   </data>
   <data name="ConcreteCapsNotFound" xml:space="preserve">
-    <value>Не найдены заглушки в закладных деталях, имя семейства не содержит:</value>
+    <value>Не найдены заглушки в закладных деталях. Код ошибки 2</value>
   </data>
   <data name="HostMaterialIsNotConcrete" xml:space="preserve">
-    <value>Материал основы закладной детали не является бетоном, имя материала не содержит:</value>
+    <value>Материал основы закладной детали не является бетоном. Код ошибки 4. Имя материала не содержит:</value>
   </data>
   <data name="HostNotFound" xml:space="preserve">
-    <value>Не найдена основа закладной детали</value>
+    <value>Не найдена основа закладной детали. Код ошибки 1</value>
   </data>
   <data name="RailingFamilyNotSupported" xml:space="preserve">
-    <value>Семейство ограждения не поддерживается, имя семейства: </value>
+    <value>Семейство ограждения не поддерживается. Код ошибки 1</value>
   </data>
   <data name="RailingsNotParallel" xml:space="preserve">
-    <value>Ограждения не параллельны друг другу</value>
+    <value>Ограждения не параллельны друг другу. Код ошибки 2</value>
   </data>
   <data name="UnknowFailure" xml:space="preserve">
     <value>Неизвестная ошибка</value>
   </data>
   <data name="RailingsTooClose" xml:space="preserve">
-    <value>Ограждения расположены слишком близко друг к другу, минимальное расстояние: </value>
+    <value>Ограждения расположены слишком близко друг к другу. Код ошибки 3. Минимальное расстояние: </value>
   </data>
   <data name="RailingCapsTurnedOn" xml:space="preserve">
-    <value>Обнаружены заглушки на стыкуемых участках поручней ограждений. Необходимо отредактировать соответствующие параметры типа</value>
+    <value>Обнаружены заглушки на стыкуемых участках поручней ограждений. Код ошибки 5</value>
   </data>
   <data name="HandrailDiametersAreDifferent" xml:space="preserve">
-    <value>Различные диаметры поручней ограждений</value>
+    <value>Различные диаметры поручней ограждений. Код ошибки 4</value>
   </data>
   <data name="HandrailEndCapIsEnabled" xml:space="preserve">
-    <value>На поручне вместе стыка включена заглушка - следует отредактировать тип ограждения</value>
+    <value>На поручне вместе стыка включена заглушка. Код ошибки 5</value>
   </data>
   <data name="IncoorectInputValue" xml:space="preserve">
     <value>Некорректный ввод значений</value>
   </data>
   <data name="NegativeEdgeSupportAlign" xml:space="preserve">
-    <value>Получено недопустимое отрицательное значение параметра привязки крайней опоры к краю поручня</value>
+    <value>Получено недопустимое отрицательное значение параметра привязки крайней опоры к краю поручня. Код ошибки 6</value>
   </data>
   <data name="RailingsMustBeOpposite" xml:space="preserve">
     <value>Горизонтальные направления в плоскости ограждений - совпадают. Данный случай плагином пока не обрабатывается.</value>
   </data>
   <data name="NegativeHandrailExtend" xml:space="preserve">
-    <value>Получено недопустимое отрицательное значение параметра удлинения поручня</value>
+    <value>Получено недопустимое отрицательное значение параметра удлинения поручня. Код ошибки 7</value>
   </data>
   <data name="AttemptToConnectMirroredNonMirrored" xml:space="preserve">
-    <value>Попытка соединить зеркальный и незеркальный экземпляры одного и того же семейства ограждения</value>
+    <value>Попытка соединить зеркальный и незеркальный экземпляры одного и того же семейства ограждения. Код ошибки 8</value>
   </data>
 </root>

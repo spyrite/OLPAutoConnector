@@ -131,6 +131,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png" />
+    <None Remove="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png" />
+    <None Remove="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png" />
+    <None Remove="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png" />
     <None Remove="Resources\Images\JoinCICapsAndHost_16.ico" />
     <None Remove="Resources\Images\JoinCICapsAndHost_32.ico" />
   </ItemGroup>
@@ -159,6 +163,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_ON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_ON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_ON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_ON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\JoinCICapsAndHost_16.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -173,10 +201,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Actions.settings</DependentUpon>
     </Compile>
-    <Compile Update="Properties\InputData.Designer.cs">
+    <Compile Update="Properties\AutoConnector.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>InputData.settings</DependentUpon>
+      <DependentUpon>AutoConnector.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\ConnectRailings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ConnectRailings.settings</DependentUpon>
     </Compile>
     <Compile Update="Resources\FailureMessages.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -215,9 +248,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Actions.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Properties\InputData.settings">
+    <None Update="Properties\AutoConnector.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>InputData.Designer.cs</LastGenOutput>
+      <LastGenOutput>AutoConnector.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\ConnectRailings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ConnectRailings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
