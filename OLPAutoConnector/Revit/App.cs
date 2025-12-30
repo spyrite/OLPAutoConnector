@@ -65,6 +65,7 @@ namespace OLP.AutoConnector.Revit
                 new SplitButtonData("SplitButton_AutoConnector2", "Автосоединение"),
             ];
 
+            splitButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.AutoConnectorHelpURL));
             pushButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.JoinCICapsAndHostHelpURL));
             pushButtonsData[1].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.ConnectRailingsHelpURL));
             pushButtonsData[2].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.DisconnectRailingsHelpURL));

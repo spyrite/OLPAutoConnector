@@ -120,7 +120,7 @@
   <PropertyGroup>
     <Company>OLP</Company>
     <Authors>Pavel Smirnov</Authors>
-    <Description>Плагин RVT для автоматического выполнения команды "Присоединить элементы геометрии"</Description>
+    <Description>Плагин RVT для автоматического соединения различных элементов между собой</Description>
     <CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
   </PropertyGroup>
 
@@ -139,9 +139,7 @@
     <None Remove="Resources\Images\ConnectRailings_32.png" />
     <None Remove="Resources\Images\DisconnectRailings_16.png" />
     <None Remove="Resources\Images\DisconnectRailings_32.png" />
-    <None Remove="Resources\Images\JoinCICapsAndHost_16.ico" />
     <None Remove="Resources\Images\JoinCICapsAndHost_16.png" />
-    <None Remove="Resources\Images\JoinCICapsAndHost_32.ico" />
     <None Remove="Resources\Images\JoinCICapsAndHost_32.png" />
   </ItemGroup>
 
@@ -159,6 +157,8 @@
     </WeaverConfiguration>
     <Title>$(AssemblyName)</Title>
     <RootNamespace>OLP.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -206,13 +206,7 @@
     <Resource Include="Resources\Images\DisconnectRailings_32.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\JoinCICapsAndHost_16.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\Images\JoinCICapsAndHost_16.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\JoinCICapsAndHost_32.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\JoinCICapsAndHost_32.png">

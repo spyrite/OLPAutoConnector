@@ -61,5 +61,18 @@ namespace OLP.AutoConnector.Properties {
                 this["JoinCICapsAndHostHelpURL"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/e" +
+            "dit?tab=t.0#heading=h.uck0vjjgkal7")]
+        public string AutoConnectorHelpURL {
+            get {
+                return ((string)(this["AutoConnectorHelpURL"]));
+            }
+            set {
+                this["AutoConnectorHelpURL"] = value;
+            }
+        }
     }
 }
