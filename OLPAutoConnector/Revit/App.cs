@@ -10,8 +10,10 @@ namespace OLP.AutoConnector.Revit
 {
     public class App : IExternalApplication
     {
-        private const string TabName1 = "OSK.Olimproekt";
-        private const string TabName2 = "Olimproekt";
+        //private const string TabName1 = "OSK.Olimproekt";
+        //private const string TabName2 = "Olimproekt";
+        private const string TabName1 = "OlimproektTest";
+        private const string TabName2 = "OlimproektTest";
         private const string PanelName1 = "КЖ";
         private const string PanelName2 = "Моделирование";
 
