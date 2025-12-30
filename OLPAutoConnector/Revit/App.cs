@@ -23,11 +23,14 @@ namespace OLP.AutoConnector.Revit
 
         public Result OnStartup(UIControlledApplication application)
         {
-            ribbonPanel1 = application.GetRibbonPanels(TabName1).FirstOrDefault(p => p.Name == PanelName1);
-            ribbonPanel1 ??= application.CreateRibbonPanel(TabName1, PanelName1);
+            try { application.CreateRibbonTab(TabName1); } catch { }
+            try { application.CreateRibbonTab(TabName2); } catch { }
 
-            ribbonPanel2 = application.GetRibbonPanels(TabName2).FirstOrDefault(p => p.Name == PanelName1);
-            ribbonPanel2 ??= application.CreateRibbonPanel(TabName2, PanelName2);
+            ribbonPanel1 = application.GetRibbonPanels(TabName1).FirstOrDefault(p => p.Name == PanelName1)
+                         ?? application.CreateRibbonPanel(TabName1, PanelName1);
+
+            ribbonPanel2 = application.GetRibbonPanels(TabName2).FirstOrDefault(p => p.Name == PanelName2)
+                         ?? application.CreateRibbonPanel(TabName2, PanelName2);
 
             pushButtonsData =
             [
