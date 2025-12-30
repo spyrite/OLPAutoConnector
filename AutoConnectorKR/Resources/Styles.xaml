@@ -1,0 +1,235 @@
+﻿<ResourceDictionary x:Class="OLP.AutoConnectorKR.Resources.Styles"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                    xmlns:resources="clr-namespace:OLP.AutoConnectorKR.Resources">
+
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="InfoTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10,0,10,0"/>
+    </Style>
+
+    <Style x:Key="DGItemStyle" TargetType="ListViewItem">
+        <Setter Property="Focusable" Value="false"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="DGColumnHeaderStyle" TargetType="GridViewColumnHeader" BasedOn="{StaticResource MetroGridViewColumnHeader}">
+        <Setter Property="Background" Value="AliceBlue"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                    <Border BorderThickness="0,0,1,1" BorderBrush="LightGray" Background="AliceBlue">
+                        <TextBlock x:Name="ContentHeader" 
+                                   Text="{TemplateBinding Content}" 
+                                   Width="{TemplateBinding Width}" 
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   FontFamily="Segoe UI"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
+
+    <Style x:Key="DGButtonStyle" TargetType="Button" BasedOn="{StaticResource MetroButton}">
+        <Setter Property="Margin" Value="2,2,2,2"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style x:Key="DGTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Margin" Value="2,5,2,5"/>
+        <Setter Property="Cursor" Value="Arrow"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+    </Style>
+
+    <Style x:Key="ButtonStyleDefault" TargetType="Button" BasedOn="{StaticResource MetroButton}">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Width" Value="70"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Margin" Value="5,10,10,10"/>
+    </Style>
+
+    <Style x:Key="TextBoxStyleDefault" TargetType="TextBox" BasedOn="{StaticResource MetroTextBox}">
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Width" Value="70"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="TextBoxAllowUpperRailingConnectionX" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding UpperRailingConnectionX}"/>
+                <Setter Property="IsEnabled" Value="True"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxAllowUpperRailingConnectionDZ" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding UpperRailingConnectionDZ}"/>
+                <Setter Property="IsEnabled" Value="{Binding AllowInputDZ1}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxAllowLowerRailingConnectionDZ" TargetType="TextBox" BasedOn="{StaticResource TextBoxStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Text" Value="{Binding LowerRailingConnectionDZ}"/>
+                <Setter Property="IsEnabled" Value="{Binding AllowInputDZ2}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Text" Value=""/>
+                <Setter Property="IsEnabled" Value="False"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="TextBlockStyleDefault" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="TextBlockAllowUpperRailingConnectionX" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionX, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBlockAllowUpperRailingConnectionDZ" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBlockAllowLowerRailingConnectionDZ" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="Black"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="LightGray"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="ComboBoxStyleDefault" TargetType="ComboBox" BasedOn="{StaticResource MetroComboBox}">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Margin" Value="10,0,10,0"/>
+    </Style>
+
+    <Style x:Key="RadioButtonStyleDefault" TargetType="{x:Type ToggleButton}">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,5,5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="grid_border" BorderThickness="4">
+                        <Grid x:Name="grid" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <ContentPresenter  x:Name="contentPresenter" 
+                                                                            ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                                                            Content="{TemplateBinding Content}" 
+                                                                            ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                                                            Focusable="False" 
+                                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                            Margin="{TemplateBinding Padding}" 
+                                                                            RecognizesAccessKey="True" 
+                                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="True"/>
+                        <Trigger Property="IsMouseOver" Value="True"/>
+                        <Trigger Property="IsPressed" Value="True"/>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="BorderBrush" TargetName="grid_border" Value="#FF2F90EA"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="False">
+                            <Setter Property="BorderBrush" TargetName="grid_border" Value="#DDE1E2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CheckBoxStyleDefault" TargetType="CheckBox" BasedOn="{StaticResource MetroCheckBox}">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="10,10,0,10"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+    </Style>
+
+
+</ResourceDictionary>

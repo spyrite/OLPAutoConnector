@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="OLP.AutoConnector.Views.ActionsView"
+﻿<mah:MetroWindow x:Class="OLP.AutoConnectorKR.Views.ActionsView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -6,8 +6,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OLP.AutoConnector.Views"
-        xmlns:viewmodels="clr-namespace:OLP.AutoConnector.ViewModels" 
-        xmlns:resources="clr-namespace:OLP.AutoConnector.Resources"
+        xmlns:viewmodels="clr-namespace:OLP.AutoConnectorKR.ViewModels" 
+        xmlns:resources="clr-namespace:OLP.AutoConnectorKR.Resources"
         
         d:DataContext="{d:DesignInstance Type=viewmodels:ActionsVM}"
                  

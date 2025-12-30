@@ -10,51 +10,39 @@ namespace OLP.AutoConnector.Revit
 {
     public class App : IExternalApplication
     {
-        private const string TabName1 = "OSK.Olimproekt";
-        private const string TabName2 = "Olimproekt";
-        private const string PanelName1 = "КЖ";
-        private const string PanelName2 = "Моделирование";
+
+        private const string TabName = "Olimproekt";
+        private const string PanelName = "РњРѕРґРµР»РёСЂРѕРІР°РЅРёРµ";
 
         private static readonly string thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
-        private static RibbonPanel ribbonPanel1;
-        private static RibbonPanel ribbonPanel2;
+
+        private static RibbonPanel ribbonPanel;
         private static List<PushButtonData> pushButtonsData;
         private static List<SplitButtonData> splitButtonsData;
 
         public Result OnStartup(UIControlledApplication application)
         {
-            try { application.CreateRibbonTab(TabName1); } catch { }
-            try { application.CreateRibbonTab(TabName2); } catch { }
 
-            ribbonPanel1 = application.GetRibbonPanels(TabName1).FirstOrDefault(p => p.Name == PanelName1)
-                         ?? application.CreateRibbonPanel(TabName1, PanelName1);
+            try { application.CreateRibbonTab(TabName); } catch { }
 
-            ribbonPanel2 = application.GetRibbonPanels(TabName2).FirstOrDefault(p => p.Name == PanelName2)
-                         ?? application.CreateRibbonPanel(TabName2, PanelName2);
+            ribbonPanel = application.GetRibbonPanels(TabName).FirstOrDefault(p => p.Name == PanelName)
+                         ?? application.CreateRibbonPanel(TabName, PanelName);
 
             pushButtonsData =
             [
-                new PushButtonData("Button_JoinCICapsAndHost", "Соединить\nзаглушки ЗД", thisAssemblyPath, typeof(JoinCICapsAndHost).FullName)
-                {
-                    ToolTip = "Соединяет вложенные в закладные детали \"бетонные заглушки\" с основой, согласует материалы заглушек и основы.",
-                    LongDescription = "Бетонные заглушки, выполненные тем же материалом что и основа, в соединенном положении позволяют скрыть выемки, образованные закладными деталями в основе." +
-                    "Таким образом, основа отображается сплошными поверхностями без излишних контруных линий от выемок.",
-                    Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/JoinCICapsAndHost_16.png")),
-                    LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/JoinCICapsAndHost_32.png"))
-                },
 
-                new PushButtonData("Button_ConnectRailings", "Автосоедиение\nограждений", thisAssemblyPath, typeof(ConnectRailings).FullName)
+                new PushButtonData("Button_ConnectRailings", "РђРІС‚РѕСЃРѕРµРґРёРµРЅРёРµ\nРѕРіСЂР°Р¶РґРµРЅРёР№", thisAssemblyPath, typeof(ConnectRailings).FullName)
                 {
-                    ToolTip = "Соединяет поручни выбранной пары ограждений",
-                    LongDescription = "Выполняет соеднение поручней путем настройки параметров концевиков. Работает с ограниченным списком семейств ограждений (см. справку).",
+                    ToolTip = "РЎРѕРµРґРёРЅСЏРµС‚ РїРѕСЂСѓС‡РЅРё РІС‹Р±СЂР°РЅРЅРѕР№ РїР°СЂС‹ РѕРіСЂР°Р¶РґРµРЅРёР№",
+                    LongDescription = "Р’С‹РїРѕР»РЅСЏРµС‚ СЃРѕРµРґРЅРµРЅРёРµ РїРѕСЂСѓС‡РЅРµР№ РїСѓС‚РµРј РЅР°СЃС‚СЂРѕР№РєРё РїР°СЂР°РјРµС‚СЂРѕРІ РєРѕРЅС†РµРІРёРєРѕРІ. Р Р°Р±РѕС‚Р°РµС‚ СЃ РѕРіСЂР°РЅРёС‡РµРЅРЅС‹Рј СЃРїРёСЃРєРѕРј СЃРµРјРµР№СЃС‚РІ РѕРіСЂР°Р¶РґРµРЅРёР№ (СЃРј. СЃРїСЂР°РІРєСѓ).",
                     Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailings_16.png")),
                     LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailings_32.png"))
                 },
 
-                new PushButtonData("Button_DisconnectRailings", "Авто-отсоедиение\nограждений", thisAssemblyPath, typeof(DisconnectRailings).FullName)
+                new PushButtonData("Button_DisconnectRailings", "РђРІС‚Рѕ-РѕС‚СЃРѕРµРґРёРµРЅРёРµ\nРѕРіСЂР°Р¶РґРµРЅРёР№", thisAssemblyPath, typeof(DisconnectRailings).FullName)
                 {
-                    ToolTip = "Отсоединяет поручни выбранных ограждений",
-                    LongDescription = "Работает по предварительно выбранным ограждений ограниченного списка семейств (см. справку).",
+                    ToolTip = "РћС‚СЃРѕРµРґРёРЅСЏРµС‚ РїРѕСЂСѓС‡РЅРё РІС‹Р±СЂР°РЅРЅС‹С… РѕРіСЂР°Р¶РґРµРЅРёР№",
+                    LongDescription = "Р Р°Р±РѕС‚Р°РµС‚ РїРѕ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕ РІС‹Р±СЂР°РЅРЅС‹Рј РѕРіСЂР°Р¶РґРµРЅРёР№ РѕРіСЂР°РЅРёС‡РµРЅРЅРѕРіРѕ СЃРїРёСЃРєР° СЃРµРјРµР№СЃС‚РІ (СЃРј. СЃРїСЂР°РІРєСѓ).",
                     Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/DisconnectRailings_16.png")),
                     LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/DisconnectRailings_32.png"))
                 },
@@ -62,19 +50,17 @@ namespace OLP.AutoConnector.Revit
 
             splitButtonsData =
             [
-                new SplitButtonData("SplitButton_AutoConnector2", "Автосоединение"),
+                new SplitButtonData("SplitButton_AutoConnector", "РђРІС‚РѕСЃРѕРµРґРёРЅРµРЅРёРµ"),
             ];
 
             splitButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.AutoConnectorHelpURL));
-            pushButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.JoinCICapsAndHostHelpURL));
-            pushButtonsData[1].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.ConnectRailingsHelpURL));
-            pushButtonsData[2].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.DisconnectRailingsHelpURL));
+            pushButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.ConnectRailingsHelpURL));
+            pushButtonsData[1].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.DisconnectRailingsHelpURL));
 
-            ribbonPanel1.AddItem(pushButtonsData[0]);
 
-            SplitButton splitButton2 = ribbonPanel2.AddItem(splitButtonsData[0]) as SplitButton;
-            splitButton2.AddPushButton(pushButtonsData[1]);
-            splitButton2.AddPushButton(pushButtonsData[2]);
+            SplitButton splitButton = ribbonPanel.AddItem(splitButtonsData[0]) as SplitButton;
+            splitButton.AddPushButton(pushButtonsData[1]);
+            splitButton.AddPushButton(pushButtonsData[2]);
 
             return Result.Succeeded;
         }

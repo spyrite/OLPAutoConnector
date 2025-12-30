@@ -1,20 +1,8 @@
-﻿using MahApps.Metro.Controls;
-using OLP.AutoConnector.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MahApps.Metro.Controls;
+using OLP.AutoConnectorKR.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace OLP.AutoConnector.Views
+namespace OLP.AutoConnectorKR.Views
 {
     /// <summary>
     /// Логика взаимодействия для ActionsView.xaml

@@ -1,0 +1,10 @@
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>AutoConnectorKR</Name>
+    <Assembly>AutoConnectorKR/AutoConnectorKR.dll</Assembly>
+    <FullClassName>OLP.AutoConnectorKR.Revit.App</FullClassName>
+    <ClientId>96699896-FD6D-4ACA-8F01-DDF235E7882E</ClientId>
+    <VendorId>OLP.SPY</VendorId>
+    <VendorDescription>Pavel Smirnov, smirnov.p.y@gmail.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>

@@ -1,17 +1,17 @@
 using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
+
 using Autodesk.Revit.UI;
-using OLP.AutoConnector.Models;
-using OLP.AutoConnector.Resources;
-using OLP.AutoConnector.ViewModels;
-using OLP.AutoConnector.Views;
-using OLP.AutoConnector.Customs;
+using OLP.AutoConnectorKR.Models;
+using OLP.AutoConnectorKR.Resources;
+using OLP.AutoConnectorKR.ViewModels;
+using OLP.AutoConnectorKR.Views;
+using OLP.AutoConnectorKR.Customs;
 using System.Collections.Generic;
 using System.Linq;
 
-using static OLP.AutoConnector.Resources.StructuralFilters;
+using static OLP.AutoConnectorKR.Resources.StructuralFilters;
 
-namespace OLP.AutoConnector.Revit
+namespace OLP.AutoConnectorKR.Revit
 {
     [Transaction(TransactionMode.Manual)]
     public class JoinCICapsAndHost : IExternalCommand
@@ -31,7 +31,7 @@ namespace OLP.AutoConnector.Revit
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elementSet)
         {
-            //Инициализация
+            //РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ
             UIApp = commandData.Application;
             UIDoc = commandData.Application.ActiveUIDocument;
             App = commandData.Application.Application;
@@ -43,7 +43,7 @@ namespace OLP.AutoConnector.Revit
             if (_selectedElemIds.Any())
                 _ciCollector = new FilteredElementCollector(Doc, _selectedElemIds).OfClass(typeof(FamilyInstance));
 
-            //Диалоговое окно с выбором дальнейшего действия
+            //Р”РёР°Р»РѕРіРѕРІРѕРµ РѕРєРЅРѕ СЃ РІС‹Р±РѕСЂРѕРј РґР°Р»СЊРЅРµР№С€РµРіРѕ РґРµР№СЃС‚РІРёСЏ
             else
             {
                 _actionsView = new(new ActionsVM(ActionsVM.TargetElementKind.CIs, 0));
@@ -63,15 +63,16 @@ namespace OLP.AutoConnector.Revit
                         try
                         {
                             _selectedElemIds = [.. UIDoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, new CIsSelectionFilter(),
-                            "Выберите закладные детали").Select(r => r.ElementId)];
+                            "Р’С‹Р±РµСЂРёС‚Рµ Р·Р°РєР»Р°РґРЅС‹Рµ РґРµС‚Р°Р»Рё").Select(r => r.ElementId)];
                             _ciCollector = new FilteredElementCollector(Doc, _selectedElemIds).OfClass(typeof(FamilyInstance));
                         }
                         catch { }
                         break;
                 }
-;           }
+;
+            }
 
-            //Поиск закладных деталей в коллекторе
+            //РџРѕРёСЃРє Р·Р°РєР»Р°РґРЅС‹С… РґРµС‚Р°Р»РµР№ РІ РєРѕР»Р»РµРєС‚РѕСЂРµ
             _targetCIs = _ciCollector != null ? [.. _ciCollector.Cast<FamilyInstance>()
                 .Select(inst => inst.GetHigherSuperComponent())
                 .Where(inst => inst.Symbol.FamilyName.Contains(ConcreteInsertFamilyNameKey))] : [];
@@ -89,63 +90,63 @@ namespace OLP.AutoConnector.Revit
                 _selectedNextAction = _actionsView.ShowNextActionsDialog();
                 if (_selectedNextAction == ActionsVM.NextAction.Cancel) return Result.Cancelled;
             }
-                
 
-            using (Transaction tx = new(Doc, "OLP: Соединение бетонных заглушек с основой"))
+
+            using (Transaction tx = new(Doc, "OLP: РЎРѕРµРґРёРЅРµРЅРёРµ Р±РµС‚РѕРЅРЅС‹С… Р·Р°РіР»СѓС€РµРє СЃ РѕСЃРЅРѕРІРѕР№"))
+            {
+                FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
+                failureHandlingOptions.SetForcedModalHandling(false);
+                failureHandlingOptions.SetDelayedMiniWarnings(false);
+                failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
+                tx.SetFailureHandlingOptions(failureHandlingOptions);
+
+                tx.Start();
+
+                foreach (FamilyInstance ci in _targetCIs)
                 {
-                    FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
-                    failureHandlingOptions.SetForcedModalHandling(false);
-                    failureHandlingOptions.SetDelayedMiniWarnings(false);
-                    failureHandlingOptions.SetFailuresPreprocessor(new SupressWarnings());
-                    tx.SetFailureHandlingOptions(failureHandlingOptions);
+                    //РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ С…РѕСЃС‚Р° Сѓ Р·Р°РєР»Р°РґРЅРѕР№ РґРµС‚Р°Р»Рё
+                    if (!HostFilter.PassesFilter(ci.Host)) AddFailureId(0, ci.Id);
 
-                    tx.Start();
+                    //РџРѕРёСЃРє Р±РµС‚РѕРЅРЅС‹С… Р·Р°РіР»СѓС€РµРє РІ Р·Р°РєР»Р°РґРЅС‹С… РґРµС‚Р°Р»СЏС…
+                    List<FamilyInstance> concreteCaps = ci.GetSubComponentIds().Select(id => Doc.GetElement(id) as FamilyInstance)
+                        .ToList().FindAll(inst => inst.Symbol.FamilyName.Contains(ConcreteCapFamilyNameKey));
+                    if (!concreteCaps.Any()) AddFailureId(1, ci.Id);
 
-                    foreach (FamilyInstance ci in _targetCIs)
+                    //РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РїР°СЂР°РјРµС‚СЂР° РјР°С‚РµСЂРёР°Р»Р° РґР»СЏ Р±РµС‚РѕРЅРЅС‹С… Р·Р°РіР»СѓС€РµРє
+                    Parameter concreteCapMaterialParameter = ci.LookupParameter(ConcreteCapMaterialParameterName);
+                    if (concreteCapMaterialParameter == null) AddFailureId(2, ci.Id);
+
+                    //РџСЂРѕРІРµСЂРєР° "Р±РµС‚РѕРЅРЅРѕСЃС‚Рё" РјР°С‚РµСЂРёР°Р»Р° С…РѕСЃС‚Р°
+                    ElementId materialId = ci.Host.GetMaterialIds(false).ToList()
+                        .Find(id => ConcreteMaterailKeys.Any(key => Doc.GetElement(id).Name.Contains(key)));
+                    if (materialId == null) AddFailureId(3, ci.Id);
+
+                    //РћРїРµСЂР°С†РёСЏ "РџСЂРёСЃРѕРµРґРёРЅРёС‚СЊ СЌР»РµРјРµРЅС‚С‹ РіРµРѕРјРµС‚СЂРёРё" СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ. РќРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РµСЃР»Рё СЌР»РµРјРµРЅС‚С‹ СѓР¶Рµ СЃРѕРµРґРёРЅРµРЅС‹.
+                    using (SubTransaction subTx = new(Doc))
                     {
-                        //Проверка наличия хоста у закладной детали
-                        if (!HostFilter.PassesFilter(ci.Host)) AddFailureId(0, ci.Id);
+                        subTx.Start();
 
-                        //Поиск бетонных заглушек в закладных деталях
-                        List<FamilyInstance> concreteCaps = ci.GetSubComponentIds().Select(id => Doc.GetElement(id) as FamilyInstance)
-                            .ToList().FindAll(inst => inst.Symbol.FamilyName.Contains(ConcreteCapFamilyNameKey));
-                        if (!concreteCaps.Any()) AddFailureId(1, ci.Id);
-
-                        //Проверка наличия параметра материала для бетонных заглушек
-                        Parameter concreteCapMaterialParameter = ci.LookupParameter(ConcreteCapMaterialParameterName);
-                        if (concreteCapMaterialParameter == null) AddFailureId(2, ci.Id);
-
-                        //Проверка "бетонности" материала хоста
-                        ElementId materialId = ci.Host.GetMaterialIds(false).ToList()
-                            .Find(id => ConcreteMaterailKeys.Any(key => Doc.GetElement(id).Name.Contains(key)));
-                        if (materialId == null) AddFailureId(3, ci.Id);
-
-                        //Операция "Присоединить элементы геометрии" с проверкой на возможность выполнения. Не выполняется если элементы уже соединены.
-                        using (SubTransaction subTx = new(Doc))
+                        foreach (FamilyInstance concreteCap in concreteCaps)
                         {
-                            subTx.Start();
-
-                            foreach (FamilyInstance concreteCap in concreteCaps)
+                            if (!JoinGeometryUtils.AreElementsJoined(Doc, ci.Host, concreteCap))
                             {
-                                if (!JoinGeometryUtils.AreElementsJoined(Doc, ci.Host, concreteCap))
-                                {
-                                    try { JoinGeometryUtils.JoinGeometry(Doc, ci.Host, concreteCap); }
-                                    catch { AddFailureId(4, ci.Id); subTx.RollBack(); break; }
-                                }
+                                try { JoinGeometryUtils.JoinGeometry(Doc, ci.Host, concreteCap); }
+                                catch { AddFailureId(4, ci.Id); subTx.RollBack(); break; }
                             }
-
-                            if (!subTx.HasEnded()) subTx.Commit();
                         }
 
-                        //Обработка закладной детали пропускается, если хотя бы одна из проверок не была пройдена
-                        if (_failureModels.Any(fm => fm.Value.Ids.Contains(ci.Id))) continue;
-
-                        //Назначение материала основы бетонной заглушке
-                        concreteCapMaterialParameter.Set(materialId);
+                        if (!subTx.HasEnded()) subTx.Commit();
                     }
 
-                    tx.Commit();
+                    //РћР±СЂР°Р±РѕС‚РєР° Р·Р°РєР»Р°РґРЅРѕР№ РґРµС‚Р°Р»Рё РїСЂРѕРїСѓСЃРєР°РµС‚СЃСЏ, РµСЃР»Рё С…РѕС‚СЏ Р±С‹ РѕРґРЅР° РёР· РїСЂРѕРІРµСЂРѕРє РЅРµ Р±С‹Р»Р° РїСЂРѕР№РґРµРЅР°
+                    if (_failureModels.Any(fm => fm.Value.Ids.Contains(ci.Id))) continue;
+
+                    //РќР°Р·РЅР°С‡РµРЅРёРµ РјР°С‚РµСЂРёР°Р»Р° РѕСЃРЅРѕРІС‹ Р±РµС‚РѕРЅРЅРѕР№ Р·Р°РіР»СѓС€РєРµ
+                    concreteCapMaterialParameter.Set(materialId);
                 }
+
+                tx.Commit();
+            }
 
             if (_failureModels.Any())
             {

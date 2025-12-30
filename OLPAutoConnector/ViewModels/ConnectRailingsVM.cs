@@ -1,11 +1,9 @@
-﻿using Autodesk.Revit.DB;
 using OLP.AutoConnector.Resources;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 
 namespace OLP.AutoConnector.ViewModels

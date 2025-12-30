@@ -103,9 +103,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>$(AssemblyName)</PackageId>
+    <PackageId>SolutionTemplates</PackageId>
     <Version>1.0.0</Version>
-    <ProjectGuid>{E2990802-E901-4864-9459-3343203BC72E}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -120,29 +119,22 @@
   <PropertyGroup>
     <Company>OLP</Company>
     <Authors>Pavel Smirnov</Authors>
-    <Description>Плагин RVT для автоматического соединения различных элементов между собой</Description>
+    <Description>Плагин для автоматического соединения элементов дисциплины КР</Description>
     <CopyrightYears>$([System.DateTime]::Now.ToString('yyyy'))</CopyrightYears>
   </PropertyGroup>
 
   <PropertyGroup>
     <AssemblyName></AssemblyName>
-    <Product>$(AssemblyName)</Product>
+    <Product>$(PackageId)</Product>
     <Copyright>Copyright © $(CopyrightYears) $(Company)</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailings_16.png" />
-    <None Remove="Resources\Images\ConnectRailings_32.png" />
-    <None Remove="Resources\Images\DisconnectRailings_16.png" />
-    <None Remove="Resources\Images\DisconnectRailings_32.png" />
+    <Compile Remove="Revit\JoinCICapsAndHost.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="D:\Repositories\OLPAutoConnector\OLPAutoConnector\.editorconfig" />
+    <None Include="Revit\JoinCICapsAndHost.cs" />
   </ItemGroup>
 
   <!-- Fody -->
@@ -152,10 +144,9 @@
         <PropertyChanged />
       </Weavers>
     </WeaverConfiguration>
-    <Title>$(AssemblyName)</Title>
     <RootNamespace>OLP.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -167,100 +158,48 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png">
+    <Resource Include="Resources\Images\JoinCICapsAndHost_16.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailings_16.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailings_32.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\DisconnectRailings_16.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\DisconnectRailings_32.png">
+    <Resource Include="Resources\Images\JoinCICapsAndHost_32.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\AutoConnector.Designer.cs">
+    <Compile Update="Properties\Actions.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>AutoConnector.settings</DependentUpon>
+      <DependentUpon>Actions.settings</DependentUpon>
     </Compile>
-    <Compile Update="Properties\ConnectRailings.Designer.cs">
+    <Compile Update="Properties\AutoConnectorKR.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ConnectRailings.settings</DependentUpon>
+      <DependentUpon>AutoConnectorKR.settings</DependentUpon>
     </Compile>
     <Compile Update="Resources\FailureMessages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
       <DependentUpon>FailureMessages.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\InputDataDescriptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>InputDataDescriptions.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\SupportedFamilyNames.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SupportedFamilyNames.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\FailureMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FailureMessages.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\InputDataDescriptions.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>InputDataDescriptions.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\SupportedFamilyNames.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SupportedFamilyNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\AutoConnector.settings">
+    <None Update="Properties\Actions.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>AutoConnector.Designer.cs</LastGenOutput>
+      <LastGenOutput>Actions.Designer.cs</LastGenOutput>
     </None>
-    <None Update="Properties\ConnectRailings.settings">
+    <None Update="Properties\AutoConnectorKR.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>ConnectRailings.Designer.cs</LastGenOutput>
+      <LastGenOutput>AutoConnectorKR.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Remove="D:\Repositories\OLPAutoConnector\OLPAutoConnector\.editorconfig" />
   </ItemGroup>
 
 </Project>

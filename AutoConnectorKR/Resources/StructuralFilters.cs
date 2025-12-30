@@ -1,7 +1,7 @@
-﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 
-namespace OLP.AutoConnector.Resources
+namespace OLP.AutoConnectorKR.Resources
 {
     internal static class StructuralFilters
     {

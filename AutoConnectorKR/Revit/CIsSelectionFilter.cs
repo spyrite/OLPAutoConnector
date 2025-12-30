@@ -1,9 +1,8 @@
-﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
+using static OLP.AutoConnectorKR.Resources.StructuralFilters;
 
-using static OLP.AutoConnector.Resources.StructuralFilters;
-
-namespace OLP.AutoConnector.Revit
+namespace OLP.AutoConnectorKR.Revit
 {
     internal class CIsSelectionFilter : ISelectionFilter
     {

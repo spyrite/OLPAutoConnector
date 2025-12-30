@@ -19,7 +19,7 @@ namespace OLP.AutoConnector.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class FailureMessages {
@@ -70,33 +70,6 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Не удалось присоединить бетонные заглушки к основе. Код ошибки 5.
-        /// </summary>
-        internal static string CannotJoinCICapsAndHost {
-            get {
-                return ResourceManager.GetString("CannotJoinCICapsAndHost", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не найден параметр материала для бетонных заглушек. Код ошибки 3.
-        /// </summary>
-        internal static string ConcreteCapMaterialParameterNotFound {
-            get {
-                return ResourceManager.GetString("ConcreteCapMaterialParameterNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не найдены заглушки в закладных деталях. Код ошибки 2.
-        /// </summary>
-        internal static string ConcreteCapsNotFound {
-            get {
-                return ResourceManager.GetString("ConcreteCapsNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Различные диаметры поручней ограждений. Код ошибки 4.
         /// </summary>
         internal static string HandrailDiametersAreDifferent {
@@ -111,24 +84,6 @@ namespace OLP.AutoConnector.Resources {
         internal static string HandrailEndCapIsEnabled {
             get {
                 return ResourceManager.GetString("HandrailEndCapIsEnabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Материал основы закладной детали не является бетоном. Код ошибки 4. Имя материала не содержит:.
-        /// </summary>
-        internal static string HostMaterialIsNotConcrete {
-            get {
-                return ResourceManager.GetString("HostMaterialIsNotConcrete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Не найдена основа закладной детали. Код ошибки 1.
-        /// </summary>
-        internal static string HostNotFound {
-            get {
-                return ResourceManager.GetString("HostNotFound", resourceCulture);
             }
         }
         

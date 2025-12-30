@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OLP.AutoConnector.Properties" GeneratedClassName="Actions">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OLP.AutoConnectorKR.Properties" GeneratedClassName="Actions">
   <Profiles />
   <Settings>
     <Setting Name="SelectedNextAction" Type="System.Int32" Scope="User">

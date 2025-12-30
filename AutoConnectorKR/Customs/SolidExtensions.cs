@@ -2,7 +2,7 @@ using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OLP.AutoConnector.Customs
+namespace OLP.AutoConnectorKR.Customs
 {
     internal static class SolidExtensions
     {

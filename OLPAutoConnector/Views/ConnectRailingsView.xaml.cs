@@ -1,4 +1,4 @@
-﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls;
 
 using OLP.AutoConnector.ViewModels;
 using System;
@@ -53,14 +53,6 @@ namespace OLP.AutoConnector.Views
             else
                 new MessageView("Ошибка", "Не выбран тип соединения ограждений. Продолжение команды невозможно.", 150, 300, ButtonsVisibility.Ok).ShowDialog();
 
-            
-            /*if (TextBoxes_InputCheck())
-            {
-                DialogResult = true;
-                Properties.ConnectRailings.Default.Save();
-                Close();
-            }
-            else new MessageView("Проверка", FailureMessages.IncoorectInputValue, 150, 250, ButtonsVisibility.Ok).ShowDialog();*/
         }
 
         private void TextBox1_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)

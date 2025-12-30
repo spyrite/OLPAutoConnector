@@ -1,7 +1,7 @@
 using Autodesk.Revit.DB;
 using System;
 
-namespace OLP.AutoConnector.Customs
+namespace OLP.AutoConnectorKR.Customs
 {
     public static class XYZExtensions
     {

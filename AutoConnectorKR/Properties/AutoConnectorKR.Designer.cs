@@ -8,16 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace OLP.AutoConnector.Properties {
+namespace OLP.AutoConnectorKR.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
-    internal sealed partial class AutoConnector : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class AutoConnectorKR : global::System.Configuration.ApplicationSettingsBase {
         
-        private static AutoConnector defaultInstance = ((AutoConnector)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new AutoConnector())));
+        private static AutoConnectorKR defaultInstance = ((AutoConnectorKR)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new AutoConnectorKR())));
         
-        public static AutoConnector Default {
+        public static AutoConnectorKR Default {
             get {
                 return defaultInstance;
             }
@@ -46,6 +46,19 @@ namespace OLP.AutoConnector.Properties {
             }
             set {
                 this["DisconnectRailingsHelpURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/e" +
+            "dit?tab=t.vku41tjbv71v#heading=h.38xcujhq4ut")]
+        public string JoinCICapsAndHostHelpURL {
+            get {
+                return ((string)(this["JoinCICapsAndHostHelpURL"]));
+            }
+            set {
+                this["JoinCICapsAndHostHelpURL"] = value;
             }
         }
         
