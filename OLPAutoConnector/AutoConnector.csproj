@@ -135,8 +135,14 @@
     <None Remove="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png" />
     <None Remove="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png" />
     <None Remove="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png" />
+    <None Remove="Resources\Images\ConnectRailings_16.png" />
+    <None Remove="Resources\Images\ConnectRailings_32.png" />
+    <None Remove="Resources\Images\DisconnectRailings_16.png" />
+    <None Remove="Resources\Images\DisconnectRailings_32.png" />
     <None Remove="Resources\Images\JoinCICapsAndHost_16.ico" />
+    <None Remove="Resources\Images\JoinCICapsAndHost_16.png" />
     <None Remove="Resources\Images\JoinCICapsAndHost_32.ico" />
+    <None Remove="Resources\Images\JoinCICapsAndHost_32.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -187,10 +193,28 @@
     <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_ON.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\ConnectRailings_16.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\ConnectRailings_32.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\DisconnectRailings_16.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\DisconnectRailings_32.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\JoinCICapsAndHost_16.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\JoinCICapsAndHost_16.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\JoinCICapsAndHost_32.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\JoinCICapsAndHost_32.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
