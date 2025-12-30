@@ -11,5 +11,8 @@
     <Setting Name="JoinCICapsAndHostHelpURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.vku41tjbv71v#heading=h.38xcujhq4ut</Value>
     </Setting>
+    <Setting Name="AutoConnectorHelpURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.0#heading=h.uck0vjjgkal7</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

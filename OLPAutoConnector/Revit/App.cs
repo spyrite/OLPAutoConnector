@@ -10,10 +10,8 @@ namespace OLP.AutoConnector.Revit
 {
     public class App : IExternalApplication
     {
-        //private const string TabName1 = "OSK.Olimproekt";
-        //private const string TabName2 = "Olimproekt";
-        private const string TabName1 = "OlimproektTest";
-        private const string TabName2 = "OlimproektTest";
+        private const string TabName1 = "OSK.Olimproekt";
+        private const string TabName2 = "Olimproekt";
         private const string PanelName1 = "КЖ";
         private const string PanelName2 = "Моделирование";
 
@@ -67,6 +65,7 @@ namespace OLP.AutoConnector.Revit
                 new SplitButtonData("SplitButton_AutoConnector2", "Автосоединение"),
             ];
 
+            splitButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.AutoConnectorHelpURL));
             pushButtonsData[0].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.JoinCICapsAndHostHelpURL));
             pushButtonsData[1].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.ConnectRailingsHelpURL));
             pushButtonsData[2].SetContextualHelp(new ContextualHelp(ContextualHelpType.Url, Properties.AutoConnector.Default.DisconnectRailingsHelpURL));
