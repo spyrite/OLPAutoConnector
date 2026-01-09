@@ -131,10 +131,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png" />
-    <None Remove="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png" />
     <None Remove="Resources\Images\ConnectRailings_16.png" />
     <None Remove="Resources\Images\ConnectRailings_32.png" />
     <None Remove="Resources\Images\DisconnectRailings_16.png" />
@@ -167,28 +163,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_OFF.png">
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton1_ON.png">
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_OFF.png">
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton2_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_OFF.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton3_ON.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_OFF.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4_ON.png">
+    <Resource Include="Resources\Images\ConnectRailingsView_RadioButton4.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\ConnectRailings_16.png">

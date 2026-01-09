@@ -1,5 +1,4 @@
 using MahApps.Metro.Controls;
-
 using OLP.AutoConnector.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,25 +15,11 @@ namespace OLP.AutoConnector.Views
         public ConnectRailingsView(ConnectRailingsVM inputDataVM)
         {
             InitializeComponent();
-            DataContext = inputDataVM;
-
-            if (inputDataVM.AllowConnectionType1 == true)
-                RadioButton1.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_ON.png")) };
-            else
-                RadioButton1.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_OFF.png")) };
-            if (inputDataVM.AllowConnectionType2 == true)
-                RadioButton2.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_ON.png")) };
-            else
-                RadioButton2.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_OFF.png")) };
-            if (inputDataVM.AllowConnectionType3 == true)
-                RadioButton3.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_ON.png")) };
-            else
-                RadioButton3.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_OFF.png")) };
-            if (inputDataVM.AllowConnectionType4 == true)
-                RadioButton4.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_ON.png")) };
-            else
-                RadioButton4.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_OFF.png")) };
-
+            DataContext = inputDataVM;          
+            RadioButton1.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1.png")) };
+            RadioButton2.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2.png")) };
+            RadioButton3.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3.png")) };
+            RadioButton4.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4.png")) };
             if (inputDataVM.AllowConnectionType1 == false) RadioButton1.Visibility = System.Windows.Visibility.Collapsed;
             if (inputDataVM.AllowConnectionType2 == false) RadioButton2.Visibility = System.Windows.Visibility.Collapsed;
             if (inputDataVM.AllowConnectionType3 == false) RadioButton3.Visibility = System.Windows.Visibility.Collapsed;
@@ -66,10 +51,5 @@ namespace OLP.AutoConnector.Views
             if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") || (e.Text == "-") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
                 e.Handled = true;
         }
-
-        private bool TextBoxes_InputCheck() => 
-            double.TryParse(TextBox1.Text, out _) 
-            & double.TryParse(TextBox2.Text, out _)
-            & double.TryParse(TextBox3.Text, out _);
     }
 }
