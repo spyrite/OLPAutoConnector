@@ -31,8 +31,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
-    
-    
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -105,6 +105,6 @@
         </StackPanel>
 
     </Grid>
-    
-    
+
+
 </mah:MetroWindow>
