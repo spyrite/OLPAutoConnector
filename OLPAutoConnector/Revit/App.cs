@@ -59,8 +59,8 @@ namespace OLP.AutoConnector.Revit
 
 
             SplitButton splitButton = ribbonPanel.AddItem(splitButtonsData[0]) as SplitButton;
+            splitButton.AddPushButton(pushButtonsData[0]);
             splitButton.AddPushButton(pushButtonsData[1]);
-            splitButton.AddPushButton(pushButtonsData[2]);
 
             return Result.Succeeded;
         }
