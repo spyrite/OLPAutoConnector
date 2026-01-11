@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OLP.AutoConnectorKR.Views"
         xmlns:viewmodels="clr-namespace:OLP.AutoConnectorKR.ViewModels" 
@@ -119,13 +118,8 @@
                 Style="{StaticResource ButtonStyleDefault}"
                 HorizontalAlignment="Right"
                 IsCancel="True"
-                Margin="0,0,10,0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <i:CallMethodAction MethodName="Close"
-                                            TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window }}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                Margin="0,0,10,0"
+                Click="CloseButton_Click">
         </Button>
 
 

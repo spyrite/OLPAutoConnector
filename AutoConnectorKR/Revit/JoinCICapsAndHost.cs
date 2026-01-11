@@ -1,14 +1,14 @@
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using OLP.AutoConnectorKR.Customs;
 using OLP.AutoConnectorKR.Models;
 using OLP.AutoConnectorKR.Resources;
 using OLP.AutoConnectorKR.ViewModels;
 using OLP.AutoConnectorKR.Views;
-using OLP.AutoConnectorKR.Customs;
+using Revit.Async;
 using System.Collections.Generic;
 using System.Linq;
-
 using static OLP.AutoConnectorKR.Resources.StructuralFilters;
 
 namespace OLP.AutoConnectorKR.Revit
@@ -37,6 +37,9 @@ namespace OLP.AutoConnectorKR.Revit
             UIDoc = commandData.Application.ActiveUIDocument;
             App = commandData.Application.Application;
             Doc = commandData.Application.ActiveUIDocument.Document;
+
+            RevitTask.Initialize(UIApp);
+
             _failureModels = [];
 
             _selectedElemIds = [.. UIDoc.Selection.GetElementIds()];

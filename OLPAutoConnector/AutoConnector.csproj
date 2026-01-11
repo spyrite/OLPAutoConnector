@@ -105,7 +105,6 @@
   <PropertyGroup>
     <PackageId>$(AssemblyName)</PackageId>
     <Version>1.0.0</Version>
-    <ProjectGuid>{E2990802-E901-4864-9459-3343203BC72E}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -150,13 +149,12 @@
     </WeaverConfiguration>
     <Title>$(AssemblyName)</Title>
     <RootNamespace>OLP.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion></FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="1.6.5" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <PackageReference Include="Prism.Core" Version="8.1.97" />
     <PackageReference Include="Revit.Async" Version="2.0.1" />
     <PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*" IncludeAssets="build; compile" PrivateAssets="All" />

@@ -16,10 +16,6 @@ namespace OLP.AutoConnector.Views
         {
             InitializeComponent();
             DataContext = inputDataVM;          
-            RadioButton1.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1.png")) };
-            RadioButton2.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2.png")) };
-            RadioButton3.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3.png")) };
-            RadioButton4.Content = new Image { Source = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4.png")) };
             if (inputDataVM.AllowConnectionType1 == false) RadioButton1.Visibility = System.Windows.Visibility.Collapsed;
             if (inputDataVM.AllowConnectionType2 == false) RadioButton2.Visibility = System.Windows.Visibility.Collapsed;
             if (inputDataVM.AllowConnectionType3 == false) RadioButton3.Visibility = System.Windows.Visibility.Collapsed;

@@ -1,4 +1,4 @@
-﻿using Autodesk.Revit.Attributes;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
@@ -8,6 +8,7 @@ using OLP.AutoConnector.Models;
 using OLP.AutoConnector.Resources;
 using OLP.AutoConnector.ViewModels;
 using OLP.AutoConnector.Views;
+using Revit.Async;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,9 @@ namespace OLP.AutoConnector.Revit
             UIDoc = commandData.Application.ActiveUIDocument;
             App = commandData.Application.Application;
             Doc = commandData.Application.ActiveUIDocument.Document;
+
+            RevitTask.Initialize(UIApp);
+
             _failureModels = [];
             _supportedFamilyNames = [.. FamilyParameterNames.Railings.Keys];
 

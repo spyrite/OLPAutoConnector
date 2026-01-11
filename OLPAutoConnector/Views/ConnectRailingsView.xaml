@@ -16,14 +16,10 @@
 
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
-            <Image x:Key="RadioButton1_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_ON.png"/>
-            <Image x:Key="RadioButton2_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_ON.png"/>
-            <Image x:Key="RadioButton3_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_ON.png"/>
-            <Image x:Key="RadioButton4_ON" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_ON.png"/>
-            <Image x:Key="RadioButton1_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1_OFF.png"/>
-            <Image x:Key="RadioButton2_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2_OFF.png"/>
-            <Image x:Key="RadioButton3_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3_OFF.png"/>
-            <Image x:Key="RadioButton4_OFF" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4_OFF.png"/>
+            <Image x:Key="RadioButton1" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1.png" Margin="2,2,2,2"/>
+            <Image x:Key="RadioButton2" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2.png" Margin="2,2,2,2"/>
+            <Image x:Key="RadioButton3" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3.png" Margin="2,2,2,2"/>
+            <Image x:Key="RadioButton4" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4.png" Margin="2,2,2,2"/>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
@@ -74,23 +70,27 @@
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              IsChecked="{Binding ConnectionType1Selected}"
-                             IsEnabled="{Binding AllowConnectionType1}">
+                             IsEnabled="{Binding AllowConnectionType1}"
+                             Content="{StaticResource RadioButton1}">
                     </RadioButton>
                     <RadioButton x:Name="RadioButton2" 
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              IsChecked="{Binding ConnectionType2Selected}"
-                             IsEnabled="{Binding AllowConnectionType2}"/>
+                             IsEnabled="{Binding AllowConnectionType2}"
+                             Content="{StaticResource RadioButton2}"/>
                     <RadioButton x:Name="RadioButton3"
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              IsChecked="{Binding ConnectionType3Selected}"
-                             IsEnabled="{Binding AllowConnectionType3}"/>
+                             IsEnabled="{Binding AllowConnectionType3}"
+                             Content="{StaticResource RadioButton3}"/>
                     <RadioButton x:Name="RadioButton4" 
                              GroupName="Types"
                              Style="{StaticResource RadioButtonStyleDefault}"
                              IsChecked="{Binding ConnectionType4Selected}"
-                             IsEnabled="{Binding AllowConnectionType4}"/>
+                             IsEnabled="{Binding AllowConnectionType4}"
+                             Content="{StaticResource RadioButton4}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1"
                             Orientation="Vertical"

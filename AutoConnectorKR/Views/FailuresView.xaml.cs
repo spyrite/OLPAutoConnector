@@ -13,5 +13,10 @@ namespace OLP.AutoConnectorKR.Views
             InitializeComponent();
             DataContext = failuresVM;
         }
+
+        private void CloseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

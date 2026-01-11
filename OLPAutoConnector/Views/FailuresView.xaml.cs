@@ -1,4 +1,4 @@
-﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls;
 using OLP.AutoConnector.ViewModels;
 
 namespace OLP.AutoConnector.Views
@@ -12,6 +12,11 @@ namespace OLP.AutoConnector.Views
         {
             InitializeComponent();
             DataContext = failuresVM;
+        }
+
+        private void CloseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }
