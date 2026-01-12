@@ -1,4 +1,4 @@
-﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using OLP.AutoConnector.Customs;
@@ -93,6 +93,7 @@ namespace OLP.AutoConnector.Resources
         internal Parameter EndAngleOPPar;
         internal Parameter EndLengthPar;
         internal Parameter EndCapIsEnabledPar;
+        internal Parameter EndNotInRailingPar;
         internal Parameter EdgeSupportAlignPar;
 
         internal List<Parameter> EndOtherPars;
@@ -270,13 +271,13 @@ namespace OLP.AutoConnector.Resources
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
                     break;
                 case RailingSide.Left when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
-                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]));
+                    EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]);
                     break;
                 case RailingSide.Right when FamilyName == StairsRailing1:
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
                     break;
                 case RailingSide.Right when FamilyName == StairsRailing2 || FamilyName == StairsRailing3:
-                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][34]));
+                    EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][34]);
                     break;
             }
         }
@@ -345,13 +346,13 @@ namespace OLP.AutoConnector.Resources
 
                 case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing3:
                 case (RailingPositionZ.Upper, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing3:
-                    EndAngleOP = -PI / 2 + OPcor * (EndOtherPars[3]?.AsInteger() == 1 & SupportsRight == true ? 1 : -1) + (RailingsAreCounter ? 0 : PI);
+                    EndAngleOP = -PI / 2 + OPcor * (EndNotInRailingPar?.AsInteger() == 1 & SupportsRight == true ? 1 : -1) + (RailingsAreCounter ? 0 : PI);
                     break;
 
 
                 case (RailingPositionZ.Lower, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing3:
                 case (RailingPositionZ.Lower, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing3:
-                    EndAngleOP = -PI / 2 + OPcor * (EndOtherPars[3]?.AsInteger() == 1 & SupportsLeft == true ? 1 : -1) + (RailingsAreCounter ? 0 : PI);
+                    EndAngleOP = -PI / 2 + OPcor * (EndNotInRailingPar?.AsInteger() == 1 & SupportsLeft == true ? 1 : -1) + (RailingsAreCounter ? 0 : PI);
                     break;
 
 
