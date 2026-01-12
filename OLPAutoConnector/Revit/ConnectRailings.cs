@@ -110,7 +110,7 @@ namespace OLP.AutoConnector.Revit
                 AddFailureId(3, _lowerRailingData.Id);
             }
 
-            //Проверка горизонтальных направлений орграждений (должны быть направлены друг на друга)
+            //Проверка горизонтальных направлений орграждений (должны быть направлены друг на друга) - зарезервировано
             /*if (_upperRailingData.DirX.IsAlmostEqualTo(_lowerRailingData.DirX))
             {
                 AddFailureId(6, _upperRailingData.Id);
@@ -169,11 +169,6 @@ namespace OLP.AutoConnector.Revit
             //Расширение исходных данных, промежуточные вычисления
             ExtendRailingsData();
             RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
-
-            /*XYZ vec1 = Transform.CreateTranslation(_upperRailingData.DirY * RailingData.RailingsDistanceY/2).OfPoint(_upperRailingData.HandrailOrigin);
-            XYZ vec2 = Transform.CreateTranslation(_lowerRailingData.DirY * RailingData.RailingsDistanceY/2).OfPoint(_lowerRailingData.HandrailOrigin);
-
-            XYZ test = vec1 - vec2;*/
 
             //Вычисления значений заполняемых параметров
             if (_upperRailingData.CalculateData(out List<int> failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _upperRailingData.Id));

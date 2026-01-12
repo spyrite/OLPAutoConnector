@@ -435,9 +435,6 @@ namespace OLP.AutoConnector.Resources
             XYZ p0 = HandrailOrigin;
             XYZ p1 = HandrailOrigin.ProjectOnPlane(ConnectionXOYPlane, (PI/2 - HandrailAngle) * (Mirrored ? 1 : -1), ConnectionXOYPlane.XVec);
 
-
-
-
             //ТЕСТ
             /*Plane railingPlane = Plane.Create(new Frame(HandrailOrigin, DirX, DirZ, DirY));
             using (Transaction tx = new(_doc, "OLP test")) { tx.Start(); _doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(_doc, railingPlane)); tx.Commit(); }*/
@@ -467,23 +464,7 @@ namespace OLP.AutoConnector.Resources
                     HandrailAngleExtend = ConnectXFromRefPlane - a2Axis * Cos(HandrailAngle);
                     break;
 
-
-
                 case string when FamilyName == StairsRailing2:
-                    /*switch (RailingPositionZ)
-                    {
-                        case RailingPositionZ.Upper:
-                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) - (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle));
-                            break;
-                        case RailingPositionZ.Lower:
-                            HandrailAngleExtend = ConnectXFromRefPlane / Cos(HandrailAngle) + (a2Axis - a2Top - HandrailDiameter / 2 * Tan(HandrailAngle));
-                            break;
-                    }
-                    break;*/
-
-
-
-
                 case string when FamilyName == StairsRailing3:
                     switch (RailingPositionZ)
                     {
