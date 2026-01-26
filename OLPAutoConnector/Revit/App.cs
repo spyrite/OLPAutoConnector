@@ -31,15 +31,15 @@ namespace OLP.AutoConnector.Revit
             pushButtonsData =
             [
 
-                new PushButtonData("Button_ConnectRailings", "Автосоедиение\nограждений", thisAssemblyPath, typeof(ConnectRailings).FullName)
+                new PushButtonData("Button_ConnectRailings", "Автосоединение\nограждений", thisAssemblyPath, typeof(ConnectRailings).FullName)
                 {
                     ToolTip = "Соединяет поручни выбранной пары ограждений",
-                    LongDescription = "Выполняет соеднение поручней путем настройки параметров концевиков. Работает с ограниченным списком семейств ограждений (см. справку).",
+                    LongDescription = "Выполняет соединение поручней путем настройки параметров концевиков. Работает с ограниченным списком семейств ограждений (см. справку).",
                     Image = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailings_16.png")),
                     LargeImage = new BitmapImage(new Uri(@"pack://application:,,,/AutoConnector;component/Resources/Images/ConnectRailings_32.png"))
                 },
 
-                new PushButtonData("Button_DisconnectRailings", "Авто-отсоедиение\nограждений", thisAssemblyPath, typeof(DisconnectRailings).FullName)
+                new PushButtonData("Button_DisconnectRailings", "Авторазъединение\nограждений", thisAssemblyPath, typeof(DisconnectRailings).FullName)
                 {
                     ToolTip = "Отсоединяет поручни выбранных ограждений",
                     LongDescription = "Работает по предварительно выбранным ограждений ограниченного списка семейств (см. справку).",

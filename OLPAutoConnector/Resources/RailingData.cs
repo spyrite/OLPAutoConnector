@@ -13,9 +13,9 @@ using Frame = Autodesk.Revit.DB.Frame;
 
 namespace OLP.AutoConnector.Resources
 {
-    internal enum RailingPositionZ { Upper, Lower }
+    public enum RailingPositionZ { Upper, Lower }
 
-    internal enum RailingSide { Left, Right }
+    public enum RailingSide { Left, Right }
 
     public enum RailingConnectionType
     {
@@ -25,80 +25,82 @@ namespace OLP.AutoConnector.Resources
         HorizontHorizont
     }
 
-    internal class RailingData
+    public class RailingData
     {
         //Статичные данные
-        internal static double MinRailingsDistanceY;
-        internal static double RailingsDistanceY;
-        internal static bool RailingsAreCounter;
-        internal static double ConnectAngle;
-        internal static XYZ ConnectAxisDir;
-        internal static double ConnectXFromEdgeSupport;
-        internal static Plane ConnectionYOZPlane;
-        internal static RailingConnectionType ConnectionType;
+        public static double MinRailingsDistanceY;
+        public static double RailingsDistanceY;
+        public static bool RailingsAreCounter;
+        public static double ConnectAngle;
+        public static XYZ ConnectAxisDir;
+        public static double ConnectXFromEdgeSupport;
+        public static Plane ConnectionYOZPlane;
+        public static RailingConnectionType ConnectionType;
 
         private readonly Document _doc;
         private readonly FamilyInstance _railing;
 
         //Исходные данные
-        internal readonly string FamilyName;
-        internal readonly ElementId Id;
-        internal readonly ElementId EndTypeId;
+        public readonly string FamilyName;
+        public readonly ElementId Id;
+        public readonly ElementId EndTypeId;
 
-        internal readonly double EndAxisRadius;
-        internal readonly double HandrailDiameter;
-        internal readonly double HandrailAngle;
-        internal readonly double StartEndRefDistance;
-        internal readonly double BottomTopRefDistance;
-        internal readonly double Height;
-        internal readonly bool SupportsLeft;
-        internal readonly bool SupportsRight;
+        public readonly double EndAxisRadius;
+        public readonly double HandrailDiameter;
+        public readonly double HandrailAngle;
+        public readonly double StartEndRefDistance;
+        public readonly double BottomTopRefDistance;
+        
+        public readonly bool SupportsLeft;
+        public readonly bool SupportsRight;
 
-        internal readonly XYZ Origin;
-        internal readonly XYZ DirX;
-        internal readonly XYZ DirY;
-        internal readonly XYZ DirZ;
-        internal readonly XYZ HandrailOrigin;
-        internal readonly XYZ HandrailDirX;
-        internal readonly XYZ HandrailDirY;
-        internal readonly XYZ HandrailDirZ;
-        internal XYZ EdgeSupportOrigin;
+        public readonly XYZ Origin;
+        public readonly XYZ DirX;
+        public readonly XYZ DirY;
+        public readonly XYZ DirZ;
+        public readonly XYZ HandrailOrigin;
+        public readonly XYZ HandrailDirX;
+        public readonly XYZ HandrailDirY;
+        public readonly XYZ HandrailDirZ;
+        public XYZ EdgeSupportOrigin;
 
-        internal RailingPositionZ RailingPositionZ;
+        public RailingPositionZ RailingPositionZ;
 
-        internal double ConnectXFromRefPlane;
-        internal double ConnectDZFromHandrailTop;
-        internal Plane ConnectionXOYPlane;
+        public double ConnectXFromRefPlane;
+        public double ConnectDZFromHandrailTop;
+        public Plane ConnectionXOYPlane;
 
-        internal bool Mirrored;
+        public double Height { get; private set; }
+                 
+        public bool Mirrored { get; private set; }
 
         //Вычисляемые данные
-        internal double HandrailAngleExtend;
-        internal double HandrailHorizontExtend;
-        internal double HandrailAngleIP;
-        internal double HandrailAngleOP;
-        internal double EndAngleIP;
-        internal double EndAngleOP;
-        internal double EndLength;
-        internal double EdgeSupportAlign;
+        public double HandrailAngleExtend;
+        public double HandrailHorizontExtend;
+        public double HandrailAngleIP;
+        public double HandrailAngleOP;
+        public double EndAngleIP;
+        public double EndAngleOP;
+        public double EndLength;
+        public double EdgeSupportAlign;
 
         //Редактируемые параметры
-        internal Parameter HandrailAngleExtendPar;
-        internal Parameter HandrailHorizontExtendPar;
-        internal Parameter HandrailAngleIPPar;
-        internal Parameter HandrailAngleOPPar;
-        internal Parameter EndTypePar;
-        internal Parameter EndIsEnabledPar;
-        internal Parameter EndAngleIPPar;
-        internal Parameter EndAngleOPPar;
-        internal Parameter EndLengthPar;
-        internal Parameter EndCapIsEnabledPar;
-        internal Parameter EndNotInRailingPar;
-        internal Parameter EdgeSupportAlignPar;
+        public Parameter HandrailAngleExtendPar;
+        public Parameter HandrailHorizontExtendPar;
+        public Parameter HandrailAngleIPPar;
+        public Parameter HandrailAngleOPPar;
+        public Parameter EndTypePar;
+        public Parameter EndIsEnabledPar;
+        public Parameter EndAngleIPPar;
+        public Parameter EndAngleOPPar;
+        public Parameter EndLengthPar;
+        public Parameter EndCapIsEnabledPar;
+        public Parameter EndNotInRailingPar;
+        public Parameter EdgeSupportAlignPar;
 
-        internal List<Parameter> EndOtherPars;
+        public List<Parameter> EndOtherPars;
 
-        internal RailingData(FamilyInstance railing)
+        public RailingData(FamilyInstance railing)
         {
             _railing = railing;
             _doc = railing.Document;
@@ -113,6 +115,7 @@ namespace OLP.AutoConnector.Resources
             HandrailAngle = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[FamilyName][18]).AsDouble();
             StartEndRefDistance = GetStartEndDistance();
             BottomTopRefDistance = StartEndRefDistance * Tan(HandrailAngle);
+
             Height = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][30]).AsDouble();
 
             SupportsLeft = _railing.GetParameterFromInstOrSym(FamilyParameterNames.Railings[FamilyName][26])?.AsInteger() == 1;

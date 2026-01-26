@@ -39,7 +39,7 @@ namespace OLP.AutoConnector.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/e" +
-            "dit?tab=t.xzypimv1eci7#heading=h.y18n6vjhoxd5")]
+            "dit?tab=t.xzypimv1eci7")]
         public string DisconnectRailingsHelpURL {
             get {
                 return ((string)(this["DisconnectRailingsHelpURL"]));

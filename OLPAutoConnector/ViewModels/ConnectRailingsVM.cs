@@ -123,13 +123,15 @@ namespace OLP.AutoConnector.ViewModels
             OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("AllowLowerRailingConnectionDZ"));
         }
 
-        private readonly string _upperRailingHeightInfo;
-        public string UpperRailingHeightInfo { get => _upperRailingHeightInfo; }
+        private readonly string _upperRailingInfo;
+        public string UpperRailingInfo { get => _upperRailingInfo; }
 
-        private readonly string _lowerRailingHeightInfo;
-        public string LowerRailingHeightInfo { get => _lowerRailingHeightInfo; }
+        private readonly string _lowerRailingInfo;
+        public string LowerRailingInfo { get => _lowerRailingInfo; }
 
-        private List<RailingConnectionType> _allowedConnectionTypes;
+
+
+        private readonly List<RailingConnectionType> _allowedConnectionTypes;
         public bool AllowConnectionType1 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleAngle); }
         public bool AllowConnectionType2 { get => _allowedConnectionTypes.Contains(RailingConnectionType.HorizontAngle); }
         public bool AllowConnectionType3 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleHorizont); }
@@ -143,7 +145,43 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowInputDZ2 { get => _allowInputDZ2; }
 
 
-        public ConnectRailingsVM (double h1, double h2, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
+        private bool? _selectAnymore;
+        public bool? SelectAnymore 
+        { 
+            get => _selectAnymore;
+            set
+            {
+                if (SetProperty(ref _selectAnymore, value))
+                {
+                    OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("AllowSelectAnymoreWithDialog"));
+                    if (value == false) SelectAnymoreWithDialog = false;
+                    
+                    Properties.ConnectRailings.Default.SelectAnymore = value ?? false;
+                }
+            }
+                
+        }
+
+        private bool? _selectAnymoreWithDialog;
+        public bool? SelectAnymoreWithDialog 
+        { 
+            get => _selectAnymoreWithDialog; 
+            set
+            {
+                if (SetProperty(ref _selectAnymoreWithDialog, value))
+                {
+                    Properties.ConnectRailings.Default.SelectAnymoreWithDialog = value ?? false;
+                }
+            }
+                
+
+        }
+
+        
+        public bool AllowSelectAnymoreWithDialog { get => _selectAnymore == true; }
+
+
+        public ConnectRailingsVM (RailingData upperRailingData, RailingData lowerRailingData, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
         {
             _allowedConnectionTypes = allowedConnectionTypes;
             _allowInputDZ1 = allowInputDZ1;
@@ -154,16 +192,17 @@ namespace OLP.AutoConnector.ViewModels
             _connectionType3Selected = Properties.ConnectRailings.Default.RailingsConnectionType == 2 & allowedConnectionTypes.Contains(RailingConnectionType.AngleHorizont);
             _connectionType4Selected = Properties.ConnectRailings.Default.RailingsConnectionType == 3 & allowedConnectionTypes.Contains(RailingConnectionType.HorizontHorizont);
 
-
-
             _upperRailingConnectionX = Math.Round(Properties.ConnectRailings.Default.UpperRailingConnectionX * 304.8);
             if (allowInputDZ1 == false) Properties.ConnectRailings.Default.UpperRailingConnectionDZ = 0;
             if (allowInputDZ2 == false) Properties.ConnectRailings.Default.LowerRailingConnectionDZ = 0;
             _upperRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.UpperRailingConnectionDZ * 304.8);
             _lowerRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.LowerRailingConnectionDZ * 304.8);
 
-            _upperRailingHeightInfo = $"Высота верхнего ограждения H1 = {Math.Round(h1 * 304.8)} мм";
-            _lowerRailingHeightInfo = $"Высота нижнего ограждения H2 = {Math.Round(h2 * 304.8)} мм";
+            _upperRailingInfo = $"Высота верхнего ограждения H1 = {Math.Round(upperRailingData.Height * 304.8)} мм; " + (upperRailingData.Mirrored ? "зеркально" : "не зеркально");
+            _lowerRailingInfo = $"Высота нижнего ограждения H2 = {Math.Round(lowerRailingData.Height * 304.8)} мм; " + (lowerRailingData.Mirrored ? "зеркально" : "не зеркально");
+
+            _selectAnymore = Properties.ConnectRailings.Default.SelectAnymore;
+            _selectAnymoreWithDialog = Properties.ConnectRailings.Default.SelectAnymoreWithDialog;
         }
 
         private DelegateCommand helpOpen;

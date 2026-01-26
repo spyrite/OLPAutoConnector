@@ -169,6 +169,18 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="TextBlockAllowConnectMirroredNonMirorred" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyleDefault}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding AllowConnectMirroredNonMirrored, Mode=OneWay}" Value="True">
+                <Setter Property="Foreground" Value="ForestGreen"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding AllowConnectMirroredNonMirrored, Mode=OneWay}" Value="False">
+                <Setter Property="Foreground" Value="IndianRed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
 
     <Style x:Key="ComboBoxStyleDefault" TargetType="ComboBox" BasedOn="{StaticResource MetroComboBox}">
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

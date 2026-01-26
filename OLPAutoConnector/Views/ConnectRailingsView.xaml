@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ConnectRailingsVM}"
                  
         mc:Ignorable="d"
-        Title="Автосоединение ограждений" Height="500" Width="400"
+        Title="Автосоединение ограждений" Height="580" Width="400"
                  ResizeMode="NoResize"
                  WindowStartupLocation="CenterScreen">
 
@@ -49,8 +49,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="230"/>
+            <RowDefinition Height="220"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0"
@@ -58,10 +58,11 @@
                   Margin="0,5,0,0">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="130"/>
                     <RowDefinition/>
-                    <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" 
+
+                <StackPanel Grid.Row="0"
                             Orientation="Horizontal"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center">
@@ -96,14 +97,14 @@
                             Orientation="Vertical"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center">
-                    <TextBlock Text="{Binding UpperRailingHeightInfo, Mode=OneTime}"
+                    <TextBlock Text="{Binding UpperRailingInfo, Mode=OneTime}"
                                Style="{StaticResource TextBlockStyleDefault}"
                                Foreground="DarkGray"/>
-                    <TextBlock Text="{Binding LowerRailingHeightInfo, Mode=OneTime}"
+                    <TextBlock Text="{Binding LowerRailingInfo, Mode=OneTime}"
                                Style="{StaticResource TextBlockStyleDefault}"
                                Foreground="DarkGray"/>
                 </StackPanel>
-                
+
             </Grid>
         </GroupBox>
 
@@ -175,22 +176,51 @@
             </Grid>
         </GroupBox>
 
-        <StackPanel Grid.Row="2" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    VerticalAlignment="Center"
-                    Margin="0,0,10,0">
-            <Button x:Name="OKButton"
-                    Content="OK"
-                    Style="{StaticResource ButtonStyleDefault}"
-                    IsDefault = "true"
-                    Click="OKButton_Click"/>
+        <Grid Grid.Row="2"
+              Margin="10,10,2,10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-            <Button x:Name="CancelButton"
-                    Content="Отмена"
-                    Style="{StaticResource ButtonStyleDefault}"
-                    IsCancel="True"/>
-        </StackPanel>
+            <CheckBox Grid.Row="0"
+                      Grid.Column="0"
+                      Style="{StaticResource CheckBoxStyleDefault}"
+                      Content="Выбрать ещё"
+                      IsChecked="{Binding SelectAnymore}"/>
+
+            <CheckBox Grid.Row="1"
+                      Grid.Column="0"
+                      Style="{StaticResource CheckBoxStyleDefault}"
+                      Content="C вызовом данного окна"
+                      IsChecked="{Binding SelectAnymoreWithDialog}"
+                      IsEnabled="{Binding AllowSelectAnymoreWithDialog}"/>
+
+            <StackPanel Grid.RowSpan="2" 
+                        Grid.Column="1"
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"
+                        Margin="0,0,10,0">
+                <Button x:Name="OKButton"
+                            Content="OK"
+                            Style="{StaticResource ButtonStyleDefault}"
+                            IsDefault = "true"
+                            Click="OKButton_Click"/>
+
+                <Button x:Name="CancelButton"
+                        Content="Отмена"
+                        Style="{StaticResource ButtonStyleDefault}"
+                        IsCancel="True"/>
+            </StackPanel>
+
+        </Grid>
+
+        
 
     </Grid>
 </mah:MetroWindow>

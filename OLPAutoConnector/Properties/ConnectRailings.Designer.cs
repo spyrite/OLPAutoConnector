@@ -70,5 +70,29 @@ namespace OLP.AutoConnector.Properties {
                 this["RailingsConnectionType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SelectAnymore {
+            get {
+                return ((bool)(this["SelectAnymore"]));
+            }
+            set {
+                this["SelectAnymore"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SelectAnymoreWithDialog {
+            get {
+                return ((bool)(this["SelectAnymoreWithDialog"]));
+            }
+            set {
+                this["SelectAnymoreWithDialog"] = value;
+            }
+        }
     }
 }

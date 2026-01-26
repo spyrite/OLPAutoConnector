@@ -6,7 +6,7 @@
       <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.sshawpz9zd4z</Value>
     </Setting>
     <Setting Name="DisconnectRailingsHelpURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.xzypimv1eci7#heading=h.y18n6vjhoxd5</Value>
+      <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.xzypimv1eci7</Value>
     </Setting>
     <Setting Name="AutoConnectorHelpURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://docs.google.com/document/d/1kTyZXmp8l5TWeQYctaFE5X4D_rw-SHAClW8Ahx5g1lY/edit?tab=t.0#heading=h.uck0vjjgkal7</Value>
