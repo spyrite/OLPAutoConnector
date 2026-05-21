@@ -81,7 +81,7 @@
   <!-- Release -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\$(RevitVersion)\plugins\common\AUTOCONNECTOR</OutputPath>
+    <OutputPath>bin\Release\$(RevitVersion)\plugins\common\$(AssemblyName)</OutputPath>
     <DefineConstants>$(DefineConstants);REVIT$(RevitVersion)</DefineConstants>
     <NoWarn>MSB3052</NoWarn>
     <DebugType>None</DebugType>
