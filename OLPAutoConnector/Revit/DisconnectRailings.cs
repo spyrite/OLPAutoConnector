@@ -1,4 +1,4 @@
-﻿using Autodesk.Revit.Attributes;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using OLP.AutoConnector.Customs;
@@ -61,7 +61,7 @@ namespace OLP.AutoConnector.Revit
 
                                 switch (inst.Symbol.FamilyName)
                                 {
-                                    case string when inst.Symbol.FamilyName == StairsRailing2:
+                                    case string when inst.Symbol.FamilyName == StairsRailing2_1:
                                         if ((condition1 || condition2) & new List<int> { 0, 2, 3, 4, 5 }.Contains(i)) continue;
                                         if ((condition3 || condition4) & new List<int> { 1, 9, 10, 11, 12 }.Contains(i)) continue;
                                         break;

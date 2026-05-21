@@ -19,7 +19,7 @@ namespace OLP.AutoConnector.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class FailureMessages {
@@ -124,11 +124,11 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Семейство ограждения не поддерживается. Код ошибки 1.
+        ///   Ищет локализованную строку, похожую на Версия семейства ограждения не поддерживается. Код ошибки 1.
         /// </summary>
-        internal static string RailingFamilyNotSupported {
+        internal static string RailingFamilyVersionNotSupported {
             get {
-                return ResourceManager.GetString("RailingFamilyNotSupported", resourceCulture);
+                return ResourceManager.GetString("RailingFamilyVersionNotSupported", resourceCulture);
             }
         }
         

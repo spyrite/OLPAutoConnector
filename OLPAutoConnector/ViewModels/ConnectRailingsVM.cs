@@ -4,12 +4,17 @@ using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace OLP.AutoConnector.ViewModels
 {
     public class ConnectRailingsVM : BindableBase
     {
+        //Сведения
+        public string TitleWithVersion { get => "Автосоединение ограждений v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+
+
         private double _upperRailingConnectionX;
         public string UpperRailingConnectionX 
         { 

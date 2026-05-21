@@ -22,14 +22,14 @@ namespace OLP.AutoConnector.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SupportedFamilyNames {
+    internal class SupportedParameters {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SupportedFamilyNames() {
+        internal SupportedParameters() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace OLP.AutoConnector.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OLP.AutoConnector.Resources.SupportedFamilyNames", typeof(SupportedFamilyNames).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("OLP.AutoConnector.Resources.SupportedParameters", typeof(SupportedParameters).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,11 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 1.2 (Огражд_РабПлоск).
+        ///   Ищет локализованную строку, похожую на 8bd6f2e2-90e4-43c5-9f69-a3a4d4277238.
         /// </summary>
-        internal static string StairsRailing1 {
+        internal static string OLPFamilyVersion {
             get {
-                return ResourceManager.GetString("StairsRailing1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 1.3 (Огражд_РабПлоск).
-        /// </summary>
-        internal static string StairsRailing2_1 {
-            get {
-                return ResourceManager.GetString("StairsRailing2_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 1.4 (Огражд_РабПлоск).
-        /// </summary>
-        internal static string StairsRailing2_2 {
-            get {
-                return ResourceManager.GetString("StairsRailing2_2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 5.2 (Огражд_РабПлоск).
-        /// </summary>
-        internal static string StairsRailing2_3 {
-            get {
-                return ResourceManager.GetString("StairsRailing2_3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 301_Поручень для лестничных маршей_Тип 1.1 (Огражд_РабПлоск).
-        /// </summary>
-        internal static string StairsRailing3 {
-            get {
-                return ResourceManager.GetString("StairsRailing3", resourceCulture);
+                return ResourceManager.GetString("OLPFamilyVersion", resourceCulture);
             }
         }
     }

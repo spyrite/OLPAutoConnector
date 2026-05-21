@@ -10,9 +10,9 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ConnectRailingsVM}"
                  
         mc:Ignorable="d"
-        Title="Автосоединение ограждений" Height="580" Width="400"
-                 ResizeMode="NoResize"
-                 WindowStartupLocation="CenterScreen">
+        Title="{Binding TitleWithVersion}" Height="580" Width="440"
+                 WindowStartupLocation="CenterScreen"
+                 ResizeMode="NoResize">
 
     <mah:MetroWindow.Resources>
         <ResourceDictionary>

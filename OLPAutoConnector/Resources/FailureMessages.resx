@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RailingFamilyNotSupported" xml:space="preserve">
-    <value>Семейство ограждения не поддерживается. Код ошибки 1</value>
+  <data name="RailingFamilyVersionNotSupported" xml:space="preserve">
+    <value>Версия семейства ограждения не поддерживается. Код ошибки 1</value>
   </data>
   <data name="RailingsNotParallel" xml:space="preserve">
     <value>Ограждения не параллельны друг другу. Код ошибки 2</value>

@@ -1,4 +1,6 @@
 using Autodesk.Revit.DB;
+using OLP.AutoConnector.Resources;
+using System;
 
 namespace OLP.AutoConnector.Customs
 {
@@ -19,5 +21,9 @@ namespace OLP.AutoConnector.Customs
 
         public static Parameter GetParameterFromInstOrSym(this FamilyInstance sourceInst, string parName) 
             => sourceInst.LookupParameter(parName) ?? sourceInst.Symbol.LookupParameter(parName);
+
+
+        public static double GetFamilyVersion(this FamilyInstance inst)
+            => inst.Symbol.get_Parameter(Guid.Parse(SupportedParameters.OLPFamilyVersion))?.AsDouble() ?? -1;
     }
 }

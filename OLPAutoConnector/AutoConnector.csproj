@@ -104,7 +104,7 @@
 
   <PropertyGroup>
     <PackageId>$(AssemblyName)</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -213,6 +213,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SupportedFamilyNames.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\SupportedParameters.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SupportedParameters.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -227,6 +232,10 @@
     <EmbeddedResource Update="Resources\SupportedFamilyNames.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SupportedFamilyNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SupportedParameters.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SupportedParameters.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
