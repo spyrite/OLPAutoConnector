@@ -81,10 +81,11 @@
   <!-- Release -->
   <PropertyGroup Condition="!$(Configuration.Contains('Debug'))">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\$(RevitVersion)</OutputPath>
+    <OutputPath>bin\Release\$(RevitVersion)\plugins\common\AUTOCONNECTOR</OutputPath>
     <DefineConstants>$(DefineConstants);REVIT$(RevitVersion)</DefineConstants>
     <NoWarn>MSB3052</NoWarn>
     <DebugType>None</DebugType>
+	<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <!-- Debug -->
@@ -254,4 +255,9 @@
     <EditorConfigFiles Remove="D:\Repositories\OLPAutoConnector\OLPAutoConnector\.editorconfig" />
   </ItemGroup>
 
+	<Target Name="RemoveConfigFile" AfterTargets="AfterBuild" Condition="!$(Configuration.Contains('Debug'))">
+		<Delete Files="$(TargetPath).config" ContinueOnError="true" />
+		<Delete Files="$(OutputPath)$(TargetFileName).config" ContinueOnError="true" />
+	</Target>
+	
 </Project>
