@@ -71,6 +71,7 @@ namespace OLP.AutoConnector.Revit
                 }
                 catch { return Result.Succeeded; }
 
+                
                 //Проверка на поддерживаемость версии семейств
                 if (_primaryRailing.GetFamilyVersion() < SupportedFamilyVersions.Railings[_primaryRailing.Symbol.FamilyName]) AddFailureId(0, _primaryRailing.Id);
                 if (_secondaryRailing.GetFamilyVersion() < SupportedFamilyVersions.Railings[_secondaryRailing.Symbol.FamilyName]) AddFailureId(0, _primaryRailing.Id);
@@ -93,6 +94,7 @@ namespace OLP.AutoConnector.Revit
                         break;
                 }
 
+                #region Проверки
                 //Проверки геометрии выбранных ограждений
                 //Параллельность ограждений
                 if (!XYZExtensions.ABS(_upperRailingData.DirX).IsAlmostEqualTo(XYZExtensions.ABS(_lowerRailingData.DirX)))
@@ -104,6 +106,9 @@ namespace OLP.AutoConnector.Revit
                 //Минимальное межосевое расстояние между ограждениями
                 RailingData.MinRailingsDistanceY = _upperRailingData.EndAxisRadius + _lowerRailingData.EndAxisRadius;
                 //Фактическое межосевое расстояние между ограждениями
+
+
+
                 Plane.CreateByOriginAndBasis(_upperRailingData.HandrailOrigin, _upperRailingData.DirX, _upperRailingData.DirZ)
                 .Project(_lowerRailingData.HandrailOrigin, out _, out RailingData.RailingsDistanceY);
 
@@ -179,6 +184,7 @@ namespace OLP.AutoConnector.Revit
                         _lowerRailingData.SetConnectionXOYPlane();
                         break;
                 }
+                #endregion
 
                 //Расширение исходных данных, промежуточные вычисления
                 ExtendRailingsData();
