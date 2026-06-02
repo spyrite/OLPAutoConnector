@@ -12,7 +12,7 @@ namespace OLP.AutoConnector.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.6.0.0")]
     internal sealed partial class ConnectRailings : global::System.Configuration.ApplicationSettingsBase {
         
         private static ConnectRailings defaultInstance = ((ConnectRailings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ConnectRailings())));
@@ -26,36 +26,36 @@ namespace OLP.AutoConnector.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionX {
+        public double UpperRailingConnectionX_0 {
             get {
-                return ((double)(this["UpperRailingConnectionX"]));
+                return ((double)(this["UpperRailingConnectionX_0"]));
             }
             set {
-                this["UpperRailingConnectionX"] = value;
+                this["UpperRailingConnectionX_0"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionDZ {
+        public double UpperRailingConnectionDZ_0 {
             get {
-                return ((double)(this["UpperRailingConnectionDZ"]));
+                return ((double)(this["UpperRailingConnectionDZ_0"]));
             }
             set {
-                this["UpperRailingConnectionDZ"] = value;
+                this["UpperRailingConnectionDZ_0"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double LowerRailingConnectionDZ {
+        public double LowerRailingConnectionDZ_0 {
             get {
-                return ((double)(this["LowerRailingConnectionDZ"]));
+                return ((double)(this["LowerRailingConnectionDZ_0"]));
             }
             set {
-                this["LowerRailingConnectionDZ"] = value;
+                this["LowerRailingConnectionDZ_0"] = value;
             }
         }
         
@@ -92,6 +92,66 @@ namespace OLP.AutoConnector.Properties {
             }
             set {
                 this["SelectAnymoreWithDialog"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperRailingConnectionX_1 {
+            get {
+                return ((double)(this["UpperRailingConnectionX_1"]));
+            }
+            set {
+                this["UpperRailingConnectionX_1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperRailingConnectionDZ_1 {
+            get {
+                return ((double)(this["UpperRailingConnectionDZ_1"]));
+            }
+            set {
+                this["UpperRailingConnectionDZ_1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LowerRailingConnectionDZ_1 {
+            get {
+                return ((double)(this["LowerRailingConnectionDZ_1"]));
+            }
+            set {
+                this["LowerRailingConnectionDZ_1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LowerRailingHandrailDataInt_0 {
+            get {
+                return ((int)(this["LowerRailingHandrailDataInt_0"]));
+            }
+            set {
+                this["LowerRailingHandrailDataInt_0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LowerRailingHandrailDataInt_1 {
+            get {
+                return ((int)(this["LowerRailingHandrailDataInt_1"]));
+            }
+            set {
+                this["LowerRailingHandrailDataInt_1"] = value;
             }
         }
     }

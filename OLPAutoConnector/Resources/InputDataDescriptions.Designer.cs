@@ -19,7 +19,7 @@ namespace OLP.AutoConnector.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class InputDataDescriptions {
@@ -70,6 +70,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на связывается с поручнем нижнего ограждения высотой.
+        /// </summary>
+        internal static string LowerRailingH {
+            get {
+                return ResourceManager.GetString("LowerRailingH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тип соединения ограждений.
         /// </summary>
         internal static string RailingsConnectionType {
@@ -93,6 +102,15 @@ namespace OLP.AutoConnector.Resources {
         internal static string UpperRailingConnectionX {
             get {
                 return ResourceManager.GetString("UpperRailingConnectionX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поручень верхнего ограждения высотой.
+        /// </summary>
+        internal static string UpperRailingH {
+            get {
+                return ResourceManager.GetString("UpperRailingH", resourceCulture);
             }
         }
     }

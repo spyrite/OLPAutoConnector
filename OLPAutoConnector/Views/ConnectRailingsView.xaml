@@ -10,9 +10,14 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:ConnectRailingsVM}"
                  
         mc:Ignorable="d"
-        Title="{Binding TitleWithVersion}" Height="580" Width="440"
-                 WindowStartupLocation="CenterScreen"
-                 ResizeMode="NoResize">
+        Title="{Binding TitleWithVersion}" 
+        Width="440"
+        Height="auto"
+        SizeToContent="Height"
+        ShowInTaskbar="True" WindowStartupLocation="CenterScreen"
+        ShowMaxRestoreButton="False"
+        ShowMinButton="False"
+        ResizeMode="NoResize">
 
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
@@ -49,8 +54,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="230"/>
-            <RowDefinition Height="220"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0"
@@ -109,9 +114,11 @@
         </GroupBox>
 
         <GroupBox Grid.Row="1"
-                  Header="Введите расстояния">
+                  Header="Сопоставьте поручни и введите расстояния">
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -119,59 +126,129 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="45"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="{Binding LowerHadrailColumnWidth}"/>
+                    <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="{Binding UpperRailingH}"
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                           Text="{Binding LowerRailingH}"
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0"
                            Text="{Binding UpperRailingConnectionXDesctription}"
                            Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
-                <TextBlock Grid.Row="1" Grid.Column="0"
+                <TextBlock Grid.Row="3" Grid.Column="0"
                            Text="{Binding UpperRailingConnectionDZDesctription}"
                            Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0"
+                <TextBlock Grid.Row="4" Grid.Column="0"
                            Text="{Binding LowerRailingConnectionXDesctription}"
                            Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
 
-                <StackPanel Grid.Row="0" Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <TextBlock Text=" X = "
-                               Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
-                    <TextBox x:Name="TextBox1"
-                             Style="{StaticResource TextBoxAllowUpperRailingConnectionX}"
+                <TextBlock Grid.Row="0" Grid.Column="1"
+                           Text=" H1 ="
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="1"
+                           Text=" H2 ="
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="1"
+                           Text=" X ="
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="1"
+                           Text="Z1 ="
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="1"
+                           Text="Z2 ="
+                           Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="2"
+                               Text="{Binding HandrailMappingFirst.UpperRailingHandrailData.DisplayHeight}"
+                               HorizontalAlignment="Center"
+                               Style="{StaticResource TextBlockStyleDefault}"/>
+                <ComboBox Grid.Row="1" Grid.Column="2"
+                              ItemsSource="{Binding AvailableLowerRailingHandrails }"
+                              Style="{StaticResource ComboBoxStyleDefault}"
+                              DisplayMemberPath="DisplayHeight"
+                              SelectedItem="{Binding HandrailMappingFirst.LowerRailingHandrailData}"/>
+
+                <TextBox Grid.Row="2" Grid.Column="2"
+                             x:Name="TextBox11"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowUpperRailingConnectionX, Mode=OneWay}"
+                             Text="{Binding HandrailMappingFirst.UpperRailingConnectionX}"
                              PreviewTextInput="TextBox1_PreviewTextInput"/>
-                    <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
-                </StackPanel>
 
-
-                <StackPanel Grid.Row="1" Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="Z1 = "
-                               Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
-                    <TextBox x:Name="TextBox2"
-                             Style="{StaticResource TextBoxAllowUpperRailingConnectionDZ}"
+                <TextBox Grid.Row="3" Grid.Column="2"
+                             x:Name="TextBox12"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}"
+                             Text="{Binding HandrailMappingFirst.UpperRailingConnectionDZ}"
                              PreviewTextInput="TextBox23_PreviewTextInput"/>
-                    <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
-                </StackPanel>
 
-
-                <StackPanel Grid.Row="2" Grid.Column="1"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                    <TextBlock Text="Z2 = "
-                               Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
-                    <TextBox x:Name="TextBox3"
-                             Style="{StaticResource TextBoxAllowLowerRailingConnectionDZ}"
+                <TextBox Grid.Row="4" Grid.Column="2"
+                             x:Name="TextBox13"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}"
+                             Text="{Binding HandrailMappingFirst.LowerRailingConnectionDZ}"
                              PreviewTextInput="TextBox23_PreviewTextInput"/>
-                    <TextBlock Text="мм"
-                               Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
-                </StackPanel>
+
+                <TextBlock Grid.Row="0" Grid.Column="3"
+                               Text="{Binding HandrailMappingLast.UpperRailingHandrailData.DisplayHeight}"
+                               HorizontalAlignment="Center"
+                               Style="{StaticResource TextBlockStyleDefault}"/>
+                <ComboBox Grid.Row="1" Grid.Column="3"
+                              ItemsSource="{Binding AvailableLowerRailingHandrails }"
+                              Style="{StaticResource ComboBoxStyleDefault}"
+                              DisplayMemberPath="DisplayHeight"
+                              SelectedItem="{Binding HandrailMappingLast.LowerRailingHandrailData}"/>
+
+                <TextBox Grid.Row="2" Grid.Column="3"
+                             x:Name="TextBox21"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowUpperRailingConnectionX, Mode=OneWay}"
+                             Text="{Binding HandrailMappingLast.UpperRailingConnectionX}"
+                             PreviewTextInput="TextBox1_PreviewTextInput"/>
+
+                <TextBox Grid.Row="3" Grid.Column="3"
+                             x:Name="TextBox22"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowUpperRailingConnectionDZ, Mode=OneWay}"
+                             Text="{Binding HandrailMappingLast.UpperRailingConnectionDZ}"
+                             PreviewTextInput="TextBox23_PreviewTextInput"/>
+
+                <TextBox Grid.Row="4" Grid.Column="3"
+                             x:Name="TextBox23"
+                             Style="{StaticResource TextBoxStyleDefault}"
+                             IsEnabled="{Binding AllowLowerRailingConnectionDZ, Mode=OneWay}"
+                             Text="{Binding HandrailMappingLast.LowerRailingConnectionDZ}"
+                             PreviewTextInput="TextBox23_PreviewTextInput"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="4"
+                           Text="мм"
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="4"
+                           Text="мм"
+                           Style="{StaticResource TextBlockStyleDefault}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="4"
+                           Text="мм"
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="4"
+                           Text="мм"
+                           Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="4"
+                           Text="мм"
+                           Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
 
             </Grid>
         </GroupBox>
