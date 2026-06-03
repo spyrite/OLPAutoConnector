@@ -1,0 +1,21 @@
+using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+
+namespace OLP.AutoConnector.Customs
+{
+    public class VisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true: return Visibility.Visible;
+                case false: return Visibility.Collapsed;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => DependencyProperty.UnsetValue;
+    }
+}

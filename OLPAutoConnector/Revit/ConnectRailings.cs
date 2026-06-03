@@ -53,8 +53,6 @@ namespace OLP.AutoConnector.Revit
             _failuresVM = new FailuresVM(Doc, [.. _failureModels.Values ]);
             _failuresView = new FailuresView(_failuresVM);
 
-             
-
             int i = 1;
             do
             {
@@ -68,7 +66,7 @@ namespace OLP.AutoConnector.Revit
 
                 try
                 {
-                    _secondaryRailing = Doc.GetElement(UIDoc.Selection.PickObject(ObjectType.Element, new RailingSelectionFilter([ _primaryRailing.Id ]),
+                    _secondaryRailing = Doc.GetElement(UIDoc.Selection.PickObject(ObjectType.Element, new RailingSelectionFilter([_primaryRailing.Id]),
                     "Выберите второй экземпляр поддерживаемого плагином семейства ограждения (для отмены нажмите ESC)")) as FamilyInstance;
                 }
                 catch { return Result.Succeeded; }
@@ -81,7 +79,7 @@ namespace OLP.AutoConnector.Revit
                 //Контрольная точка
                 //if (_failureModels.Any()) { new FailuresView(new FailuresVM(Doc, [.. _failureModels.Values])).Show(); return Result.Cancelled; }
                 if (CheckPoint(i) == false) if (i > 1) continue; else return Result.Succeeded;
-            
+
                 //Определение вышестоящего и нижестоящего ограждений
                 switch ((_primaryRailing.Location as LocationPoint).Point.Z > (_secondaryRailing.Location as LocationPoint).Point.Z)
                 {
@@ -107,25 +105,6 @@ namespace OLP.AutoConnector.Revit
 
                 //Минимальное межосевое расстояние между ограждениями
                 RailingData.MinRailingsDistanceY = _upperRailingData.EndAxisRadius + _lowerRailingData.EndAxisRadius;
-                //Фактическое межосевое расстояние между ограждениями
-
-
-
-                Plane.CreateByOriginAndBasis(_upperRailingData.Handrails[0].HandrailOrigin, _upperRailingData.DirX, _upperRailingData.DirZ)
-                .Project(_lowerRailingData.Handrails[0].HandrailOrigin, out _, out RailingData.RailingsDistanceY);
-
-                if (RailingData.RailingsDistanceY < RailingData.MinRailingsDistanceY)
-                {
-                    AddFailureId(2, _upperRailingData.Id);
-                    AddFailureId(2, _lowerRailingData.Id);
-                }
-
-                //Диаметры поручней
-                if (_upperRailingData.Handrails[0].HandrailDiameter != _lowerRailingData.Handrails[0].HandrailDiameter)
-                {
-                    AddFailureId(3, _upperRailingData.Id);
-                    AddFailureId(3, _lowerRailingData.Id);
-                }
 
                 //Проверка горизонтальных направлений орграждений (должны быть направлены друг на друга) - зарезервировано
                 /*if (_upperRailingData.DirX.IsAlmostEqualTo(_lowerRailingData.DirX))
@@ -135,7 +114,7 @@ namespace OLP.AutoConnector.Revit
                 }*/
 
                 //Проверка на зеркальность/незеркальность пары ограждений в пределах одного и того же семейства (оба должны быть либо зеркальными, либо незеркальными)
-                if (((_upperRailingData.Mirrored & !_lowerRailingData.Mirrored) || (!_upperRailingData.Mirrored & _lowerRailingData.Mirrored)) 
+                if (((_upperRailingData.Mirrored & !_lowerRailingData.Mirrored) || (!_upperRailingData.Mirrored & _lowerRailingData.Mirrored))
                     & _upperRailingData.FamilyName == _lowerRailingData.FamilyName)
                 {
                     AddFailureId(8, _upperRailingData.Id);
@@ -154,12 +133,26 @@ namespace OLP.AutoConnector.Revit
 
 
                 //Ввод исходных данных
-                _vm = new ConnectRailingsVM(_upperRailingData, _lowerRailingData, _allowedConnectionTypes,
-                        _upperRailingData.SupportsRight == false,
-                        _lowerRailingData.SupportsLeft == false);
-                
                 if (i == 1 || Properties.ConnectRailings.Default.SelectAnymoreWithDialog == true)
-                    
+                    if (new ConnectRailingsView(new ConnectRailingsVM(ref _upperRailingData, ref _lowerRailingData, _allowedConnectionTypes,
+                        _upperRailingData.SupportsRight == false,
+                        _lowerRailingData.SupportsLeft == false))
+                        .ShowDialog() == false) return Result.Cancelled;
+
+                //Проверка расстояния между поручными
+                UpdateAndCheckRailingsDistance();
+                //Диаметры поручней
+                CheckHandrailDiameter();
+
+                //Контрольная точка
+                if (CheckPoint(i) == false) if (i > 1) continue; else return Result.Succeeded;
+
+                RailingData.HandrailToConnect = (RailingHandrailToConnect)Properties.ConnectRailings.Default.HandrailToConnect;
+                RailingData.ConnectionType = (RailingConnectionType)Properties.ConnectRailings.Default.RailingsConnectionType;
+                RailingData.ConnectXFromEdgeSupport = Properties.ConnectRailings.Default.UpperRailingConnectionX;
+                _upperRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.UpperRailingConnectionDZ;
+                _lowerRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ;
+
 
 
                 if (new ConnectRailingsView(_vm).ShowDialog() == false) return Result.Cancelled;
@@ -322,6 +315,29 @@ namespace OLP.AutoConnector.Revit
         }
 
 
+
+        private void UpdateAndCheckRailingsDistance()
+        {
+            //Фактическое межосевое расстояние между ограждениями
+            Plane.CreateByOriginAndBasis(_upperRailingData.HandrailOrigin, _upperRailingData.DirX, _upperRailingData.DirZ)
+            .Project(_lowerRailingData.HandrailOrigin, out _, out RailingData.RailingsDistanceY);
+
+            if (RailingData.RailingsDistanceY < RailingData.MinRailingsDistanceY)
+            {
+                AddFailureId(2, _upperRailingData.Id);
+                AddFailureId(2, _lowerRailingData.Id);
+            }
+        }
+
+        private void CheckHandrailDiameter()
+        {
+            if (_upperRailingData.HandrailDiameter != _lowerRailingData.HandrailDiameter)
+            {
+                AddFailureId(3, _upperRailingData.Id);
+                AddFailureId(3, _lowerRailingData.Id);
+            }
+        }
+
         //Метод определеляет плоскости стыка,
         //расстояние от плоскости стыка до начальной/конечной опорной плоскости ограждния,
         //производит выбор заполняемых параметров для ограждений
@@ -344,12 +360,12 @@ namespace OLP.AutoConnector.Revit
 
                         break;
 
-                    case string familyName when familyName == SupportedFamilyNames.StairsRailing2_1
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing2_1 
                     || familyName == SupportedFamilyNames.StairsRailing2_2
-                    || familyName == SupportedFamilyNames.StairsRailing2_3:
-                        hm.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
-                            + hm.ConnectXFromEdgeSupport * _upperRailingData.DirX,
-                            _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
+                    || (familyName == SupportedFamilyNames.StairsRailing2_3 & RailingData.HandrailToConnect == RailingHandrailToConnect.Upper):
+                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
+                        + RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
+                        _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
 
                         hm.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
                             , out _upperRailingData.ConnectXFromRefPlane);
@@ -360,10 +376,11 @@ namespace OLP.AutoConnector.Revit
                             : null;
                         break;
 
-                    case string familyName when familyName == SupportedFamilyNames.StairsRailing3:
-                        hm.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
-                            + hm.ConnectXFromEdgeSupport * _upperRailingData.DirX,
-                            _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing3
+                    || (familyName == SupportedFamilyNames.StairsRailing2_3 & RailingData.HandrailToConnect == RailingHandrailToConnect.Lower):
+                    RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Right, false)
+                        + RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
+                        _upperRailingData.DirY, _upperRailingData.DirZ, (_upperRailingData.Mirrored ? 1 : -1) * _upperRailingData.DirX));
 
                         hm.ConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin + _upperRailingData.StartEndRefDistance * _upperRailingData.DirX
                             , out _upperRailingData.ConnectXFromRefPlane);
@@ -384,10 +401,10 @@ namespace OLP.AutoConnector.Revit
 
                         break;
 
-                    case string familyName when familyName == SupportedFamilyNames.StairsRailing2_1
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing2_1
                     || familyName == SupportedFamilyNames.StairsRailing2_2
-                    || familyName == SupportedFamilyNames.StairsRailing2_3:
-                        hm.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
+                    || (familyName == SupportedFamilyNames.StairsRailing2_3 & RailingData.HandrailToConnect == RailingHandrailToConnect.Upper):
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
 
                         _lowerRailingData.InitilizeParameters(RailingSide.Left);
                         _lowerRailingData.EdgeSupportOrigin = _lowerRailingData.SupportsLeft == true
@@ -395,8 +412,9 @@ namespace OLP.AutoConnector.Revit
                             : null;
                         break;
 
-                    case string familyName when familyName == SupportedFamilyNames.StairsRailing3:
-                        hm.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing3
+                    || (familyName == SupportedFamilyNames.StairsRailing2_3 & RailingData.HandrailToConnect == RailingHandrailToConnect.Lower):
+                    RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin, out _lowerRailingData.ConnectXFromRefPlane);
 
                         _lowerRailingData.InitilizeParameters(RailingSide.Left);
                         _lowerRailingData.EdgeSupportOrigin = _lowerRailingData.SupportsLeft == true

@@ -7,25 +7,27 @@
         xmlns:local="clr-namespace:OLP.AutoConnector.Views"
         xmlns:viewmodels="clr-namespace:OLP.AutoConnector.ViewModels" 
         xmlns:resources="clr-namespace:OLP.AutoConnector.Resources"
+        xmlns:customs="clr-namespace:OLP.AutoConnector.Customs"
         d:DataContext="{d:DesignInstance Type=viewmodels:ConnectRailingsVM}"
                  
         mc:Ignorable="d"
         Title="{Binding TitleWithVersion}" 
-        Width="440"
-        Height="auto"
-        SizeToContent="Height"
-        ShowInTaskbar="True" WindowStartupLocation="CenterScreen"
-        ShowMaxRestoreButton="False"
-        ShowMinButton="False"
-        ResizeMode="NoResize">
+                 Height="auto" 
+                 Width="440"
+                 SizeToContent="Height"
+                 WindowStartupLocation="CenterScreen"
+                 ResizeMode="NoResize">
 
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
+            <customs:VisibilityConverter x:Key="myVisibilityConverter"/>
             <Image x:Key="RadioButton1" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton1.png" Margin="2,2,2,2"/>
             <Image x:Key="RadioButton2" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton2.png" Margin="2,2,2,2"/>
             <Image x:Key="RadioButton3" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton3.png" Margin="2,2,2,2"/>
             <Image x:Key="RadioButton4" Source="/AutoConnector;component/Resources/Images/ConnectRailingsView_RadioButton4.png" Margin="2,2,2,2"/>
             <FrameworkElement x:Key="ProxyElement" DataContext="{Binding}"/>
+            
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -35,6 +37,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/AutoConnector;component/resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            
         </ResourceDictionary>
         
     </mah:MetroWindow.Resources>
@@ -54,9 +58,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="230"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="220"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
+        
+        
 
         <GroupBox Grid.Row="0"
                   Header="Выберите тип соединения"
@@ -102,10 +110,10 @@
                             Orientation="Vertical"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center">
-                    <TextBlock Text="{Binding UpperRailingInfo, Mode=OneTime}"
+                    <TextBlock Text="{Binding UpperRailingInfo}"
                                Style="{StaticResource TextBlockStyleDefault}"
                                Foreground="DarkGray"/>
-                    <TextBlock Text="{Binding LowerRailingInfo, Mode=OneTime}"
+                    <TextBlock Text="{Binding LowerRailingInfo}"
                                Style="{StaticResource TextBlockStyleDefault}"
                                Foreground="DarkGray"/>
                 </StackPanel>
@@ -113,8 +121,32 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="1"
-                  Header="Сопоставьте поручни и введите расстояния">
+        <StackPanel Grid.Row="1"
+                    Visibility="{Binding AllowSelectHandrail, Converter={StaticResource myVisibilityConverter}}"
+                    Background="#41B1E1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,5,0,5"
+                    Height="30">
+            <TextBlock Text="ВЫБЕРИТЕ СОЕДИНЯЕМЫЕ ПОРУЧНИ"
+                       Foreground="White"
+                       Margin="5,0,10,0"
+                       VerticalAlignment="Center"/>
+            <RadioButton Content="ВЕРХНИЕ"
+                         Foreground="White"
+                         Margin="5,5,5,5"
+                         FontWeight="DemiBold"
+                         IsChecked="{Binding UpperHandrailSelected}"/>
+            <RadioButton Content="НИЖНИЕ"
+                         Foreground="White"
+                         Margin="5,5,5,5"
+                         FontWeight="DemiBold"
+                         IsChecked="{Binding LowerHandrailSelected}"/>
+
+        </StackPanel>
+
+        <GroupBox Grid.Row="2"
+                  Header="Введите расстояния">
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -253,7 +285,7 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="3"
               Margin="10,10,2,10">
             <Grid.RowDefinitions>
                 <RowDefinition/>

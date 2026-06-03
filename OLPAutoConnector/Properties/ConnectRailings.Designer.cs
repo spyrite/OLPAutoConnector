@@ -98,60 +98,12 @@ namespace OLP.AutoConnector.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionX_1 {
+        public int HandrailToConnect {
             get {
-                return ((double)(this["UpperRailingConnectionX_1"]));
+                return ((int)(this["HandrailToConnect"]));
             }
             set {
-                this["UpperRailingConnectionX_1"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionDZ_1 {
-            get {
-                return ((double)(this["UpperRailingConnectionDZ_1"]));
-            }
-            set {
-                this["UpperRailingConnectionDZ_1"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double LowerRailingConnectionDZ_1 {
-            get {
-                return ((double)(this["LowerRailingConnectionDZ_1"]));
-            }
-            set {
-                this["LowerRailingConnectionDZ_1"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LowerRailingHandrailDataInt_0 {
-            get {
-                return ((int)(this["LowerRailingHandrailDataInt_0"]));
-            }
-            set {
-                this["LowerRailingHandrailDataInt_0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LowerRailingHandrailDataInt_1 {
-            get {
-                return ((int)(this["LowerRailingHandrailDataInt_1"]));
-            }
-            set {
-                this["LowerRailingHandrailDataInt_1"] = value;
+                this["HandrailToConnect"] = value;
             }
         }
     }

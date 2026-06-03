@@ -1,4 +1,4 @@
-using OLP.AutoConnector.Models;
+using Autodesk.Revit.DB;
 using OLP.AutoConnector.Resources;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -14,18 +14,64 @@ namespace OLP.AutoConnector.ViewModels
 {
     public class ConnectRailingsVM : BindableBase
     {
+        private RailingData _upperRailingData;
+        private RailingData _lowerRailingData;
+
         #region Сведения
         public string TitleWithVersion { get => "Автосоединение ограждений v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
-
-        private readonly string _upperRailingInfo;
-        public string UpperRailingInfo { get => _upperRailingInfo; }
-
-        private readonly string _lowerRailingInfo;
-        public string LowerRailingInfo { get => _lowerRailingInfo; }
-
+        public string UpperRailingInfo { get => $"Высота верхнего ограждения H1 = {Math.Round(_upperRailingData.Height * 304.8)} мм; " + (_upperRailingData.Mirrored ? "зеркально" : "не зеркально"); }
+        public string LowerRailingInfo { get => $"Высота нижнего ограждения H2 = {Math.Round(_lowerRailingData.Height * 304.8)} мм; " + (_lowerRailingData.Mirrored ? "зеркально" : "не зеркально"); }
         #endregion
 
-        #region Тип соединения
+        #region Расстояния
+        private double _upperRailingConnectionX;
+        public string UpperRailingConnectionX
+        {
+            get => _upperRailingConnectionX.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _upperRailingConnectionX, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.UpperRailingConnectionX = decimalValue / 304.8;
+                }
+            }
+        }
+
+        private double _upperRailingConnectionDZ;
+        public string UpperRailingConnectionDZ
+        {
+            get => _upperRailingConnectionDZ.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _upperRailingConnectionDZ, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.UpperRailingConnectionDZ = decimalValue / 304.8;
+                }
+            }
+        }
+
+        private double _lowerRailingConnectionDZ;
+        public string LowerRailingConnectionDZ
+        {
+            get => _lowerRailingConnectionDZ.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _lowerRailingConnectionDZ, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.LowerRailingConnectionDZ = decimalValue / 304.8;
+                }
+            }
+        }
+        
+        public string UpperRailingConnectionXDesctription { get => InputDataDescriptions.UpperRailingConnectionX;  }
+        public string UpperRailingConnectionDZDesctription { get => InputDataDescriptions.UpperRailingConnectionDZ; }
+        public string LowerRailingConnectionXDesctription { get => InputDataDescriptions.LowerRailingConnectionDZ; }
+        #endregion
+
+        #region Типы соединения
         private bool _connectionType1Selected;
         public bool ConnectionType1Selected
         {
@@ -81,33 +127,63 @@ namespace OLP.AutoConnector.ViewModels
                 }
             }
         }
-
-        private readonly List<RailingConnectionType> _allowedConnectionTypes;
-        public bool AllowConnectionType1 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleAngle); }
-        public bool AllowConnectionType2 { get => _allowedConnectionTypes.Contains(RailingConnectionType.HorizontAngle); }
-        public bool AllowConnectionType3 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleHorizont); }
-        public bool AllowConnectionType4 { get => _allowedConnectionTypes.Contains(RailingConnectionType.HorizontHorizont); }
         #endregion
 
-        #region Настройка окна 
+        #region Поручни
 
-        public double LowerHadrailColumnWidth { get => _handrailMappings.Count > 1 ? 70 : 0; }
-        public string UpperRailingH { get => InputDataDescriptions.UpperRailingH; }
-        public string LowerRailingH { get => InputDataDescriptions.LowerRailingH; }
-        public string UpperRailingConnectionXDesctription { get => InputDataDescriptions.UpperRailingConnectionX;  }
-        public string UpperRailingConnectionDZDesctription { get => InputDataDescriptions.UpperRailingConnectionDZ; }
-        public string LowerRailingConnectionXDesctription { get => InputDataDescriptions.LowerRailingConnectionDZ; }
+        private bool _upperHandrailSelected;
+        public bool UpperHandrailSelected 
+        { 
+            get => _upperHandrailSelected; 
+            set
+            {
+                if (SetProperty(ref _upperHandrailSelected, value) & value == true)
+                {
+                    Properties.ConnectRailings.Default.HandrailToConnect = 0;
+                    SetHandrailToConnectMode(RailingHandrailToConnect.Upper);
+                    RaisePropertyChanged(nameof(UpperRailingInfo));
+                    RaisePropertyChanged(nameof(LowerRailingInfo));
+                }
+            }
+        }
 
+        private bool _lowerHandrailSelected;
+        public bool LowerHandrailSelected 
+        { 
+            get => _lowerHandrailSelected; 
+            set
+            {
+                if (SetProperty(ref _lowerHandrailSelected, value) & value == true)
+                {
+                    Properties.ConnectRailings.Default.HandrailToConnect = 1;
+                    SetHandrailToConnectMode(RailingHandrailToConnect.Lower);
+                    RaisePropertyChanged(nameof(UpperRailingInfo));
+                    RaisePropertyChanged(nameof(LowerRailingInfo));
+                }
+            }
+        }
+
+        #endregion
+
+        #region Разрешения
+        public bool AllowSelectHandrail { get => _upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing2_3
+                || _lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing2_3; }
         public bool AllowUpperRailingConnectionX { get => _connectionType1Selected || _connectionType2Selected || _connectionType3Selected || _connectionType4Selected; }
         public bool AllowUpperRailingConnectionDZ { get => _connectionType2Selected || _connectionType4Selected; }
         public bool AllowLowerRailingConnectionDZ { get => _connectionType3Selected || _connectionType4Selected; }
 
         private void UpdateAllowingXDZ()
         {
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("AllowUpperRailingConnectionX"));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("AllowUpperRailingConnectionDZ"));
-            OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs("AllowLowerRailingConnectionDZ"));
+            RaisePropertyChanged(nameof(AllowUpperRailingConnectionX));
+            RaisePropertyChanged(nameof(AllowUpperRailingConnectionDZ));   
+            RaisePropertyChanged(nameof(AllowLowerRailingConnectionDZ));
         }
+
+        private readonly List<RailingConnectionType> _allowedConnectionTypes;
+        public bool AllowConnectionType1 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleAngle); }
+        public bool AllowConnectionType2 { get => _allowedConnectionTypes.Contains(RailingConnectionType.HorizontAngle); }
+        public bool AllowConnectionType3 { get => _allowedConnectionTypes.Contains(RailingConnectionType.AngleHorizont); }
+        public bool AllowConnectionType4 { get => _allowedConnectionTypes.Contains(RailingConnectionType.HorizontHorizont); }
 
         private readonly bool _allowInputDZ1;
         public bool AllowInputDZ1 { get => _allowInputDZ1; }
@@ -115,22 +191,7 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowInputDZ2 { get => _allowInputDZ2; }
         #endregion
 
-        #region Сопоставление поручней
-        private ObservableCollection<HandrailMapping> _handrailMappings;
-        public ObservableCollection<HandrailMapping> HandrailMappings 
-        { 
-            get => _handrailMappings;
-            set => SetProperty(ref _handrailMappings, value);
-        }
-
-        public HandrailMapping HandrailMappingFirst { get => _handrailMappings.First(); }
-        public HandrailMapping HandrailMappingLast { get => _handrailMappings.Last(); }
-
-        private static List<HandrailData> _availableLowerRailingHandrails;
-        public static List<HandrailData> AvailableLowerRailingHandrails { get => _availableLowerRailingHandrails; }
-        #endregion
-
-        #region Выбор
+        #region Выбрать ещё
         private bool? _selectAnymore;
         public bool? SelectAnymore 
         { 
@@ -164,10 +225,13 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowSelectAnymoreWithDialog { get => _selectAnymore == true; }
         #endregion
 
-        //Конструктор
-        public ConnectRailingsVM (RailingData upperRailingData, RailingData lowerRailingData, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
+        public ConnectRailingsVM (ref RailingData upperRailingData, ref RailingData lowerRailingData, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
         {
-            
+            _upperRailingData = upperRailingData;
+            _lowerRailingData = lowerRailingData;
+
+            SetHandrailToConnectMode((RailingHandrailToConnect)Properties.ConnectRailings.Default.HandrailToConnect);
+
             _allowedConnectionTypes = allowedConnectionTypes;
             _allowInputDZ1 = allowInputDZ1;
             _allowInputDZ2 = allowInputDZ2;
@@ -177,12 +241,14 @@ namespace OLP.AutoConnector.ViewModels
             _connectionType3Selected = Properties.ConnectRailings.Default.RailingsConnectionType == 2 & allowedConnectionTypes.Contains(RailingConnectionType.AngleHorizont);
             _connectionType4Selected = Properties.ConnectRailings.Default.RailingsConnectionType == 3 & allowedConnectionTypes.Contains(RailingConnectionType.HorizontHorizont);
 
-            _availableLowerRailingHandrails = [new HandrailData()];
-            _availableLowerRailingHandrails.AddRange(lowerRailingData.Handrails);
-            _handrailMappings = new(upperRailingData.Handrails.Select(h => new HandrailMapping(h, upperRailingData.Handrails.IndexOf(h))));
+            _upperHandrailSelected = Properties.ConnectRailings.Default.HandrailToConnect == 0;
+            _lowerHandrailSelected = Properties.ConnectRailings.Default.HandrailToConnect == 1;
 
-            _upperRailingInfo = $"Верхнее ограждение {(upperRailingData.Mirrored ? "зеркально" : "не зеркально")}";
-            _lowerRailingInfo = $"Нижнее ограждение {(lowerRailingData.Mirrored ? "зеркально" : "не зеркально")}";
+            _upperRailingConnectionX = Math.Round(Properties.ConnectRailings.Default.UpperRailingConnectionX * 304.8);
+            if (allowInputDZ1 == false) Properties.ConnectRailings.Default.UpperRailingConnectionDZ = 0;
+            if (allowInputDZ2 == false) Properties.ConnectRailings.Default.LowerRailingConnectionDZ = 0;
+            _upperRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.UpperRailingConnectionDZ * 304.8);
+            _lowerRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.LowerRailingConnectionDZ * 304.8);          
 
             _selectAnymore = Properties.ConnectRailings.Default.SelectAnymore;
             _selectAnymoreWithDialog = Properties.ConnectRailings.Default.SelectAnymoreWithDialog;
@@ -190,6 +256,12 @@ namespace OLP.AutoConnector.ViewModels
             
         }
 
+        private void SetHandrailToConnectMode(RailingHandrailToConnect handrailToConnect)
+        {
+            FamilyParameterNames.UpdateRailings(handrailToConnect);
+            _upperRailingData.UpdatePrimaryHandrailData(handrailToConnect);
+            _lowerRailingData.UpdatePrimaryHandrailData(handrailToConnect);
+        }
 
         private DelegateCommand helpOpen;
         public ICommand HelpOpen => helpOpen ??= new DelegateCommand(PerformHelpOpen);

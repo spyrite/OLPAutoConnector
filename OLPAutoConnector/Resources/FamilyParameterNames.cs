@@ -424,6 +424,53 @@ namespace OLP.AutoConnector.Resources
                 ]
             },
         };
+        
 
+        internal static void UpdateRailings (RailingHandrailToConnect handrailToConnect)
+        {
+            switch (handrailToConnect)
+            {
+                case RailingHandrailToConnect.Upper:
+                    Railings[StairsRailing2_3][0] = "Поручень_Удлинение L";//0
+                    Railings[StairsRailing2_3][1] = "Поручень_Удлинение R";//1
+                    Railings[StairsRailing2_3][2] = "Концевик L.Вкл";//2
+                    Railings[StairsRailing2_3][3] = "Концевик L_Сег1_Угол IP.Ручн";//3
+                    Railings[StairsRailing2_3][4] = "Концевик L_Сег1_Угол OP";//4
+                    Railings[StairsRailing2_3][5] = "Концевик L_Сег2_Длина";//5
+                    Railings[StairsRailing2_3][6] = "Концевик L_Сег3_Угол IP";//6
+                    Railings[StairsRailing2_3][7] = "Концевик L_Сег3_Угол OP";//7
+                    Railings[StairsRailing2_3][8] = "Концевик L_Сег4_Длина";//8
+                    Railings[StairsRailing2_3][9] = "Концевик R.Вкл";//9
+                    Railings[StairsRailing2_3][10] = "Концевик R_Сег1_Угол IP.Ручн";//10
+                    Railings[StairsRailing2_3][11] = "Концевик R_Сег1_Угол OP";//11
+                    Railings[StairsRailing2_3][12] = "Концевик R_Сег2_Длина";//12
+                    Railings[StairsRailing2_3][13] = "Концевик R_Сег3_Угол IP";//13
+                    Railings[StairsRailing2_3][14] = "Концевик R_Сег3_Угол OP";//14
+                    Railings[StairsRailing2_3][15] = "Концевик R_Сег4_Длина";//15
+                    Railings[StairsRailing2_3][17] = "Поручень_Сечение_Dext";//17
+                    Railings[StairsRailing2_3][30] = "Ограждение_Высота";//30
+                    break;
+                case RailingHandrailToConnect.Lower:
+                    Railings[StairsRailing2_3][0] = "Поручень 2_Удлинение L";//0
+                    Railings[StairsRailing2_3][1] = "Поручень 2_Удлинение R";//1
+                    Railings[StairsRailing2_3][2] = "Концевик L2.Вкл";//2
+                    Railings[StairsRailing2_3][3] = "Концевик L2_Сег1_Угол IP.Ручн";//3
+                    Railings[StairsRailing2_3][4] = "Концевик L2_Сег1_Угол OP";//4
+                    Railings[StairsRailing2_3][5] = "Концевик L2_Сег2_Длина";//5
+                    Railings[StairsRailing2_3][6] = "Концевик L2_Сег3_Угол IP";//6
+                    Railings[StairsRailing2_3][7] = "Концевик L2_Сег3_Угол OP";//7
+                    Railings[StairsRailing2_3][8] = "Концевик L2_Сег4_Длина";//8
+                    Railings[StairsRailing2_3][9] = "Концевик R2.Вкл";//9
+                    Railings[StairsRailing2_3][10] = "Концевик R2_Сег1_Угол IP.Ручн";//10
+                    Railings[StairsRailing2_3][11] = "Концевик R2_Сег1_Угол OP";//11
+                    Railings[StairsRailing2_3][12] = "Концевик R2_Сег2_Длина";//12
+                    Railings[StairsRailing2_3][13] = "Концевик R2_Сег3_Угол IP";//13
+                    Railings[StairsRailing2_3][14] = "Концевик R2_Сег3_Угол OP";//14
+                    Railings[StairsRailing2_3][15] = "Концевик R2_Сег4_Длина";//15
+                    Railings[StairsRailing2_3][17] = "Поручень 2_Сечение_Dext";//17
+                    Railings[StairsRailing2_3][30] = "Ограждение_Высота 2";//30
+                    break;
+            }
+        }
     }
 }

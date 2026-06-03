@@ -20,19 +20,7 @@
     <Setting Name="SelectAnymoreWithDialog" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="UpperRailingConnectionX_1" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="UpperRailingConnectionDZ_1" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="LowerRailingConnectionDZ_1" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="LowerRailingHandrailDataInt_0" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="LowerRailingHandrailDataInt_1" Type="System.Int32" Scope="User">
+    <Setting Name="HandrailToConnect" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

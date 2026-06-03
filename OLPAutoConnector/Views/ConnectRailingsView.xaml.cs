@@ -14,10 +14,12 @@ namespace OLP.AutoConnector.Views
 {
     public partial class ConnectRailingsView : MetroWindow
     {
-        
+        private readonly ConnectRailingsVM _vm;
+
         public ConnectRailingsView(ConnectRailingsVM inputDataVM)
         {
             InitializeComponent();
+            _vm = inputDataVM;
             DataContext = inputDataVM;          
             if (inputDataVM.AllowConnectionType1 == false) RadioButton1.Visibility = System.Windows.Visibility.Collapsed;
             if (inputDataVM.AllowConnectionType2 == false) RadioButton2.Visibility = System.Windows.Visibility.Collapsed;
@@ -31,6 +33,7 @@ namespace OLP.AutoConnector.Views
             if (check1.Any(c => c == true))
             {
                 DialogResult = true;
+                if (!_vm.AllowSelectHandrail) Properties.ConnectRailings.Default.HandrailToConnect = 0;
                 Properties.ConnectRailings.Default.Save();
                 Close();
             }
