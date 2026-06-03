@@ -129,10 +129,4 @@
   <data name="UpperRailingConnectionDZ" xml:space="preserve">
     <value>Смещение верха поручня верхнего ограждения</value>
   </data>
-  <data name="UpperRailingH" xml:space="preserve">
-    <value>Поручень верхнего ограждения высотой</value>
-  </data>
-  <data name="LowerRailingH" xml:space="preserve">
-    <value>связывается с поручнем нижнего ограждения высотой</value>
-  </data>
 </root>

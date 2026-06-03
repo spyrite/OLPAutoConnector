@@ -1,4 +1,3 @@
-using Autodesk.Revit.UI;
 using MahApps.Metro.Controls;
 using OLP.AutoConnector.ViewModels;
 using System;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
-using TextBox = System.Windows.Controls.TextBox;
 
 namespace OLP.AutoConnector.Views
 {
@@ -44,20 +42,14 @@ namespace OLP.AutoConnector.Views
 
         private void TextBox1_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
-            if (sender is TextBox textbox)
-            {
-                if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") && !textbox.Text.Contains(".") && textbox.Text.Length != 0))
-                    e.Handled = true;
-            }
+            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
+                e.Handled = true;
         }
 
         private void TextBox23_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
-            if (sender is TextBox textbox)
-            {
-                if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") || (e.Text == "-") && !textbox.Text.Contains(".") && textbox.Text.Length != 0))
-                    e.Handled = true;
-            }
+            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") || (e.Text == "-") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
+                e.Handled = true;
         }
     }
 }

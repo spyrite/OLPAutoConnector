@@ -4,9 +4,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
 
@@ -73,9 +71,9 @@ namespace OLP.AutoConnector.ViewModels
 
         #region Типы соединения
         private bool _connectionType1Selected;
-        public bool ConnectionType1Selected
-        {
-            get => _connectionType1Selected;
+        public bool ConnectionType1Selected 
+        { 
+            get => _connectionType1Selected; 
             set
             {
                 if (SetProperty(ref _connectionType1Selected, value))
@@ -87,9 +85,9 @@ namespace OLP.AutoConnector.ViewModels
         }
 
         private bool _connectionType2Selected;
-        public bool ConnectionType2Selected
-        {
-            get => _connectionType2Selected;
+        public bool ConnectionType2Selected 
+        { 
+            get => _connectionType2Selected; 
             set
             {
                 if (SetProperty(ref _connectionType2Selected, value))
@@ -102,8 +100,8 @@ namespace OLP.AutoConnector.ViewModels
 
         private bool _connectionType3Selected;
         public bool ConnectionType3Selected
-        {
-            get => _connectionType3Selected;
+        { 
+            get => _connectionType3Selected; 
             set
             {
                 if (SetProperty(ref _connectionType3Selected, value))
@@ -116,7 +114,7 @@ namespace OLP.AutoConnector.ViewModels
 
         private bool _connectionType4Selected;
         public bool ConnectionType4Selected
-        {
+        { 
             get => _connectionType4Selected;
             set
             {
@@ -125,7 +123,7 @@ namespace OLP.AutoConnector.ViewModels
                     UpdateAllowingXDZ();
                     if (value == true) Properties.ConnectRailings.Default.RailingsConnectionType = 3;
                 }
-            }
+            }       
         }
         #endregion
 
@@ -189,7 +187,6 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowInputDZ1 { get => _allowInputDZ1; }
         private readonly bool _allowInputDZ2;
         public bool AllowInputDZ2 { get => _allowInputDZ2; }
-        #endregion
 
         #region Выбрать ещё
         private bool? _selectAnymore;
@@ -220,10 +217,12 @@ namespace OLP.AutoConnector.ViewModels
                     Properties.ConnectRailings.Default.SelectAnymoreWithDialog = value ?? false;
                 }
             }
+                
+
         }
 
+        
         public bool AllowSelectAnymoreWithDialog { get => _selectAnymore == true; }
-        #endregion
 
         public ConnectRailingsVM (ref RailingData upperRailingData, ref RailingData lowerRailingData, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
         {
@@ -252,8 +251,6 @@ namespace OLP.AutoConnector.ViewModels
 
             _selectAnymore = Properties.ConnectRailings.Default.SelectAnymore;
             _selectAnymoreWithDialog = Properties.ConnectRailings.Default.SelectAnymoreWithDialog;
-
-            
         }
 
         private void SetHandrailToConnectMode(RailingHandrailToConnect handrailToConnect)
@@ -270,6 +267,5 @@ namespace OLP.AutoConnector.ViewModels
         {
             Process.Start(Properties.AutoConnector.Default.ConnectRailingsHelpURL);
         }
-
     }
 }

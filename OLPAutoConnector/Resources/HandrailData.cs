@@ -24,14 +24,12 @@ namespace OLP.AutoConnector.Resources
         public double HandrailDiameter { get; }
         public double HandrailAngle { get; }
 
-        public string DisplayHeight { get => Height == 0 ? "Н/Д" : Math.Round(Height * 304.8).ToString(); }
-        public double Height { get; private set; }
-        public HandrailPositionZ PositionZ { get; private set; }
 
         public double ConnectDZFromHandrailTop { get; set; }
         public Plane ConnectionXOYPlane { get; set; }
-        
 
+
+        public double Height { get; set; }
         public double HandrailAngleExtend { get; set; }
         public double HandrailHorizontExtend { get; set; }
         public double HandrailAngleIP { get; set; }
@@ -63,41 +61,25 @@ namespace OLP.AutoConnector.Resources
             HandrailDirY = handrail.HandOrientation.CrossProduct(handrail.FacingOrientation);
             HandrailDirZ = handrail.FacingOrientation;
         }
-        public HandrailData() {}
 
-        public void ExtendData(HandrailPositionZ positionZ)
-        {
-            PositionZ = positionZ;
-            switch (positionZ)
-            {
-                case HandrailPositionZ.Upper:
-                    Height = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][30])?.AsDouble() ?? 0;
-                    break;
-                case HandrailPositionZ.Lower:
-                    Height = _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][56])?.AsDouble() ?? 0;
-                    break;
-            }    
-             
-        }
-
-        public void InitilizeParameters(RailingSide side, RailingPositionZ railingPositionZ)
+        public void ExtendData(HandrailPositionZ positionZ, RailingSide side, RailingConnectionType connectionType, RailingPositionZ railingPositionZ)
         {
             List<int> Ns1 = [];
-            switch (side, PositionZ)
+            switch (side, positionZ)
             {
                 case (RailingSide.Left, HandrailPositionZ.Upper):
-                    Ns1 = [0, 5, 3, 4, 2, 20];
+                    Ns1 = [0, 5, 3, 4, 2, 20, 22, 35];
                     break;
                 case (RailingSide.Right, HandrailPositionZ.Upper):
-                    Ns1 = [1, 12, 10, 11, 9, 21];
+                    Ns1 = [1, 12, 10, 11, 9, 21, 23, 36];
                     break;
 
                 case (RailingSide.Left, HandrailPositionZ.Lower):
-                    Ns1 = [37, 42, 40, 41, 39, 54];
+                    Ns1 = [37, 42, 40, 41, 39, 57, 59, 62];
                     break;
 
                 case (RailingSide.Right, HandrailPositionZ.Lower):
-                    Ns1 = [38, 49, 47, 48, 46, 55];
+                    Ns1 = [38, 49, 47, 48, 46, 58, 60, 73];
                     break;
             }
             HandrailAngleExtendPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][Ns1[0]]);
@@ -109,7 +91,7 @@ namespace OLP.AutoConnector.Resources
 
 
             List<int> Ns2 = [];
-            switch (RailingData.ConnectionType, railingPositionZ, side, PositionZ)
+            switch (connectionType, railingPositionZ, side, positionZ)
             {
                 case (RailingConnectionType.HorizontAngle, RailingPositionZ.Upper, RailingSide.Left, HandrailPositionZ.Upper)
                 or (RailingConnectionType.AngleHorizont, RailingPositionZ.Lower, RailingSide.Left, HandrailPositionZ.Upper)
@@ -165,17 +147,21 @@ namespace OLP.AutoConnector.Resources
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
                     break;
                 case RailingSide.Left when _railing.Symbol.FamilyName == StairsRailing2_1 || _railing.Symbol.FamilyName == StairsRailing2_2 || _railing.Symbol.FamilyName == StairsRailing2_3
-                                            || _railing.Symbol.FamilyName == StairsRailing3:
+    || _railing.Symbol.FamilyName == StairsRailing3:
                     EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]);
                     break;
                 case RailingSide.Right when _railing.Symbol.FamilyName == StairsRailing1:
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
                     break;
                 case RailingSide.Right when _railing.Symbol.FamilyName == StairsRailing2_1 || _railing.Symbol.FamilyName == StairsRailing2_2 || _railing.Symbol.FamilyName == StairsRailing2_3
-                                            || _railing.Symbol.FamilyName == StairsRailing3:
+    || _railing.Symbol.FamilyName == StairsRailing3:
                     EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][34]);
                     break;
             }
+
+
         }
+
+
     }
 }
