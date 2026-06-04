@@ -12,8 +12,8 @@ namespace OLP.AutoConnector.ViewModels
 {
     public class ConnectRailingsVM : BindableBase
     {
-        private RailingData _upperRailingData;
-        private RailingData _lowerRailingData;
+        private readonly RailingData _upperRailingData;
+        private readonly RailingData _lowerRailingData;
 
         #region Сведения
         public string TitleWithVersion { get => "Автосоединение ограждений v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
@@ -187,6 +187,7 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowInputDZ1 { get => _allowInputDZ1; }
         private readonly bool _allowInputDZ2;
         public bool AllowInputDZ2 { get => _allowInputDZ2; }
+        #endregion
 
         #region Выбрать ещё
         private bool? _selectAnymore;
@@ -205,6 +206,7 @@ namespace OLP.AutoConnector.ViewModels
             }
                 
         }
+        #endregion
 
         private bool? _selectAnymoreWithDialog;
         public bool? SelectAnymoreWithDialog 
@@ -217,8 +219,6 @@ namespace OLP.AutoConnector.ViewModels
                     Properties.ConnectRailings.Default.SelectAnymoreWithDialog = value ?? false;
                 }
             }
-                
-
         }
 
         

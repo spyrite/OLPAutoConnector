@@ -61,6 +61,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на 748a2515-4cc9-4b74-9a69-339a8d65a212.
+        /// </summary>
+        internal static string ADSK_Length {
+            get {
+                return ResourceManager.GetString("ADSK_Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 8bd6f2e2-90e4-43c5-9f69-a3a4d4277238.
         /// </summary>
         internal static string OLPFamilyVersion {

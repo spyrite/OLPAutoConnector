@@ -152,38 +152,6 @@ namespace OLP.AutoConnector.Revit
                 _lowerRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ;
 
 
-
-                if (new ConnectRailingsView(_vm).ShowDialog() == false) return Result.Cancelled;
-
-                for (int j = _vm.HandrailMappings.Count - 1; j >= 0; j--)
-                {
-                    if (_vm.HandrailMappings[j].LowerRailingHandrailData == null)
-                        _vm.HandrailMappings.RemoveAt(j);
-                }
-
-                if (_vm.HandrailMappings.Count > 0)
-                {
-
-                    _vm.HandrailMappings[0].ConnectXFromEdgeSupport = Properties.ConnectRailings.Default.UpperRailingConnectionX_0;
-                    _upperRailingData.Handrails.Find(h => h == _vm.HandrailMappings[0].UpperRailingHandrailData).ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.UpperRailingConnectionDZ_0;
-                    _lowerRailingData.Handrails.Find(h => h == _vm.HandrailMappings[0].LowerRailingHandrailData).ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ_0;
-                }
-                else return Result.Cancelled;
-
-                if (_vm.HandrailMappings.Count > 1)
-                {
-                    _vm.HandrailMappings[1].ConnectXFromEdgeSupport = Properties.ConnectRailings.Default.UpperRailingConnectionX_1;
-                    _upperRailingData.Handrails.Find(h => h == _vm.HandrailMappings[0].UpperRailingHandrailData).ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.UpperRailingConnectionDZ_1;
-                    _lowerRailingData.Handrails.Find(h => h == _vm.HandrailMappings[0].LowerRailingHandrailData).ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ_1;
-                }
-
-                RailingData.ConnectionType = (RailingConnectionType)Properties.ConnectRailings.Default.RailingsConnectionType;
-                RailingData.ConnectXFromEdgeSupport = Properties.ConnectRailings.Default.UpperRailingConnectionX;
-                _upperRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.UpperRailingConnectionDZ;
-                _lowerRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ;
-
-
-
                 //Ограждения смотрят друг на друга?
                 RailingData.RailingsAreCounter = _upperRailingData.DirY.IsCollinearAndCounterTo(_lowerRailingData.DirY, _upperRailingData.HandrailOrigin, _lowerRailingData.HandrailOrigin);
 
@@ -226,7 +194,7 @@ namespace OLP.AutoConnector.Revit
 
                     tx.Start();
 
-                    _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
+                    //_upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
                     _upperRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
                     _upperRailingData.EndIsEnabledPar?.Set(1);
                     _upperRailingData.EndAngleIPPar?.Set(_upperRailingData.EndAngleIP);
@@ -234,7 +202,7 @@ namespace OLP.AutoConnector.Revit
                     _upperRailingData.EndLengthPar?.Set(_upperRailingData.EndLength);
                     _upperRailingData.EndCapIsEnabledPar?.Set(0);
 
-                    _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
+                    //_lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
                     _lowerRailingData.EndTypePar?.Set(_upperRailingData.EndTypeId);
                     _lowerRailingData.EndIsEnabledPar?.Set(1);
                     _lowerRailingData.EndAngleIPPar?.Set(_lowerRailingData.EndAngleIP);
@@ -245,35 +213,77 @@ namespace OLP.AutoConnector.Revit
                     switch (RailingData.ConnectionType)
                     {
                         case RailingConnectionType.AngleAngle:
+                            _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
+                            _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
                             foreach (Parameter par in _upperRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
                             foreach (Parameter par in _lowerRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
                             break;
 
                         case RailingConnectionType.HorizontAngle:
-                            _upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
+                            if (_upperRailingData.SupportsRight) _upperRailingData.HandrailAngleExtendPar?
+                                    .Set(_upperRailingData.HandrailHorizontExtend - _upperRailingData.HandrailLengthRight);
+                            else
+                            {
+                                _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
+                                _upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
+                            }
+                                
+                                
+                            //_upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
                             _upperRailingData.HandrailAngleIPPar?.Set(_upperRailingData.HandrailAngleIP);
                             _upperRailingData.HandrailAngleOPPar?.Set(_upperRailingData.HandrailAngleOP);
-                            if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar?.Set(_upperRailingData.EdgeSupportAlign);
+                            //Корректировка привязки стоек
+                            //if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar?.Set(_upperRailingData.EdgeSupportAlign);
+                            _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
                             foreach (Parameter par in _lowerRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
                             break;
 
                         case RailingConnectionType.AngleHorizont:
+                            _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
                             foreach (Parameter par in _upperRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
-                            _lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
+                            if (_lowerRailingData.SupportsLeft) _lowerRailingData.HandrailAngleExtendPar?
+                                    .Set(_lowerRailingData.HandrailHorizontExtend - _lowerRailingData.HandrailLengthLeft);
+                            else
+                            {
+                                _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
+                                _lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
+                            }    
+                                
+                            //_lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
                             _lowerRailingData.HandrailAngleIPPar?.Set(_lowerRailingData.HandrailAngleIP);
                             _lowerRailingData.HandrailAngleOPPar?.Set(_lowerRailingData.HandrailAngleOP);
-                            if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar?.Set(_lowerRailingData.EdgeSupportAlign);
+                            //Корректировка привязки стоек
+                            //if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar?.Set(_lowerRailingData.EdgeSupportAlign);
                             break;
 
                         case RailingConnectionType.HorizontHorizont:
-                            _upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
+                            if (_upperRailingData.SupportsRight) _upperRailingData.HandrailAngleExtendPar?
+                                    .Set(_upperRailingData.HandrailHorizontExtend - _upperRailingData.HandrailLengthRight);
+                            else 
+                            {
+                                _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
+                                _upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
+                            } 
+                                
+                                
+                            //_upperRailingData.HandrailHorizontExtendPar?.Set(_upperRailingData.HandrailHorizontExtend);
                             _upperRailingData.HandrailAngleIPPar?.Set(_upperRailingData.HandrailAngleIP);
                             _upperRailingData.HandrailAngleOPPar?.Set(_upperRailingData.HandrailAngleOP);
-                            if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar?.Set(_upperRailingData.EdgeSupportAlign);
-                            _lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
+                            //Корректировка привязки стоек
+                            //if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar?.Set(_upperRailingData.EdgeSupportAlign);
+                            if (_lowerRailingData.SupportsLeft) _lowerRailingData.HandrailAngleExtendPar?
+                                    .Set(_lowerRailingData.HandrailHorizontExtend - _lowerRailingData.HandrailLengthLeft);
+                            else
+                            {
+                                _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
+                                _lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
+                            }
+                                
+                            //_lowerRailingData.HandrailHorizontExtendPar?.Set(_lowerRailingData.HandrailHorizontExtend);
                             _lowerRailingData.HandrailAngleIPPar?.Set(_lowerRailingData.HandrailAngleIP);
                             _lowerRailingData.HandrailAngleOPPar?.Set(_lowerRailingData.HandrailAngleOP);
-                            if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar?.Set(_lowerRailingData.EdgeSupportAlign);
+                            //Корректировка привязки стоек
+                            //if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar?.Set(_lowerRailingData.EdgeSupportAlign);
                             break;
                     }
 

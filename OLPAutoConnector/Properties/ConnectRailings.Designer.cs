@@ -26,42 +26,6 @@ namespace OLP.AutoConnector.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionX_0 {
-            get {
-                return ((double)(this["UpperRailingConnectionX_0"]));
-            }
-            set {
-                this["UpperRailingConnectionX_0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double UpperRailingConnectionDZ_0 {
-            get {
-                return ((double)(this["UpperRailingConnectionDZ_0"]));
-            }
-            set {
-                this["UpperRailingConnectionDZ_0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double LowerRailingConnectionDZ_0 {
-            get {
-                return ((double)(this["LowerRailingConnectionDZ_0"]));
-            }
-            set {
-                this["LowerRailingConnectionDZ_0"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int RailingsConnectionType {
             get {
                 return ((int)(this["RailingsConnectionType"]));
@@ -104,6 +68,42 @@ namespace OLP.AutoConnector.Properties {
             }
             set {
                 this["HandrailToConnect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperRailingConnectionX {
+            get {
+                return ((double)(this["UpperRailingConnectionX"]));
+            }
+            set {
+                this["UpperRailingConnectionX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperRailingConnectionDZ {
+            get {
+                return ((double)(this["UpperRailingConnectionDZ"]));
+            }
+            set {
+                this["UpperRailingConnectionDZ"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LowerRailingConnectionDZ {
+            get {
+                return ((double)(this["LowerRailingConnectionDZ"]));
+            }
+            set {
+                this["LowerRailingConnectionDZ"] = value;
             }
         }
     }
