@@ -117,8 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="StairsRailing1" xml:space="preserve">
+  <data name="StairsRailing1_2" xml:space="preserve">
     <value>301_Ограждение лестничных маршей_Тип 1.2 (Огражд_РабПлоск)</value>
+  </data>
+  <data name="StairsRailing3" xml:space="preserve">
+    <value>301_Поручень для лестничных маршей_Тип 1.1 (Огражд_РабПлоск)</value>
   </data>
   <data name="StairsRailing2_1" xml:space="preserve">
     <value>301_Ограждение лестничных маршей_Тип 1.3 (Огражд_РабПлоск)</value>
@@ -129,7 +132,7 @@
   <data name="StairsRailing2_3" xml:space="preserve">
     <value>301_Ограждение лестничных маршей_Тип 5.2 (Огражд_РабПлоск)</value>
   </data>
-  <data name="StairsRailing3" xml:space="preserve">
-    <value>301_Поручень для лестничных маршей_Тип 1.1 (Огражд_РабПлоск)</value>
+  <data name="StairsRailing1_1" xml:space="preserve">
+    <value>301_Ограждение лестничных маршей_Тип 1.1 (Огражд_РабПлоск)</value>
   </data>
 </root>

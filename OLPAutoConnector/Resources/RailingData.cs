@@ -176,7 +176,7 @@ namespace OLP.AutoConnector.Resources
         {
             return FamilyName switch
             {
-                string when FamilyName == StairsRailing1 
+                string when FamilyName == StairsRailing1_2 
                 => _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][24]).AsDouble()
                                         - _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][25]).AsDouble() / 2,
 
@@ -198,13 +198,13 @@ namespace OLP.AutoConnector.Resources
             switch (RailingPositionZ)
             {
                 //Нижнее, тип 2, 3; Верхнее, тип 1
-                case RailingPositionZ.Upper when FamilyName == StairsRailing1:
+                case RailingPositionZ.Upper when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                 case RailingPositionZ.Lower when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
                 || FamilyName == StairsRailing3:
                     break;
 
                 //Верхнее, тип 2, 3; Нижнее, тип 1
-                case RailingPositionZ.Lower when FamilyName == StairsRailing1:
+                case RailingPositionZ.Lower when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     dirX = -dirX;
                     origin += BottomTopRefDistance * DirZ;
                     break;
@@ -237,7 +237,7 @@ namespace OLP.AutoConnector.Resources
             List<XYZ> supportOrigins = [];
             switch (FamilyName)
             {
-                case string when FamilyName == StairsRailing1:
+                case string when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                 case string when FamilyName == StairsRailing3:
                     supportOrigins = [.. supports.Select(inst => (inst.Location as LocationPoint).Point)];
                     break;
@@ -320,14 +320,14 @@ namespace OLP.AutoConnector.Resources
 
             switch (side)
             {
-                case RailingSide.Left when FamilyName == StairsRailing1:
+                case RailingSide.Left when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
                     break;
                 case RailingSide.Left when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
                 || FamilyName == StairsRailing3:
                     EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]);
                     break;
-                case RailingSide.Right when FamilyName == StairsRailing1:
+                case RailingSide.Right when FamilyName == StairsRailing1_2:
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
                     break;
                 case RailingSide.Right when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
@@ -358,20 +358,20 @@ namespace OLP.AutoConnector.Resources
             double OPcor = Atan(cZD / (RailingsDistanceY / 2)); //Корректировка угла из плоскости 90 градусов
             switch (RailingPositionZ, ConnectionType)
             {
-                //Семейство ограждения лестницы 1.1
-                case (_, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing1:
-                case (RailingPositionZ.Upper, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing1:
-                case (RailingPositionZ.Lower, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing1:
+                //Семейство ограждения лестницы 1.1, 1.2
+                case (_, RailingConnectionType.AngleHorizont) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case (RailingPositionZ.Upper, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndAngleOP = PI / 2 - OPcor * (Mirrored ? 1 : -1) - (RailingsAreCounter ? PI : 0);
                     break;
 
-                case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing1:
-                case (RailingPositionZ.Upper, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing1:
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case (RailingPositionZ.Upper, RailingConnectionType.HorizontHorizont) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndAngleOP = -PI / 2 + OPcor * (Mirrored ? 1 : -1) + (RailingsAreCounter ? PI : 0);
                     break;
 
-                case (RailingPositionZ.Lower, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing1:
-                case (RailingPositionZ.Lower, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing1:
+                case (RailingPositionZ.Lower, RailingConnectionType.HorizontAngle) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case (RailingPositionZ.Lower, RailingConnectionType.AngleAngle) when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndAngleOP = PI / 2 + OPcor * (Mirrored ? 1 : -1) - (RailingsAreCounter ? PI : 0);
                     break;
 
@@ -440,7 +440,7 @@ namespace OLP.AutoConnector.Resources
 
             switch (FamilyName)
             {
-                case string when FamilyName == StairsRailing1:
+                case string when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndAngleIP = PI / 2 - IPcor * (Mirrored ? 1 : -1) * (RailingsAreCounter ? -1 : 1);
                     break;
                 case string when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2
@@ -490,12 +490,12 @@ namespace OLP.AutoConnector.Resources
             
             switch (RailingPositionZ)
             {
-                case RailingPositionZ.Upper when FamilyName == StairsRailing1:
+                case RailingPositionZ.Upper when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     HandrailAngleExtend = -ConnectDZFromHandrailTop / Tan(HandrailAngle);
                     HandrailAngleExtend -= (2 * (EndAxisRadius - HandrailDiameter / 2) * Sin(HandrailAngle / 2) * Sin(HandrailAngle / 2)
                     + HandrailDiameter / 2 * Sin(HandrailAngle) * Tan(HandrailAngle)) / Tan(HandrailAngle);
                     break;
-                case RailingPositionZ.Lower when FamilyName == StairsRailing1:
+                case RailingPositionZ.Lower when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     HandrailAngleExtend = ConnectDZFromHandrailTop / Tan(HandrailAngle);
                     HandrailAngleExtend -= (2 * (EndAxisRadius + HandrailDiameter / 2) * Sin(HandrailAngle / 2) * Sin(HandrailAngle / 2)
                         - HandrailDiameter / 2 * Sin(HandrailAngle) * Tan(HandrailAngle)) / Tan(HandrailAngle);
@@ -539,7 +539,7 @@ namespace OLP.AutoConnector.Resources
 
             switch (FamilyName)
             {
-                case string when FamilyName == StairsRailing1:
+                case string when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     HandrailAngleExtend = ConnectXFromRefPlane - a2Axis * Cos(HandrailAngle);
                     break;
 
@@ -579,7 +579,7 @@ namespace OLP.AutoConnector.Resources
             HandrailAngleIP = HandrailAngle;
             switch (FamilyName)
             {
-                case string when FamilyName == StairsRailing1:
+                case string when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     switch (RailingPositionZ)
                     {
                         case RailingPositionZ.Upper:

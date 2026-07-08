@@ -330,7 +330,8 @@ namespace OLP.AutoConnector.Revit
             //Определение вертикальной плоскости стыка
             switch (_upperRailingData.FamilyName)
             {
-                case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing1_1 
+                    || familyName == SupportedFamilyNames.StairsRailing1_2:
                     RailingData.ConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, false)
                         - RailingData.ConnectXFromEdgeSupport * _upperRailingData.DirX,
                         _upperRailingData.DirY, _upperRailingData.DirZ, _upperRailingData.DirX));
@@ -374,7 +375,8 @@ namespace OLP.AutoConnector.Revit
 
             switch (_lowerRailingData.FamilyName)
             {
-                case string familyName when familyName == SupportedFamilyNames.StairsRailing1:
+                case string familyName when familyName == SupportedFamilyNames.StairsRailing1_1 
+                    || familyName == SupportedFamilyNames.StairsRailing1_2:
                     RailingData.ConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin + _lowerRailingData.StartEndRefDistance * _lowerRailingData.DirX
                         , out _lowerRailingData.ConnectXFromRefPlane);
 

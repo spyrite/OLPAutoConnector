@@ -61,7 +61,9 @@ namespace OLP.AutoConnector.Revit
 
                                 switch (inst.Symbol.FamilyName)
                                 {
-                                    case string when inst.Symbol.FamilyName == StairsRailing2_1:
+                                    case string when inst.Symbol.FamilyName == StairsRailing2_1
+                                        || inst.Symbol.FamilyName == StairsRailing2_2
+                                        || inst.Symbol.FamilyName == StairsRailing2_3:
                                         if ((condition1 || condition2) & new List<int> { 0, 2, 3, 4, 5 }.Contains(i)) continue;
                                         if ((condition3 || condition4) & new List<int> { 1, 9, 10, 11, 12 }.Contains(i)) continue;
                                         break;

@@ -61,11 +61,20 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 1.1 (Огражд_РабПлоск).
+        /// </summary>
+        internal static string StairsRailing1_1 {
+            get {
+                return ResourceManager.GetString("StairsRailing1_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 301_Ограждение лестничных маршей_Тип 1.2 (Огражд_РабПлоск).
         /// </summary>
-        internal static string StairsRailing1 {
+        internal static string StairsRailing1_2 {
             get {
-                return ResourceManager.GetString("StairsRailing1", resourceCulture);
+                return ResourceManager.GetString("StairsRailing1_2", resourceCulture);
             }
         }
         

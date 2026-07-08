@@ -10,7 +10,7 @@ namespace OLP.AutoConnector.Revit
     internal class RailingSelectionFilter : ISelectionFilter
     {
         private readonly List<string> _supportedFamilyNames = [.. FamilyParameterNames.Railings.Keys];
-        private List<ElementId> _excludingIds;
+        private readonly List<ElementId> _excludingIds;
 
         public RailingSelectionFilter()
         {
