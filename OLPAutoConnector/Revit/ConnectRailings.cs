@@ -141,6 +141,8 @@ namespace OLP.AutoConnector.Revit
                 UpdateAndCheckRailingsDistance();
                 //Диаметры поручней
                 CheckHandrailDiameter();
+                if (Properties.ConnectRailings.Default.ConnectHorizontalBalusters) CheckHorizontalBalustersDiameter();
+
 
                 //Контрольная точка
                 if (CheckPoint(i) == false) if (i > 1) continue; else return Result.Succeeded;
@@ -148,6 +150,8 @@ namespace OLP.AutoConnector.Revit
                 RailingData.HandrailToConnect = (RailingHandrailToConnect)Properties.ConnectRailings.Default.HandrailToConnect;
                 RailingData.ConnectionType = (RailingConnectionType)Properties.ConnectRailings.Default.RailingsConnectionType;
                 RailingData.ConnectXFromEdgeSupport = Properties.ConnectRailings.Default.UpperRailingConnectionX;
+                if (Properties.ConnectRailings.Default.ConnectHorizontalBalusters) RailingData.HorizontalBalustersConnectXFromEdgeSupport = Properties.ConnectRailings.Default.HorizontalBalustersConnectionX1;
+
                 _upperRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.UpperRailingConnectionDZ;
                 _lowerRailingData.ConnectDZFromHandrailTop = Properties.ConnectRailings.Default.LowerRailingConnectionDZ;
 
@@ -176,15 +180,24 @@ namespace OLP.AutoConnector.Revit
                 //Расширение исходных данных, промежуточные вычисления
                 ExtendRailingsData();
                 RailingData.ConnectAngle = GetConnectionAngle(out RailingData.ConnectAxisDir);
-
+                
                 //Вычисления значений заполняемых параметров
                 if (_upperRailingData.CalculateData(out List<int> failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _upperRailingData.Id));
                 if (_lowerRailingData.CalculateData(out failureIds) == false) failureIds.ForEach(id => AddFailureId(id, _lowerRailingData.Id));
 
+                //То же самое для горизонтальных связей
+                if (Properties.ConnectRailings.Default.ConnectHorizontalBalusters)
+                {
+                    ExtendHorizontalBalustersData();
+                    RailingData.HorizontalBalustersConnectAngle = GetHorizontalBalustersConnectionAngle(out RailingData.HorizontalBalustersConnectAxisDir);
+                    _upperRailingData.CalculateHorizontalBalustersData();
+                    _lowerRailingData.CalculateHorizontalBalustersData();
+                }
+
                 //Контрольная точка
                 if (CheckPoint(i) == false) if (i > 1) continue; else return Result.Succeeded;
 
-                using (Transaction tx = new(Doc, "OLP: Автосоединение поручней ограждений"))
+                using (Transaction tx = new(Doc, "OLP: Автосоединение ограждений"))
                 {
                     FailureHandlingOptions failureHandlingOptions = tx.GetFailureHandlingOptions();
                     failureHandlingOptions.SetForcedModalHandling(false);
@@ -235,12 +248,14 @@ namespace OLP.AutoConnector.Revit
                             //Корректировка привязки стоек
                             //if (_upperRailingData.SupportsRight == true) _upperRailingData.EdgeSupportAlignPar?.Set(_upperRailingData.EdgeSupportAlign);
                             _lowerRailingData.HandrailAngleExtendPar?.Set(_lowerRailingData.HandrailAngleExtend);
+                            _upperRailingData.EndOtherPars.Last()?.Set(0);
                             foreach (Parameter par in _lowerRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
                             break;
 
                         case RailingConnectionType.AngleHorizont:
                             _upperRailingData.HandrailAngleExtendPar?.Set(_upperRailingData.HandrailAngleExtend);
                             foreach (Parameter par in _upperRailingData.EndOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
+                            _lowerRailingData.EndOtherPars.Last()?.Set(0);
                             if (_lowerRailingData.SupportsLeft) _lowerRailingData.HandrailAngleExtendPar?
                                     .Set(_lowerRailingData.HandrailHorizontExtend - _lowerRailingData.HandrailLengthLeft);
                             else
@@ -257,6 +272,8 @@ namespace OLP.AutoConnector.Revit
                             break;
 
                         case RailingConnectionType.HorizontHorizont:
+                            _upperRailingData.EndOtherPars.Last()?.Set(0);
+                            _lowerRailingData.EndOtherPars.Last()?.Set(0);
                             if (_upperRailingData.SupportsRight) _upperRailingData.HandrailAngleExtendPar?
                                     .Set(_upperRailingData.HandrailHorizontExtend - _upperRailingData.HandrailLengthRight);
                             else 
@@ -285,6 +302,23 @@ namespace OLP.AutoConnector.Revit
                             //Корректировка привязки стоек
                             //if (_lowerRailingData.SupportsLeft == true) _lowerRailingData.EdgeSupportAlignPar?.Set(_lowerRailingData.EdgeSupportAlign);
                             break;
+                    }
+
+                    if (Properties.ConnectRailings.Default.ConnectHorizontalBalusters)
+                    {
+                        _upperRailingData.HorizontalBalustersEndIsEnabledPar.Set(1);
+                        foreach (Parameter par in _upperRailingData.HorizontalBalustersOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
+                        _upperRailingData.HorizontalBalustersLengthPar?.Set(_upperRailingData.HorizontalBalustersLength);
+                        _upperRailingData.HorizontalBalustersAngleIPPar?.Set(_upperRailingData.HorizontalBalustersAngleIP);
+                        _upperRailingData.HorizontalBalustersAngleOPPar?.Set(_upperRailingData.HorizontalBalustersAngleOP);
+                        _upperRailingData.HorizontalBalustersExtendPar?.Set(_upperRailingData.HorizontalBalustersExtend);
+
+                        _lowerRailingData.HorizontalBalustersEndIsEnabledPar.Set(1);
+                        foreach (Parameter par in _lowerRailingData.HorizontalBalustersOtherPars.Where(p => !p.IsReadOnly)) par?.Set(0);
+                        _lowerRailingData.HorizontalBalustersLengthPar?.Set(_lowerRailingData.HorizontalBalustersLength);
+                        _lowerRailingData.HorizontalBalustersAngleIPPar?.Set(_lowerRailingData.HorizontalBalustersAngleIP);
+                        _lowerRailingData.HorizontalBalustersAngleOPPar?.Set(_lowerRailingData.HorizontalBalustersAngleOP);
+                        _lowerRailingData.HorizontalBalustersExtendPar?.Set(_lowerRailingData.HorizontalBalustersExtend);
                     }
 
                     tx.Commit();
@@ -321,10 +355,18 @@ namespace OLP.AutoConnector.Revit
             }
         }
 
+        private void CheckHorizontalBalustersDiameter()
+        {
+            if (_upperRailingData.HorizontalBalustersDiameter != _lowerRailingData.HorizontalBalustersDiameter)
+            {
+                AddFailureId(9, _upperRailingData.Id);
+                AddFailureId(9, _lowerRailingData.Id);
+            }
+        }
+
         //Метод определеляет плоскости стыка,
         //расстояние от плоскости стыка до начальной/конечной опорной плоскости ограждния,
         //производит выбор заполняемых параметров для ограждений
-
         private void ExtendRailingsData()
         {
             //Определение вертикальной плоскости стыка
@@ -407,6 +449,22 @@ namespace OLP.AutoConnector.Revit
             } 
         }
 
+        //То же самое, но для горизонтальных связей
+        private void ExtendHorizontalBalustersData()
+        {
+            //Определение вертикальной плоскости стыка
+            RailingData.HorizontalBalustersConnectionYOZPlane = Plane.Create(new Frame(_upperRailingData.GetEdgeRailingSupportOrigin(RailingSide.Left, false)
+                                                        - RailingData.HorizontalBalustersConnectXFromEdgeSupport * _upperRailingData.DirX,
+                                                        _upperRailingData.DirY, _upperRailingData.DirZ, _upperRailingData.DirX));
+
+            RailingData.HorizontalBalustersConnectionYOZPlane.ProjectWithToken(_upperRailingData.Origin, out _upperRailingData.HorizontalBalustersConnectXFromRefPlane);
+            _upperRailingData.InitilizeHorizontalBalustersParameters(RailingSide.Left);
+
+            RailingData.HorizontalBalustersConnectionYOZPlane.ProjectWithToken(_lowerRailingData.Origin + _lowerRailingData.StartEndRefDistance * _lowerRailingData.DirX
+                                                            , out _lowerRailingData.HorizontalBalustersConnectXFromRefPlane);
+            _lowerRailingData.InitilizeHorizontalBalustersParameters(RailingSide.Right);
+        }
+
         //Метод определяет угол наклона оси стыка ограждений
         private double GetConnectionAngle(out XYZ connectionAxisDir)
         {
@@ -429,14 +487,25 @@ namespace OLP.AutoConnector.Revit
                     break;
             }
 
-
             connectionAxisDir = Line.CreateBound(p0, p1).Direction;
-
 
             //ТЕСТ
             //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.ConnectionYOZPlane)); tx.Commit(); }
 
             return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.ConnectionYOZPlane.XVec.ABS()), RailingData.ConnectionYOZPlane.Normal);
+        }
+
+        //То же самое, но для горизонтальных связей
+        private double GetHorizontalBalustersConnectionAngle(out XYZ connectionAxisDir)
+        {
+            XYZ p0 = _lowerRailingData.HandrailOrigin.ProjectOnPlane(RailingData.HorizontalBalustersConnectionYOZPlane, _lowerRailingData.HandrailAngle, _lowerRailingData.DirZ);
+            XYZ p1 = _upperRailingData.HandrailOrigin.ProjectOnPlane(RailingData.HorizontalBalustersConnectionYOZPlane, _upperRailingData.HandrailAngle, -_upperRailingData.DirZ);
+            connectionAxisDir = Line.CreateBound(p0, p1).Direction;
+
+            //ТЕСТ
+            //using (Transaction tx = new(Doc, "OLP test")) { tx.Start(); Doc.Create.NewModelCurve(Line.CreateBound(p0, p1), SketchPlane.Create(Doc, RailingData.HorizontalBalustersConnectionYOZPlane)); tx.Commit(); }
+
+            return connectionAxisDir.AngleOnPlaneTo(connectionAxisDir.Multiply2(RailingData.HorizontalBalustersConnectionYOZPlane.XVec.ABS()), RailingData.HorizontalBalustersConnectionYOZPlane.Normal);
         }
 
         //Регистрация ошибки
@@ -471,6 +540,9 @@ namespace OLP.AutoConnector.Revit
                         break;
                     case 8:
                         _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.AttemptToConnectMirroredNonMirrored);
+                        break;
+                    case 9:
+                        _failureModels[failureKey] = new FailureModel(UIDoc, FailureMessages.HorizontalBalustersDiametersAreDifferent);
                         break;
                 }
 

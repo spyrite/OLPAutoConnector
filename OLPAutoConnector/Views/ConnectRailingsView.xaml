@@ -60,6 +60,7 @@
             <RowDefinition Height="230"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="220"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
@@ -190,7 +191,7 @@
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox2"
                              Style="{StaticResource TextBoxAllowUpperRailingConnectionDZ}"
-                             PreviewTextInput="TextBox23_PreviewTextInput"/>
+                             PreviewTextInput="TextBox234_PreviewTextInput"/>
                     <TextBlock Text="мм"
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                 </StackPanel>
@@ -204,7 +205,7 @@
                                Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox3"
                              Style="{StaticResource TextBoxAllowLowerRailingConnectionDZ}"
-                             PreviewTextInput="TextBox23_PreviewTextInput"/>
+                             PreviewTextInput="TextBox234_PreviewTextInput"/>
                     <TextBlock Text="мм"
                                Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                 </StackPanel>
@@ -212,7 +213,44 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="3"
+        <StackPanel Grid.Row="3"
+                    Visibility="{Binding AllowConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
+                    Background="#41B1E1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,5,0,5"
+                    Height="40">
+            <CheckBox Content="СОЕДИНЯТЬ ГОРИЗОНТАЛЬНЫЕ СВЯЗИ"
+                      Foreground="White"
+                      Margin="5,0,32,0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding ConnectHorizontalBalusters}"/>
+            <TextBlock Text=" X1 = "
+                       Foreground="White"
+                       Style="{StaticResource TextBlockStyleDefault}"
+                       Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"/>
+            <TextBox x:Name="TextBox4"
+                     Style="{StaticResource TextBoxStyleDefault}"
+                     Text="{Binding HorizontalBalustersConnectionX1}"         
+                     PreviewTextInput="TextBox234_PreviewTextInput"
+                     Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}">
+            <TextBox.ToolTip>
+                    <TextBlock Width="300"
+                               Text="{Binding HorizontalBalustersConnectionX1Desctription}"
+                               TextWrapping="Wrap"/>
+                </TextBox.ToolTip>
+            </TextBox>
+            
+            <TextBlock Text="мм"
+                       Foreground="White"
+                       Style="{StaticResource TextBlockStyleDefault}"
+                       Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"/>
+
+
+
+        </StackPanel>
+
+        <Grid Grid.Row="4"
               Margin="10,10,2,10">
             <Grid.RowDefinitions>
                 <RowDefinition/>

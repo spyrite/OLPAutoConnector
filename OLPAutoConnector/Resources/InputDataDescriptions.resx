@@ -129,4 +129,7 @@
   <data name="UpperRailingConnectionDZ" xml:space="preserve">
     <value>Смещение верха поручня верхнего ограждения</value>
   </data>
+  <data name="HorizontalBalustersConnectionX1" xml:space="preserve">
+    <value>Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка горизонтальных связей из плоскости</value>
+  </data>
 </root>

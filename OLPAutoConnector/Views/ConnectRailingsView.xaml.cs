@@ -32,6 +32,7 @@ namespace OLP.AutoConnector.Views
             {
                 DialogResult = true;
                 if (!_vm.AllowSelectHandrail) Properties.ConnectRailings.Default.HandrailToConnect = 0;
+                if (!_vm.AllowConnectHorizontalBalusters) Properties.ConnectRailings.Default.ConnectHorizontalBalusters = false;
                 Properties.ConnectRailings.Default.Save();
                 Close();
             }
@@ -46,7 +47,7 @@ namespace OLP.AutoConnector.Views
                 e.Handled = true;
         }
 
-        private void TextBox23_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        private void TextBox234_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".") || (e.Text == "-") && !TextBox1.Text.Contains(".") && TextBox1.Text.Length != 0))
                 e.Handled = true;

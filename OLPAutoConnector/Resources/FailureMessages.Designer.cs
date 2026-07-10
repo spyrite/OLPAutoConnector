@@ -88,6 +88,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Различные диаметры горизонтальных связей ограждений. Код ошибки 9.
+        /// </summary>
+        internal static string HorizontalBalustersDiametersAreDifferent {
+            get {
+                return ResourceManager.GetString("HorizontalBalustersDiametersAreDifferent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Некорректный ввод значений.
         /// </summary>
         internal static string IncoorectInputValue {

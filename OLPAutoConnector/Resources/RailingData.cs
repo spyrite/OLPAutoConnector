@@ -37,10 +37,19 @@ namespace OLP.AutoConnector.Resources
         public static double MinRailingsDistanceY;
         public static double RailingsDistanceY;
         public static bool RailingsAreCounter;
+
         public static double ConnectAngle;
+        public static double HorizontalBalustersConnectAngle;
+
         public static XYZ ConnectAxisDir;
+        public static XYZ HorizontalBalustersConnectAxisDir;
+
         public static double ConnectXFromEdgeSupport;
+        public static double HorizontalBalustersConnectXFromEdgeSupport;
+
         public static Plane ConnectionYOZPlane;
+        public static Plane HorizontalBalustersConnectionYOZPlane;
+
         public static RailingConnectionType ConnectionType;
         public static RailingHandrailToConnect HandrailToConnect;
 
@@ -53,7 +62,12 @@ namespace OLP.AutoConnector.Resources
         public readonly ElementId EndTypeId;
 
         public readonly double EndAxisRadius;
+        public readonly double HorizontalBalustersAxisRadius;
+
         public double HandrailDiameter;
+        public double HorizontalBalustersDiameter;
+
+
         public double HandrailAngle;
         public readonly double StartEndRefDistance;
         public readonly double BottomTopRefDistance;
@@ -77,6 +91,8 @@ namespace OLP.AutoConnector.Resources
         public RailingPositionZ RailingPositionZ;
 
         public double ConnectXFromRefPlane;
+        public double HorizontalBalustersConnectXFromRefPlane;
+
         public double ConnectDZFromHandrailTop;
         public Plane ConnectionXOYPlane;
 
@@ -93,6 +109,10 @@ namespace OLP.AutoConnector.Resources
         public double EndAngleOP;
         public double EndLength;
         public double EdgeSupportAlign;
+        public double HorizontalBalustersExtend;
+        public double HorizontalBalustersAngleIP;
+        public double HorizontalBalustersAngleOP;
+        public double HorizontalBalustersLength;
 
         //Редактируемые параметры
         public Parameter HandrailAngleExtendPar;
@@ -108,8 +128,14 @@ namespace OLP.AutoConnector.Resources
         public Parameter EndCapIsEnabledPar;
         public Parameter EndNotInRailingPar;
         public Parameter EdgeSupportAlignPar;
+        public Parameter HorizontalBalustersEndIsEnabledPar;
+        public Parameter HorizontalBalustersExtendPar;
+        public Parameter HorizontalBalustersAngleIPPar;
+        public Parameter HorizontalBalustersAngleOPPar;
+        public Parameter HorizontalBalustersLengthPar;
 
         public List<Parameter> EndOtherPars;
+        public List<Parameter> HorizontalBalustersOtherPars;
 
         public RailingData(FamilyInstance railing)
         {
@@ -121,7 +147,7 @@ namespace OLP.AutoConnector.Resources
             EndTypeId = new FilteredElementCollector(_doc).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>()
                 .FirstOrDefault(sym => sym.FamilyName == SubFamilyNames.Railings[FamilyName][2])?.Id ?? ElementId.InvalidElementId;
 
-            EndAxisRadius = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][16]).AsDouble();
+            EndAxisRadius = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][16]).AsDouble();            
 
             HandrailLengthLeft = railing.GetParameterFromInstOrSym(FamilyParameterNames.Railings[FamilyName][5])?.AsDouble() ?? 0;
             HandrailLengthRight = railing.GetParameterFromInstOrSym(FamilyParameterNames.Railings[FamilyName][12])?.AsDouble() ?? 0;
@@ -139,9 +165,12 @@ namespace OLP.AutoConnector.Resources
             Mirrored = railing.Mirrored;
 
             UpdatePrimaryHandrailData(RailingHandrailToConnect.Upper);
-            
+
             StartEndRefDistance = GetStartEndDistance();
             BottomTopRefDistance = StartEndRefDistance * Tan(railing.Symbol.LookupParameter(FamilyParameterNames.Railings[FamilyName][18]).AsDouble());
+
+            HorizontalBalustersDiameter = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][40])?.AsDouble() ?? 0;
+            HorizontalBalustersAxisRadius = railing.Symbol.LookupParameter(FamilyParameterNames.Railings[railing.Symbol.FamilyName][41])?.AsDouble() ?? 0;
         }
 
         public void UpdatePrimaryHandrailData(RailingHandrailToConnect handrailToConnect)
@@ -176,7 +205,12 @@ namespace OLP.AutoConnector.Resources
         {
             return FamilyName switch
             {
-                string when FamilyName == StairsRailing1_2 
+                string when FamilyName == StairsRailing1_1
+                => _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][24]).AsDouble()
+                                        - _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][50]).AsDouble()
+                                        - _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][25]).AsDouble() / 2,
+
+                string when FamilyName == StairsRailing1_2
                 => _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][24]).AsDouble()
                                         - _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][25]).AsDouble() / 2,
 
@@ -286,8 +320,6 @@ namespace OLP.AutoConnector.Resources
                     break;
             }
 
-
-
             List<int> Ns = [];
             switch (ConnectionType, RailingPositionZ, side)
             {
@@ -326,13 +358,40 @@ namespace OLP.AutoConnector.Resources
                 case RailingSide.Left when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
                 || FamilyName == StairsRailing3:
                     EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][33]);
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][31]));
                     break;
-                case RailingSide.Right when FamilyName == StairsRailing1_2:
+                case RailingSide.Right when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
                     EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
                     break;
                 case RailingSide.Right when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
                 || FamilyName == StairsRailing3:
                     EndNotInRailingPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][34]);
+                    EndOtherPars.Add(_railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][32]));
+                    break;
+            }
+        }
+        internal void InitilizeHorizontalBalustersParameters(RailingSide side)
+        {
+            List<int> Ns = [];
+            switch (side)
+            {
+                case RailingSide.Left:
+                    HorizontalBalustersEndIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][42]);
+                    HorizontalBalustersLengthPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][43]);
+                    HorizontalBalustersAngleIPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][46]);
+                    HorizontalBalustersAngleOPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][47]);
+                    HorizontalBalustersExtendPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][48]);
+                    HorizontalBalustersOtherPars = [.. new List<int> { 44, 45 }
+                                                    .Select(i => _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][i]))];
+                    break;
+                case RailingSide.Right:
+                    HorizontalBalustersEndIsEnabledPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][49]);
+                    HorizontalBalustersLengthPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][50]);
+                    HorizontalBalustersAngleIPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][53]);
+                    HorizontalBalustersAngleOPPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][54]);
+                    HorizontalBalustersExtendPar = _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][55]);
+                    HorizontalBalustersOtherPars = [.. new List<int> { 51, 52 }
+                                                    .Select(i => _railing.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][i]))];
                     break;
             }
         }
@@ -482,6 +541,35 @@ namespace OLP.AutoConnector.Resources
             //Вычисление удлинения концевика
             EndLength = (RailingsDistanceY / 2) / Cos(ConnectAngle) - a2Axis;
             return true;
+        }
+
+        //Вычисление параметров горизонтальных связей
+        internal void CalculateHorizontalBalustersData()
+        {
+            double endPreAngle = HandrailAngle; //Угол поручня до концевика
+
+            //Вычисление угла из плоскости
+            double cZ = RailingsDistanceY / 2 * Tan(HorizontalBalustersConnectAngle); //Превышение стыка связей из плоскости (проекция Z)
+            double cZD = cZ * Cos(endPreAngle); //Проекция превышения на плоскоть сечения связей
+            double OPcor = Atan(cZD / (RailingsDistanceY / 2)); //Корректировка угла из плоскости 90 градусов
+            HorizontalBalustersAngleOP = PI / 2 + OPcor * (Mirrored ? 1 : -1) - (RailingsAreCounter ? PI : 0);
+
+
+            //Вычисление угла в плоскости
+            double cZhr = cZ * Sin(endPreAngle); //Проекция превышения на ось связей
+            double c2Y2 = (RailingsDistanceY / 2) / Cos(HorizontalBalustersConnectAngle); //Гипотенуза между превышением и половиной осевого расстояния между ограждениями
+            double IPcor = Asin(cZhr / c2Y2); //Корректировка угла в плоскости 90 градусов
+            HorizontalBalustersAngleIP = PI / 2 - IPcor * (Mirrored ? 1 : -1) * (RailingsAreCounter ? -1 : 1);
+
+            //Вычисление удлинения cвязей
+            double a2Axis = HorizontalBalustersAxisRadius * Tan(HorizontalBalustersAngleIP / 2);
+            HorizontalBalustersExtend = (RailingsDistanceY / 2) / Cos(HorizontalBalustersConnectAngle) - a2Axis;
+
+            //Вычисление длины свеса горизонтальных связей
+            HorizontalBalustersLength = HorizontalBalustersConnectXFromRefPlane
+                - _railing.Symbol.LookupParameter(FamilyParameterNames.Railings[_railing.Symbol.FamilyName][25]).AsDouble() / 2
+                - HorizontalBalustersDiameter / 2 * Sin(HandrailAngle)
+                - a2Axis * Cos(HandrailAngle);
         }
 
         //Вычисление удлинения поручня в горизонтальном положении

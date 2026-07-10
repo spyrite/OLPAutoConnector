@@ -153,4 +153,7 @@
   <data name="AttemptToConnectMirroredNonMirrored" xml:space="preserve">
     <value>Попытка соединить зеркальный и незеркальный экземпляры одного и того же семейства ограждения. Код ошибки 8</value>
   </data>
+  <data name="HorizontalBalustersDiametersAreDifferent" xml:space="preserve">
+    <value>Различные диаметры горизонтальных связей ограждений. Код ошибки 9</value>
+  </data>
 </root>

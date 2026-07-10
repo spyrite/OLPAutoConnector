@@ -19,7 +19,7 @@ namespace OLP.AutoConnector.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class InputDataDescriptions {
@@ -57,6 +57,15 @@ namespace OLP.AutoConnector.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка горизонтальных связей из плоскости.
+        /// </summary>
+        internal static string HorizontalBalustersConnectionX1 {
+            get {
+                return ResourceManager.GetString("HorizontalBalustersConnectionX1", resourceCulture);
             }
         }
         

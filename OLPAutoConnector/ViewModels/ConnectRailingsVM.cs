@@ -63,10 +63,26 @@ namespace OLP.AutoConnector.ViewModels
                 }
             }
         }
-        
+
+        private double _horizontalBalustersConnectionX1;
+        public string HorizontalBalustersConnectionX1
+        {
+            get => _horizontalBalustersConnectionX1.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _horizontalBalustersConnectionX1, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.HorizontalBalustersConnectionX1 = decimalValue / 304.8;
+                }
+            }
+        }
+
         public string UpperRailingConnectionXDesctription { get => InputDataDescriptions.UpperRailingConnectionX;  }
         public string UpperRailingConnectionDZDesctription { get => InputDataDescriptions.UpperRailingConnectionDZ; }
         public string LowerRailingConnectionXDesctription { get => InputDataDescriptions.LowerRailingConnectionDZ; }
+        public string HorizontalBalustersConnectionX1Desctription { get => InputDataDescriptions.HorizontalBalustersConnectionX1; }
+
         #endregion
 
         #region Типы соединения
@@ -163,12 +179,29 @@ namespace OLP.AutoConnector.ViewModels
 
         #endregion
 
+        #region Гор. связи
+        private bool _connectHorizontalBalusters;
+        public bool ConnectHorizontalBalusters
+        {
+            get => _connectHorizontalBalusters;
+            set
+            {
+                if (SetProperty(ref _connectHorizontalBalusters, value))
+                {
+                    Properties.ConnectRailings.Default.ConnectHorizontalBalusters = value;
+                }
+            }
+        }
+        #endregion
+
         #region Разрешения
         public bool AllowSelectHandrail { get => _upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing2_3
                 || _lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing2_3; }
         public bool AllowUpperRailingConnectionX { get => _connectionType1Selected || _connectionType2Selected || _connectionType3Selected || _connectionType4Selected; }
         public bool AllowUpperRailingConnectionDZ { get => _connectionType2Selected || _connectionType4Selected; }
         public bool AllowLowerRailingConnectionDZ { get => _connectionType3Selected || _connectionType4Selected; }
+        public bool AllowConnectHorizontalBalusters { get => _upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1
+                & _lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1; }
 
         private void UpdateAllowingXDZ()
         {
@@ -187,6 +220,8 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowInputDZ1 { get => _allowInputDZ1; }
         private readonly bool _allowInputDZ2;
         public bool AllowInputDZ2 { get => _allowInputDZ2; }
+
+        public bool AllowSelectAnymoreWithDialog { get => _selectAnymore == true; }
         #endregion
 
         #region Выбрать ещё
@@ -206,12 +241,11 @@ namespace OLP.AutoConnector.ViewModels
             }
                 
         }
-        #endregion
 
         private bool? _selectAnymoreWithDialog;
-        public bool? SelectAnymoreWithDialog 
-        { 
-            get => _selectAnymoreWithDialog; 
+        public bool? SelectAnymoreWithDialog
+        {
+            get => _selectAnymoreWithDialog;
             set
             {
                 if (SetProperty(ref _selectAnymoreWithDialog, value))
@@ -220,9 +254,7 @@ namespace OLP.AutoConnector.ViewModels
                 }
             }
         }
-
-        
-        public bool AllowSelectAnymoreWithDialog { get => _selectAnymore == true; }
+        #endregion
 
         public ConnectRailingsVM (ref RailingData upperRailingData, ref RailingData lowerRailingData, List<RailingConnectionType> allowedConnectionTypes, bool allowInputDZ1, bool allowInputDZ2)
         {
@@ -247,7 +279,10 @@ namespace OLP.AutoConnector.ViewModels
             if (allowInputDZ1 == false) Properties.ConnectRailings.Default.UpperRailingConnectionDZ = 0;
             if (allowInputDZ2 == false) Properties.ConnectRailings.Default.LowerRailingConnectionDZ = 0;
             _upperRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.UpperRailingConnectionDZ * 304.8);
-            _lowerRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.LowerRailingConnectionDZ * 304.8);          
+            _lowerRailingConnectionDZ = Math.Round(Properties.ConnectRailings.Default.LowerRailingConnectionDZ * 304.8);
+
+            _connectHorizontalBalusters = Properties.ConnectRailings.Default.ConnectHorizontalBalusters;
+            _horizontalBalustersConnectionX1 = Math.Round(Properties.ConnectRailings.Default.HorizontalBalustersConnectionX1 * 304.8);
 
             _selectAnymore = Properties.ConnectRailings.Default.SelectAnymore;
             _selectAnymoreWithDialog = Properties.ConnectRailings.Default.SelectAnymoreWithDialog;
@@ -267,5 +302,7 @@ namespace OLP.AutoConnector.ViewModels
         {
             Process.Start(Properties.AutoConnector.Default.ConnectRailingsHelpURL);
         }
+
+
     }
 }

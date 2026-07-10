@@ -126,6 +126,8 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    
+    
 
 
     <Style x:Key="TextBlockStyleDefault" TargetType="TextBlock" BasedOn="{StaticResource MetroTextBlock}">
