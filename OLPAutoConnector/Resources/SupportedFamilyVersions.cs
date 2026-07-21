@@ -14,6 +14,7 @@ namespace OLP.AutoConnector.Resources
         {
             {StairsRailing1_1, 6},
             {StairsRailing1_2, 24},
+            {StairsRailing1_3, 1},
             {StairsRailing2_1, 22},
             {StairsRailing2_2, 4},
             {StairsRailing2_3, 12},

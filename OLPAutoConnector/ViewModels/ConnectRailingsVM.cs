@@ -200,8 +200,11 @@ namespace OLP.AutoConnector.ViewModels
         public bool AllowUpperRailingConnectionX { get => _connectionType1Selected || _connectionType2Selected || _connectionType3Selected || _connectionType4Selected; }
         public bool AllowUpperRailingConnectionDZ { get => _connectionType2Selected || _connectionType4Selected; }
         public bool AllowLowerRailingConnectionDZ { get => _connectionType3Selected || _connectionType4Selected; }
-        public bool AllowConnectHorizontalBalusters { get => _upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1
-                & _lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1; }
+        public bool AllowConnectHorizontalBalusters { get => 
+                (_upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1
+                || _upperRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_3)
+                & (_lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_1
+                || _lowerRailingData.FamilyName == SupportedFamilyNames.StairsRailing1_3); }
 
         private void UpdateAllowingXDZ()
         {

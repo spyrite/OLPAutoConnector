@@ -135,4 +135,7 @@
   <data name="StairsRailing1_1" xml:space="preserve">
     <value>301_Ограждение лестничных маршей_Тип 1.1 (Огражд_РабПлоск)</value>
   </data>
+  <data name="StairsRailing1_3" xml:space="preserve">
+    <value>301_Ограждение лестничных маршей_Тип 1.5 (Огражд_РабПлоск)</value>
+  </data>
 </root>
