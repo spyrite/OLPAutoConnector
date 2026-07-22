@@ -233,13 +233,13 @@ namespace OLP.AutoConnector.Resources
             switch (RailingPositionZ)
             {
                 //Нижнее, тип 2, 3; Верхнее, тип 1
-                case RailingPositionZ.Upper when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case RailingPositionZ.Upper when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2 || FamilyName == StairsRailing1_3:
                 case RailingPositionZ.Lower when FamilyName == StairsRailing2_1 || FamilyName == StairsRailing2_2 || FamilyName == StairsRailing2_3
                 || FamilyName == StairsRailing3:
                     break;
 
                 //Верхнее, тип 2, 3; Нижнее, тип 1
-                case RailingPositionZ.Lower when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2:
+                case RailingPositionZ.Lower when FamilyName == StairsRailing1_1 || FamilyName == StairsRailing1_2 || FamilyName == StairsRailing1_3:
                     dirX = -dirX;
                     origin += BottomTopRefDistance * DirZ;
                     break;

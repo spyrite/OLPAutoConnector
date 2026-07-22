@@ -59,8 +59,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="230"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="220"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="240"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
@@ -126,7 +126,7 @@
                     Background="#41B1E1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Stretch"
-                    Margin="0,5,0,5"
+                    Margin="0,5,0,0"
                     Height="30">
             <TextBlock Text="ВЫБЕРИТЕ СОЕДИНЯЕМЫЕ ПОРУЧНИ"
                        Foreground="White"
@@ -145,7 +145,21 @@
 
         </StackPanel>
 
-        <GroupBox Grid.Row="2"
+        <StackPanel Grid.Row="2"
+                    Visibility="{Binding AllowConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
+                    Background="#41B1E1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Stretch"
+                    Margin="0,5,0,5"
+                    Height="30">
+            <CheckBox Content="СОЕДИНЯТЬ ГОРИЗОНТАЛЬНЫЕ СВЯЗИ"
+                      Foreground="White"
+                      Margin="5,0,0,0"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding ConnectHorizontalBalusters}"/>
+        </StackPanel>
+
+        <GroupBox Grid.Row="3"
                   Header="Введите расстояния">
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -156,7 +170,7 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0"
@@ -177,7 +191,14 @@
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
                     <TextBox x:Name="TextBox1"
                              Style="{StaticResource TextBoxAllowUpperRailingConnectionX}"
-                             PreviewTextInput="TextBox1_PreviewTextInput"/>
+                             PreviewTextInput="TextBox1_PreviewTextInput"
+                             Width="40"/>
+                    <TextBox x:Name="TextBox11"
+                             Style="{StaticResource TextBoxAllowUpperRailingConnectionX}"
+                             PreviewTextInput="TextBox1_PreviewTextInput"
+                             Text="{Binding HorizontalBalustersConnectionX1}"
+                             Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
+                             Width="40"/>
                     <TextBlock Text="мм"
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionX}"/>
                 </StackPanel>
@@ -191,7 +212,14 @@
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox2"
                              Style="{StaticResource TextBoxAllowUpperRailingConnectionDZ}"
-                             PreviewTextInput="TextBox234_PreviewTextInput"/>
+                             PreviewTextInput="TextBox234_PreviewTextInput"
+                             Width="40"/>
+                    <TextBox x:Name="TextBox22"
+                             Style="{StaticResource TextBoxAllowUpperRailingConnectionDZ}"
+                             PreviewTextInput="TextBox234_PreviewTextInput"
+                             Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
+                             Text="{Binding UpperHorizontalBalustersConnectionDZ1}"
+                             Width="40"/>
                     <TextBlock Text="мм"
                                Style="{StaticResource TextBlockAllowUpperRailingConnectionDZ}"/>
                 </StackPanel>
@@ -205,50 +233,20 @@
                                Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                     <TextBox x:Name="TextBox3"
                              Style="{StaticResource TextBoxAllowLowerRailingConnectionDZ}"
-                             PreviewTextInput="TextBox234_PreviewTextInput"/>
+                             PreviewTextInput="TextBox234_PreviewTextInput"
+                             Width="40"/>
+                    <TextBox x:Name="TextBox33"
+                             Style="{StaticResource TextBoxAllowLowerRailingConnectionDZ}"
+                             PreviewTextInput="TextBox234_PreviewTextInput"
+                             Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
+                             Text="{Binding UpperHorizontalBalustersConnectionDZ1}"
+                             Width="40"/>
                     <TextBlock Text="мм"
                                Style="{StaticResource TextBlockAllowLowerRailingConnectionDZ}"/>
                 </StackPanel>
 
             </Grid>
         </GroupBox>
-
-        <StackPanel Grid.Row="3"
-                    Visibility="{Binding AllowConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"
-                    Background="#41B1E1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Stretch"
-                    Margin="0,5,0,5"
-                    Height="40">
-            <CheckBox Content="СОЕДИНЯТЬ ГОРИЗОНТАЛЬНЫЕ СВЯЗИ"
-                      Foreground="White"
-                      Margin="5,0,32,0"
-                      VerticalAlignment="Center"
-                      IsChecked="{Binding ConnectHorizontalBalusters}"/>
-            <TextBlock Text=" X1 = "
-                       Foreground="White"
-                       Style="{StaticResource TextBlockStyleDefault}"
-                       Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"/>
-            <TextBox x:Name="TextBox4"
-                     Style="{StaticResource TextBoxStyleDefault}"
-                     Text="{Binding HorizontalBalustersConnectionX1}"         
-                     PreviewTextInput="TextBox234_PreviewTextInput"
-                     Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}">
-            <TextBox.ToolTip>
-                    <TextBlock Width="300"
-                               Text="{Binding HorizontalBalustersConnectionX1Desctription}"
-                               TextWrapping="Wrap"/>
-                </TextBox.ToolTip>
-            </TextBox>
-            
-            <TextBlock Text="мм"
-                       Foreground="White"
-                       Style="{StaticResource TextBlockStyleDefault}"
-                       Visibility="{Binding ConnectHorizontalBalusters, Converter={StaticResource myVisibilityConverter}}"/>
-
-
-
-        </StackPanel>
 
         <Grid Grid.Row="4"
               Margin="10,10,2,10">

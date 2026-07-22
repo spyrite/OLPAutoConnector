@@ -29,5 +29,11 @@
     <Setting Name="HorizontalBalustersConnectionX1" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="UpperHorizontalBalustersConnectionDZ1" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LowerHorizontalBalustersConnectionDZ1" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

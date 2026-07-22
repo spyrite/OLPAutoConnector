@@ -12,7 +12,7 @@ namespace OLP.AutoConnector.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.8.0.0")]
     internal sealed partial class ConnectRailings : global::System.Configuration.ApplicationSettingsBase {
         
         private static ConnectRailings defaultInstance = ((ConnectRailings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ConnectRailings())));
@@ -128,6 +128,30 @@ namespace OLP.AutoConnector.Properties {
             }
             set {
                 this["HorizontalBalustersConnectionX1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double UpperHorizontalBalustersConnectionDZ1 {
+            get {
+                return ((double)(this["UpperHorizontalBalustersConnectionDZ1"]));
+            }
+            set {
+                this["UpperHorizontalBalustersConnectionDZ1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LowerHorizontalBalustersConnectionDZ1 {
+            get {
+                return ((double)(this["LowerHorizontalBalustersConnectionDZ1"]));
+            }
+            set {
+                this["LowerHorizontalBalustersConnectionDZ1"] = value;
             }
         }
     }

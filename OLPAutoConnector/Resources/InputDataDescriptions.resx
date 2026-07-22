@@ -120,14 +120,23 @@
   <data name="LowerRailingConnectionDZ" xml:space="preserve">
     <value>Смещение верха поручня нижнего ограждения</value>
   </data>
+  <data name="LowerRailingHBConnectionDZ" xml:space="preserve">
+    <value>Смещение верха поручня/горизонтальных связей нижнего ограждения</value>
+  </data>
   <data name="RailingsConnectionType" xml:space="preserve">
     <value>Тип соединения ограждений</value>
   </data>
   <data name="UpperRailingConnectionX" xml:space="preserve">
     <value>Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка поручня из плоскости</value>
   </data>
+  <data name="UpperRailingHBConnectionX" xml:space="preserve">
+    <value>Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка поручня/горизонтальных связей из плоскости</value>
+  </data>
   <data name="UpperRailingConnectionDZ" xml:space="preserve">
     <value>Смещение верха поручня верхнего ограждения</value>
+  </data>
+  <data name="UpperRailingHBConnectionDZ" xml:space="preserve">
+    <value>Смещение верха поручня/горизонтальных связей верхнего ограждения</value>
   </data>
   <data name="HorizontalBalustersConnectionX1" xml:space="preserve">
     <value>Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка горизонтальных связей из плоскости</value>

@@ -79,6 +79,15 @@ namespace OLP.AutoConnector.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Смещение верха поручня/горизонтальных связей нижнего ограждения.
+        /// </summary>
+        internal static string LowerRailingHBConnectionDZ {
+            get {
+                return ResourceManager.GetString("LowerRailingHBConnectionDZ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Тип соединения ограждений.
         /// </summary>
         internal static string RailingsConnectionType {
@@ -102,6 +111,24 @@ namespace OLP.AutoConnector.Resources {
         internal static string UpperRailingConnectionX {
             get {
                 return ResourceManager.GetString("UpperRailingConnectionX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Смещение верха поручня/горизонтальных связей верхнего ограждения.
+        /// </summary>
+        internal static string UpperRailingHBConnectionDZ {
+            get {
+                return ResourceManager.GetString("UpperRailingHBConnectionDZ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Расстояние от оси крайней стойки (кронштейна) верхнего ограждения до оси стыка поручня/горизонтальных связей из плоскости.
+        /// </summary>
+        internal static string UpperRailingHBConnectionX {
+            get {
+                return ResourceManager.GetString("UpperRailingHBConnectionX", resourceCulture);
             }
         }
     }

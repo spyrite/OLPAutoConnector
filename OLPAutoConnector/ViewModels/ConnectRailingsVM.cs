@@ -78,10 +78,45 @@ namespace OLP.AutoConnector.ViewModels
             }
         }
 
-        public string UpperRailingConnectionXDesctription { get => InputDataDescriptions.UpperRailingConnectionX;  }
-        public string UpperRailingConnectionDZDesctription { get => InputDataDescriptions.UpperRailingConnectionDZ; }
-        public string LowerRailingConnectionXDesctription { get => InputDataDescriptions.LowerRailingConnectionDZ; }
-        public string HorizontalBalustersConnectionX1Desctription { get => InputDataDescriptions.HorizontalBalustersConnectionX1; }
+        private double _upperHorizontalBalustersConnectionDZ1;
+        public string UpperHorizontalBalustersConnectionDZ1
+        {
+            get => _upperHorizontalBalustersConnectionDZ1.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _upperHorizontalBalustersConnectionDZ1, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.UpperHorizontalBalustersConnectionDZ1 = decimalValue / 304.8;
+                }
+            }
+        }
+
+        private double _lowerHorizontalBalustersConnectionDZ1;
+        public string LowerHorizontalBalustersConnectionDZ1
+        {
+            get => _lowerHorizontalBalustersConnectionDZ1.ToString();
+            set
+            {
+                double.TryParse(value, out double decimalValue);
+                if (SetProperty(ref _lowerHorizontalBalustersConnectionDZ1, decimalValue))
+                {
+                    Properties.ConnectRailings.Default.LowerHorizontalBalustersConnectionDZ1 = decimalValue / 304.8;
+                }
+            }
+        }
+
+        public string UpperRailingConnectionXDesctription { get => _connectHorizontalBalusters ? 
+                InputDataDescriptions.UpperRailingHBConnectionX
+                : InputDataDescriptions.UpperRailingConnectionX;  }
+        public string UpperRailingConnectionDZDesctription { get => _connectHorizontalBalusters ?
+                InputDataDescriptions.UpperRailingHBConnectionDZ
+                : InputDataDescriptions.UpperRailingConnectionDZ; }
+        public string LowerRailingConnectionXDesctription { get => _connectHorizontalBalusters ?
+                InputDataDescriptions.LowerRailingHBConnectionDZ
+                : InputDataDescriptions.LowerRailingConnectionDZ; }
+        
+        //public string HorizontalBalustersConnectionX1Desctription { get => InputDataDescriptions.HorizontalBalustersConnectionX1; }
 
         #endregion
 
@@ -189,6 +224,9 @@ namespace OLP.AutoConnector.ViewModels
                 if (SetProperty(ref _connectHorizontalBalusters, value))
                 {
                     Properties.ConnectRailings.Default.ConnectHorizontalBalusters = value;
+                    RaisePropertyChanged(nameof(UpperRailingConnectionXDesctription));
+                    RaisePropertyChanged(nameof(UpperRailingConnectionDZDesctription));
+                    RaisePropertyChanged(nameof(LowerRailingConnectionXDesctription));
                 }
             }
         }
